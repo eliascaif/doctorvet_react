@@ -5,7 +5,7 @@ const AuthContext = createContext();
 
 // Proveedor del contexto
 export function AuthProvider({ children }) {
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('user_registered') ? true : false);
 
   // Función para iniciar sesión

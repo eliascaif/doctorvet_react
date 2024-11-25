@@ -148,7 +148,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}vets?create_vet`, vetData);
       const response2 = await axios.post(`${import.meta.env.VITE_API_URL}users?email_auth_web`, { vet: { id: response.data.data.id }, pre_access_token: pre_access_token }, { withCredentials: true });
-      localStorage.setItem("logged", "1");
+      localStorage.setItem('user_registered', true);
       navigate('/main');
     } catch (error) {
       lib.handleError(error);

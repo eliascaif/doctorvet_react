@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
-import { TextField, Button, Checkbox, CircularProgress, Container, Typography, Box } from '@mui/material';
+import React, { useState, useRef } from 'react';
+import { TextField, Button, CircularProgress, Container, Typography, Box } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from '../providers/SnackBarProvider';
 import * as lib from '../utils/lib';
-import AuthContext from '../contexts/AuthContext';
 import './styles.css';
 import ReCAPTCHA from 'react-google-recaptcha';
 
@@ -26,12 +25,6 @@ function Login() {
   const [passwordError, setPasswordError] = useState('');
   const passwordRef = useRef(null);
  
-  useEffect(() => {
-    const isAuthenticated = localStorage.getItem('user_registered');
-    if (isAuthenticated)
-      navigate('/main');
-  }, []);
-
   const handleSubmit = async(e) => {
     e.preventDefault();
 

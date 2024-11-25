@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
 
-// Contexto para el título y subtítulo
 const TitleContext = createContext();
 
 // Proveedor del contexto
