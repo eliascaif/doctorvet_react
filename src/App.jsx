@@ -9,7 +9,6 @@ import LoginCheckValid from './pages/LoginCheckValid';
 import LoginChoice from './pages/LoginChoice';
 import LoginForgotPassword from './pages/LoginForgotPassword';
 import LoginForgotPassword2 from './pages/LoginForgotPassword2';
-import LoginForgotPassword3 from './pages/LoginForgotPassword3';
 
 import MainLayout from './layouts/MainLayout';
 import Home from './pages/Home';
@@ -34,13 +33,13 @@ function App() {
         <Route path="login-choice" element={<LoginChoice />} />
         <Route path="login-forgot-password" element={<LoginForgotPassword />} />
         <Route path="login-forgot-password-2" element={<LoginForgotPassword2 />} />
-        <Route path="login-forgot-password-3" element={<LoginForgotPassword3 />} />
         
         <Route path="edit-vet" element={<EditVet />} />
         
         <Route path="search-test" element={<SearchTest />} />
         <Route path="search-vet" element={<SearchVet />} />
 
+        {/* private */}
         <Route
           path="main"
           element={

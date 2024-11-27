@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { TextField, Button, CircularProgress, Container, Box } from '@mui/material';
+import { TextField, Button, CircularProgress, Container, Box, Typography } from '@mui/material';
 import axios from 'axios';
 import { useSnackbar } from '../providers/SnackBarProvider';
 import * as lib from '../utils/lib';
@@ -18,6 +18,9 @@ function LoginForgotPassword() {
   const [errorEmail, setEmailError] = useState('');
   const emailRef = useRef(null);
  
+  const info = 'Revisa tu cuenta de correo para continuar';
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const handleSubmit = async() => {
     if (!lib.validateEmail(email, setEmailError, emailRef))
       return;
@@ -40,9 +43,11 @@ function LoginForgotPassword() {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}users?forgot_account_web`, { email });
       console.log(response);
 
-      if (response.data.status == 'SUCCESS') 
+      if (response.data.status == 'SUCCESS') {
         showSnackbar(`Revisa el correo ${email} para continuar`);
-
+        setIsSuccess(true);
+      }
+        
     } catch (error) {
       lib.handleError(error);
     } finally {
@@ -77,19 +82,22 @@ function LoginForgotPassword() {
             />
           </Box>
 
-          <Box mt={4}>
-            <Button
-              variant="contained"
-              type="submit"
-              color="primary"
-              onClick={handleSubmit}
-              disabled={isLoading}
-              fullWidth
-            >
-              {isLoading ? <CircularProgress size={24} /> : 'Continuar'}
-            </Button>
-          </Box>
-        
+          {isSuccess && <Typography variant="subtitle1" sx={{ mt: 4, textAlign: 'center' }} fullWidth >{info}</Typography>}
+
+          {!isSuccess && 
+            <Box mt={4}>
+              <Button
+                variant="contained"
+                type="submit"
+                color="primary"
+                onClick={handleSubmit}
+                disabled={isLoading}
+                fullWidth
+              >
+                {isLoading ? <CircularProgress size={24} /> : 'Continuar'}
+              </Button>
+            </Box>
+          }        
         </Box>
       </Box>
     </Container>
