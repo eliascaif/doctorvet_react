@@ -9,6 +9,8 @@ import EditVet from './pages/edit/EditVet';
 // import MainLayout from './layouts/MainLayout';
 import SearchTest from './pages/search/SearchTest';
 import SearchVet from './pages/search/SearchVet';
+import EditOwner from './pages/edit/EditOwner';
+
 
 function App() {
   return (
@@ -20,10 +22,13 @@ function App() {
         <Route path="login-create-account" element={<LoginCreateAccount />} />
         <Route path="login-check-valid" element={<LoginCheckValid />} />
         <Route path="login-choice" element={<LoginChoice />} />
+        <Route path="edit-owner" element={<EditOwner />} />
         <Route path="edit-vet" element={<EditVet />} />
+        
 
         <Route path="searchtest" element={<SearchTest />} />
         <Route path="searchvet" element={<SearchVet />} />
+        
 
         {/* <Route
           path="main"
