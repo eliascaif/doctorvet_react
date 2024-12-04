@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-function SearchPage({ fetchData, renderItem, placeholder }) {
+function SearchPage({ fetchFunction, fetchArgs, renderItem, placeholder }) {
   const [searchText, setSearchText] = React.useState('');
   const [results, setResults] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -29,7 +29,7 @@ function SearchPage({ fetchData, renderItem, placeholder }) {
 
   const handleSearch = () => {
     setIsLoading(true);
-    fetchData(searchText, page).then((data) => {
+    fetchFunction(searchText, page, ...fetchArgs).then((data) => {
       setResults((actualData) => [...actualData, ...data.content]);
       setHasMore(data.total_pages !== page);
       setIsLoading(false);
@@ -65,8 +65,8 @@ function SearchPage({ fetchData, renderItem, placeholder }) {
           <TextField
             fullWidth
             id="txt_search"
-            label="Buscar"
-            placeholder="Buscar"
+            label={ placeholder }
+            placeholder={ placeholder }
             variant="outlined"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
@@ -89,8 +89,7 @@ function SearchPage({ fetchData, renderItem, placeholder }) {
         </Box>
 
         {/* Indicador de carga */}
-        {isLoading && <CircularProgress />}
-
+        {/* {isLoading && <CircularProgress />} */}
 
         {/* Lista de resultados */}
         <List>

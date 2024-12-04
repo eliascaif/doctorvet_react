@@ -1,23 +1,19 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
-// Crea el contexto
 const AuthContext = createContext();
 
-// Proveedor del contexto
 export function AuthProvider({ children }) {
 
-  const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('user_registered') ? true : false);
+  const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('isAuthenticated') ? true : false);
 
-  // Función para iniciar sesión
   const login = () => {
-    // Aquí podrías agregar lógica para autenticar al usuario
-    // setIsAuthenticated(localStorage.getItem('user_registered') ? true : false);
+    localStorage.setItem('isAuthenticated', true);
+    setIsAuthenticated(true);
   };
 
-  // Función para cerrar sesión
   const logout = () => {
-    // Lógica para cerrar sesión, limpiar tokens, etc.
-    // localStorage.removeItem('user_registered');
+    localStorage.setItem('isAuthenticated', false);
+    setIsAuthenticated(false);
   };
 
   return (
@@ -27,4 +23,4 @@ export function AuthProvider({ children }) {
   );
 }
 
-export default AuthContext;
+export const useAuth = () => useContext(AuthContext);

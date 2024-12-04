@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import PrivateRoute from './components/ProtectedRoute';
-import AuthContext from './contexts/AuthContext';
+//import AuthContext from './contexts/AuthContext';
 
 import Login from './pages/Login';
 import LoginCreateAccount from './pages/LoginCreateAccount';
@@ -18,9 +18,12 @@ import EditVet from './pages/edit/EditVet';
 
 import SearchTest from './pages/search/SearchTest';
 import SearchVet from './pages/search/SearchVet';
+import { useAuth } from './contexts/AuthContext';
 
 function App() {
-  const { isAuthenticated } = useContext(AuthContext);
+  //const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated } = useAuth();
+  //console.log(useAuth());
 
   return (
     <Router>
@@ -28,6 +31,8 @@ function App() {
 
         {/* public */}
         <Route path="/" element={ isAuthenticated ? <Navigate to="/main" /> : <Login /> } />
+        {/* <Route path="/" element={ <Login /> } /> */}
+        
         <Route path="login-create-account" element={<LoginCreateAccount />} />
         <Route path="login-check-valid" element={<LoginCheckValid />} />
         <Route path="login-choice" element={<LoginChoice />} />

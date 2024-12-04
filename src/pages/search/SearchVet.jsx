@@ -1,16 +1,18 @@
 import React from 'react';
 import SearchPage from './SearchPage';
-import { ListItemText, Button, Typography } from '@mui/material';
+import { ListItemText } from '@mui/material';
 import { fetchVets } from '../../utils/lib';
 
 const SearchVet = () => {
+
   const renderVetItem = (vet) => (
     <ListItemText primary={vet.name} secondary={vet.email} />
   );
 
   return (
     <SearchPage
-      fetchData={fetchVets}
+      fetchFunction={fetchVets}
+      fetchArgs={[config.user.email]}
       renderItem={renderVetItem}
       placeholder="Buscar veterinarias..."
     />

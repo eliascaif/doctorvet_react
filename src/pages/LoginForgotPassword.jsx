@@ -27,7 +27,7 @@ function LoginForgotPassword() {
 
     const captchaValue = recaptcha.current.getValue();
     if (!captchaValue) {
-      showSnackbar('Valida que eres humano.');
+      showSnackbar('Presiona sobre \'No soy un robot\'');
       return;
     } 
     

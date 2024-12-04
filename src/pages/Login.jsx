@@ -24,7 +24,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const passwordRef = useRef(null);
- 
+
   const handleSubmit = async(e) => {
     e.preventDefault();
 
@@ -34,21 +34,24 @@ function Login() {
 
     const captchaValue = recaptcha.current.getValue();
     if (!captchaValue) {
-      showSnackbar('Valida que eres humano.');
+      showSnackbar('Presiona sobre \'No soy un robot\'');
       return;
     } 
     
     const validCaptcha = lib.verifyCaptchaToken(captchaValue);
     if (!validCaptcha) {
-      showSnackbar('Error al procesar captcha.');
+      showSnackbar('Error al procesar captcha');
       return;
     }
 
     setIsLoading(true);
     
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}users?email_pre_auth_web`, { email, password });
-      // console.log(response);
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}users?email_pre_auth_web`,
+        { email, password }
+      );
+      //console.log(response);
       
       switch (response.data.data.state) {
         case 'ACCOUNT_WAITING_FOR_EMAIL_CHECK':
@@ -61,8 +64,8 @@ function Login() {
           break;
       }
     } catch (error) {
-      if (error.response && error.response.status == 404)
-        showSnackbar('Login inválido.');
+      if (error.response /*&& error.response.status == 404*/)
+        showSnackbar('Login inválido');
 
       lib.handleError(error);
     } finally {
@@ -73,7 +76,7 @@ function Login() {
   const handleGoogleLogin = () => {
     const captchaValue = recaptcha.current.getValue()
     if (!captchaValue) {
-      showSnackbar('Valida que eres humano.');
+      showSnackbar('Presiona sobre \'No soy un robot\'');
       return;
     }
   };
@@ -167,7 +170,7 @@ function Login() {
               variant="caption"
               color="textSecondary"
               style={{ cursor: 'pointer' }}
-              onClick={() => window.open('https://test.doctor-vet.app/privacy-policy.html', '_blank')}
+              onClick={() => window.open(`${import.meta.env.VITE_WEB_URL}privacy-policy.html`, '_blank')}
               >
                 Política de privacidad
             </Typography>

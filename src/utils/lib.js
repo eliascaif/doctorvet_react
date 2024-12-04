@@ -61,7 +61,7 @@ export const fetchProducts = async () => {
         min: '',
         compress: '',
       };
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}products`, { params: queryParams })
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}products`, { params: queryParams }, { withCredentials: true } )
       const stringData = compressedBase64ToString(response.data.data);
       localStorage.setItem('products', stringData);
       return JSON.parse(stringData);
@@ -89,10 +89,33 @@ export const fetchVets = async (searchText, page, user_email) => {
     return null;
   }
 };
+export const fetchOwnersForInput = async () => {
+  const mustDoRequest_ = await mustDoRequest(undefined, 'owners_for_input');
 
-const mustDoRequest = async (table_name) => {
+  if (mustDoRequest_) {
+    try {
+      const queryParams = {
+        for_input: '',
+        compress: '',
+      };
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}owners`, { params: queryParams })
+      console.log(response);
+      const stringData = compressedBase64ToString(response.data.data);
+      localStorage.setItem('owners_for_input', stringData);
+      return JSON.parse(stringData);
+    } catch (error) {
+      handleError(error);
+      return null;
+    }
+  } else {
+    // console.log('cached data');
+    return JSON.parse(localStorage.getItem('owners_for_input'));
+  }
+};
+
+const mustDoRequest = async (table_name, object_name) => {
   //from server
-  const last_update_server = await getLastUpdate(table_name);
+  const last_update_server = await getLastUpdate(table_name, object_name);
   const last_update_server_date = new Date(last_update_server.replace(' ', 'T'));
   
   //local
@@ -120,6 +143,7 @@ const getLastUpdate = async (table_name, object_name) => {
       url += `?object_name=${object_name}`;
 
     const response = await axios.get(url)
+    console.log(response);
     return response.data.data.update_time;
   } catch (error) {
     handleError(error);
