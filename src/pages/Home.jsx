@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { Typography } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 import { useTitle } from '../contexts/TitleContext';
+import axios from 'axios';
 
 function Home() {
 
@@ -10,8 +11,32 @@ function Home() {
     updateTitle('', '');
   }, [updateTitle]);
 
+  const handleLogin = async() => {
+    //alert("pepe");
+
+    try {
+      const queryParams = {
+        recent: '',
+        page: 1,
+      };
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}owners`,
+         { params: queryParams, withCredentials: true },
+      );
+      console.log(response);
+
+    } catch (error) {
+      //console.log(error);
+    }
+  
+
+  }
+
   return (
-    <Typography variant="h4">Home Page</Typography>
+    <Container maxWidth="sm">
+      <Typography variant="h4">Home Page</Typography>
+      <button onClick={handleLogin}>Iniciar sesión</button>
+    </Container>
   );
 }
 
