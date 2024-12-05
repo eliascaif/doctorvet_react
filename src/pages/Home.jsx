@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Container, Typography } from '@mui/material';
 import { useTitle } from '../contexts/TitleContext';
 import axios from 'axios';
+import { fetchOwnersForInput } from '../utils/lib';
 
 function Home() {
 
@@ -12,23 +13,25 @@ function Home() {
   }, [updateTitle]);
 
   const handleLogin = async() => {
-    //alert("pepe");
+    // alert("pepe");
 
-    try {
-      const queryParams = {
-        recent: '',
-        page: 1,
-      };
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}owners`,
-         { params: queryParams, withCredentials: true },
-      );
-      console.log(response);
+    const result = await fetchOwnersForInput();
+    console.log(result);
 
-    } catch (error) {
-      //console.log(error);
-    }
-  
+    // try {
+    //   const queryParams = {
+    //     recent: '',
+    //     page: 1,
+    //   };
+    //   const response = await axios.get(
+    //     `${import.meta.env.VITE_API_URL}owners`,
+    //      { params: queryParams, withCredentials: true },
+    //   );
+    //   console.log(response);
+
+    // } catch (error) {
+    //   //console.log(error);
+    // }
 
   }
 

@@ -98,8 +98,12 @@ export const fetchOwnersForInput = async () => {
         for_input: '',
         compress: '',
       };
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}owners`, { params: queryParams })
-      console.log(response);
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}owners`, 
+        { params: queryParams, withCredentials: true },
+      );
+      //console.log(response);
+      
       const stringData = compressedBase64ToString(response.data.data);
       localStorage.setItem('owners_for_input', stringData);
       return JSON.parse(stringData);
@@ -114,19 +118,24 @@ export const fetchOwnersForInput = async () => {
 };
 
 const mustDoRequest = async (table_name, object_name) => {
+  
+  let final_object_name = table_name;
+  if (object_name)
+    final_object_name = object_name;
+
   //from server
   const last_update_server = await getLastUpdate(table_name, object_name);
   const last_update_server_date = new Date(last_update_server.replace(' ', 'T'));
   
   //local
-  if (localStorage.getItem(`${table_name}_last_update`) === null)
-    localStorage.setItem(`${table_name}_last_update`, last_update_server);
+  if (localStorage.getItem(`${final_object_name}_last_update`) === null)
+    localStorage.setItem(`${final_object_name}_last_update`, last_update_server);
 
-  const last_update_local = localStorage.getItem(`${table_name}_last_update`);
+  const last_update_local = localStorage.getItem(`${final_object_name}_last_update`);
   const last_update_local_date = new Date(last_update_local.replace(' ', 'T'));
 
   //cache file
-  const last_update_cache = localStorage.getItem(table_name);
+  const last_update_cache = localStorage.getItem(final_object_name);
 
   const mustDoRequest = !last_update_cache || (last_update_server_date > last_update_local_date);
   return mustDoRequest;
@@ -142,8 +151,11 @@ const getLastUpdate = async (table_name, object_name) => {
     if (object_name)
       url += `?object_name=${object_name}`;
 
-    const response = await axios.get(url)
-    console.log(response);
+    const response = await axios.get(
+      url,
+      { withCredentials: true },
+    );
+    //console.log(response);
     return response.data.data.update_time;
   } catch (error) {
     handleError(error);
