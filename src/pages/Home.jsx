@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { Container, Typography } from '@mui/material';
 import { useTitle } from '../contexts/TitleContext';

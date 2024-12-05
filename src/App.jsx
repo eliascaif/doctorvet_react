@@ -18,6 +18,9 @@ import EditVet from './pages/edit/EditVet';
 
 import SearchTest from './pages/search/SearchTest';
 import SearchVet from './pages/search/SearchVet';
+
+import EditOwner from './pages/edit/EditOwner';
+
 import { useAuth } from './contexts/AuthContext';
 
 function App() {
@@ -36,6 +39,13 @@ function App() {
         <Route path="login-create-account" element={<LoginCreateAccount />} />
         <Route path="login-check-valid" element={<LoginCheckValid />} />
         <Route path="login-choice" element={<LoginChoice />} />
+        <Route path="edit-owner" element={<EditOwner />} />
+        <Route path="edit-vet" element={<EditVet />} />
+        
+        <Route path="searchtest" element={<SearchTest />} />
+        <Route path="searchvet" element={<SearchVet />} />
+        
+        {/* <Route
         <Route path="login-forgot-password" element={<LoginForgotPassword />} />
         <Route path="login-forgot-password-2" element={<LoginForgotPassword2 />} />
         
