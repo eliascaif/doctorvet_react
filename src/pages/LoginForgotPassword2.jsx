@@ -7,27 +7,16 @@ import {
   Container,
 } from '@mui/material';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { useSnackbar } from '../providers/SnackBarProvider';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as lib from '../utils/lib';
-import ReCAPTCHA from 'react-google-recaptcha';
 
-const LoginCreateAccount = () => {
+const LoginForgotPassword2 = () => {
+  const [searchParams] = useSearchParams();
+  const email = searchParams.get('email');
+
   const navigate = useNavigate();
 
-  const showSnackbar = useSnackbar();
-
   const [isLoading, setIsLoading] = useState(false);
-
-  const recaptcha = useRef();
-
-  const [name, setName] = useState('');
-  const [errorName, setErrorName] = useState('');
-  const nameRef = useRef(null);
-
-  const [email, setEmail] = useState('');
-  const [errorEmail, setErrorEmail] = useState('');
-  const emailRef = useRef(null);
 
   const [password, setPassword] = useState('');
   const [errorPassword, setErrorPassword] = useState('');
@@ -38,43 +27,28 @@ const LoginCreateAccount = () => {
   const passwordRepeatRef = useRef(null);
 
   useEffect(() => {
-    nameRef.current.focus();
+    passwordRef.current.focus();
   }, []);
 
   const handleSubmit = async(e) => {
     e.preventDefault();
 
-    if (!lib.validateNonEmpty(name, setErrorName, nameRef) || 
-        !lib.validateEmail(email, setErrorEmail, emailRef) || 
-        !lib.validatePassword(password, setErrorPassword, passwordRef) || 
+    if (!lib.validatePassword(password, setErrorPassword, passwordRef) || 
         !validatePasswordRepeat())
       return;
-
-    const captchaValue = recaptcha.current.getValue()
-    if (!captchaValue) {
-      showSnackbar('Presiona sobre \'No soy un robot\'');
-      return;
-    }
-
-    const validCaptcha = lib.verifyCaptchaToken(captchaValue);
-    if (!validCaptcha) {
-      showSnackbar('Error al procesar captcha.');
-      return;
-    }
   
     setIsLoading(true);
 
     const userData = {
-      name: name,
       email: email,
       password: password,
-      login_type: 'EMAIL',
     };
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}users?create_account`, userData);
-      //console.log(response);
-      navigate('/login-check-valid', { state: { email: email, pre_access_token: response.data.data.pre_access_token } });
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}users?forgot_account_3`, userData);
+      console.log(response);
+
+      navigate('/');
     } catch (error) {
       lib.handleError(error);
     } finally {
@@ -102,27 +76,7 @@ const LoginCreateAccount = () => {
           boxShadow={3}
           component="form"
           onSubmit={handleSubmit}>
-          <TextField
-            label="Nombre"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            error={Boolean(errorName)}
-            helperText={errorName}
-            inputRef={nameRef}
-          />
-          <TextField
-            label="Email"
-            fullWidth
-            margin="normal"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            error={!!errorEmail}
-            helperText={errorEmail}
-            inputRef={emailRef}
-          />
+          
           <TextField
             label="Contraseña"
             type="password"
@@ -150,14 +104,7 @@ const LoginCreateAccount = () => {
               }
             }}
           />
-
-          <Box display="flex" justifyContent="center" mt={2}>
-            <ReCAPTCHA 
-              ref={recaptcha} 
-              sitekey={import.meta.env.VITE_RECAPCHA_SITE_KEY} 
-            />
-          </Box>
-
+          
           <Box mt={4}>
             <Button
               variant="contained"
@@ -177,4 +124,4 @@ const LoginCreateAccount = () => {
   );
 };
 
-export default LoginCreateAccount;
+export default LoginForgotPassword2;

@@ -31,6 +31,7 @@ import { strings } from '../../constants/strings';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
+import { useAuth } from '../../contexts/AuthContext';
 
 const EditVet = ({ isUpdate = false, initialVetData = null }) => {
 
@@ -43,6 +44,8 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
   const { pre_access_token, isInitCreate } = location.state || {};
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const { login } = useAuth();
 
   const [vetData, setVetData] = useState(initialVetData || {
     name: '',
@@ -95,13 +98,13 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
 
   useEffect(() => {
     const fetchRegions = async () => {
+      setIsLoading(true);
       const regions = await lib.fetchRegions();
       setRegions(regions);
+      setIsLoading(false);
     }    
 
-    setIsLoading(true);
     fetchRegions();
-    setIsLoading(false);
 
     //in create, sell point doesnt exists
     //implement
@@ -146,10 +149,30 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
     vetData.pre_access_token = pre_access_token;
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}vets?create_vet`, vetData);
-      const response2 = await axios.post(`${import.meta.env.VITE_API_URL}users?email_auth_web`, { vet: { id: response.data.data.id }, pre_access_token: pre_access_token }, { withCredentials: true });
-      localStorage.setItem("logged", "1");
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}vets?create_vet`,
+        vetData
+      );
+      const response2 = await axios.post(
+        `${import.meta.env.VITE_API_URL}users?email_auth_web`,
+        { vet: { id: response.data.data.id }, pre_access_token: pre_access_token },
+        { withCredentials: true }
+      );
+
+      login();
       navigate('/main');
+
+      //localStorage.setItem('isAuthenticated', true);
+      //navigate('/main');
+
+      // const { login } = useAuth();
+      // login();
+      // navigate('/main');
+      // useEffect(() => {
+      //   const { login } = useAuth();
+      //   login();
+      //   navigate('/');
+      // }, []);
     } catch (error) {
       lib.handleError(error);
     } finally {
