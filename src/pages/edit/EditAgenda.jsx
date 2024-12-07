@@ -31,7 +31,7 @@ import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PetOwnerSelector from '../../components/ProfileItem';
 import ProfileItem from '../../components/ProfileItem';
-import { useConfig } from '../../contexts/ConfigContext';
+import { useConfig } from '../../providers/ConfigProvider';
 
 const EditAgenda = ({ isUpdate = false, initialAgendaData = null }) => {
 

@@ -1,9 +1,8 @@
 import React, { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../providers/AuthProvider';
 
 function ProtectedRoute({ children }) {
-  // const { isAuthenticated } = useContext(AuthContext);
   const { isAuthenticated } = useAuth();
   return isAuthenticated ? children : <Navigate to="/" />;
 }

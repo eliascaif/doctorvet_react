@@ -31,7 +31,7 @@ import { strings } from '../../constants/strings';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../providers/AuthProvider';
 
 const EditVet = ({ isUpdate = false, initialVetData = null }) => {
 

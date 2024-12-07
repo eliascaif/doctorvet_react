@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Container, Typography } from '@mui/material';
-import { useTitle } from '../contexts/TitleContext';
+import { useTitle } from '../providers/TitleProvider';
 import axios from 'axios';
 import { fetchOwnersForInput } from '../utils/lib';
 

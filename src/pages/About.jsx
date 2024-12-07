@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Typography } from '@mui/material';
-import { useTitle } from '../contexts/TitleContext';
+import { useTitle } from '../providers/TitleProvider';
 
 function About() {
 

@@ -19,7 +19,7 @@ import SearchVet from './pages/search/SearchVet';
 
 import EditOwner from './pages/edit/EditOwner';
 
-import { useAuth } from './contexts/AuthContext';
+import { useAuth } from './providers/AuthProvider';
 
 function App() {
   const { isAuthenticated } = useAuth();

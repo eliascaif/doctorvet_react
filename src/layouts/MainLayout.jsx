@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, Drawer, List, ListItem, ListItemText, Typography, CssBaseline, Box, IconButton } from '@mui/material';
-import { useTitle } from '../contexts/TitleContext';
+import { useTitle } from '../providers/TitleProvider';
 import CloseIcon from '@mui/icons-material/Close';
 
 const drawerWidth = 240;

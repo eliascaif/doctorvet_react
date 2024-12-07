@@ -3,9 +3,9 @@ import { createRoot } from 'react-dom/client'
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme/ThemeProviderLocal.jsx';
 import { SnackBarProvider } from './providers/SnackBarProvider.jsx'
-import { AuthProvider } from './contexts/AuthContext.jsx';
-import { ConfigProvider } from './contexts/ConfigContext.jsx';
-import { TitleProvider } from './contexts/TitleContext.jsx';
+import { AuthProvider } from './providers/AuthProvider.jsx';
+import { ConfigProvider } from './providers/ConfigProvider.jsx';
+import { TitleProvider } from './providers/TitleProvider.jsx';
 
 import App from './App.jsx'
 

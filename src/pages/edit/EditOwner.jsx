@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import * as lib from "../../utils/lib"; 
 import axios from "axios";
 import { useSnackbar } from "../../providers/SnackBarProvider";
-import { useTitle } from "../../contexts/TitleContext";
+import { useTitle } from "../../providers/TitleProvider";
 
 const EditOwner = ( {updateOwner = null} ) => {
 
