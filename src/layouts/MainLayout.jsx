@@ -3,6 +3,7 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, Drawer, List, ListItem, ListItemText, Typography, CssBaseline, Box, IconButton } from '@mui/material';
 import { useTitle } from '../providers/TitleProvider';
 import CloseIcon from '@mui/icons-material/Close';
+import BottomSheet from './BottomSheet';
 
 const drawerWidth = 240;
 
@@ -24,7 +25,7 @@ function MainLayout() {
       <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Toolbar>
           <Typography variant="h6" noWrap component="div">
-            My App
+            Doctor Vet
           </Typography>
           <Box sx={{ ml: `${168}px`, display: title.length > 0 ? 'block' : 'none' }}>
             <Typography variant="h6" noWrap>
@@ -65,8 +66,17 @@ function MainLayout() {
           <ListItem button component={Link} to="home" selected={location.pathname === '/main/home'}>
             <ListItemText primary="Home" />
           </ListItem>
-          <ListItem button component={Link} to="about" selected={location.pathname === '/main/about'}>
-            <ListItemText primary="About" />
+          <ListItem button component={Link} to="pets" selected={location.pathname === '/main/pets'}>
+            <ListItemText primary="Mascotas" />
+          </ListItem>
+          <ListItem button component={Link} to="owners" selected={location.pathname === '/main/owners'}>
+            <ListItemText primary="Propietarios" />
+          </ListItem>
+          <ListItem button component={Link} to="agenda" selected={location.pathname === '/main/agenda'}>
+            <ListItemText primary="Agenda" />
+          </ListItem>
+          <ListItem button component={Link} to="daily_cash" selected={location.pathname === '/main/daily_cash'}>
+            <ListItemText primary="Caja diaria" />
           </ListItem>
         </List>      
       </Drawer>
@@ -75,6 +85,9 @@ function MainLayout() {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
         <Outlet />
+
+        <BottomSheet />
+
       </Box>
     </Box>
   );

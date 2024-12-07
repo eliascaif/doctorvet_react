@@ -14,6 +14,7 @@ import * as lib from "../../utils/lib";
 import axios from "axios";
 import { useSnackbar } from "../../providers/SnackBarProvider";
 import { useTitle } from "../../providers/TitleProvider";
+import { strings } from "../../constants/strings"
 
 const EditOwner = ( {updateOwner = null} ) => {
 
@@ -45,9 +46,9 @@ const EditOwner = ( {updateOwner = null} ) => {
   useEffect(() => {
 
     if (updateOwner)
-      updateTitle('Editando propietario', 'Completa los datos')
+      updateTitle(strings.update_owner, strings.complete_data);
     else
-      updateTitle('Nuevo propietario', 'Completa los datos')
+      updateTitle(strings.new_owner, strings.complete_data);
     
     setIsLoading(true);
 
