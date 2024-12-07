@@ -47,7 +47,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
 
   const { login } = useAuth();
 
-  const [vetData, setVetData] = useState(initialVetData || {
+  const [vet, setVet] = useState(initialVetData || {
     name: '',
     address: '',
     region: null,
@@ -122,8 +122,8 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setVetData({
-      ...vetData,
+    setVet({
+      ...vet,
       [name]: type === 'checkbox' ? checked : value,
     });
   }
@@ -139,19 +139,19 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
 
   const save = async () => {
 
-    if (!lib.validateNonEmpty(vetData.name, setErrorName, nameRef) ||
-        !validateRegion() || 
-        !lib.validateEmail(vetData.email, setErrorEmail, emailRef))
+    if (!lib.validateNonEmpty(vet.name, setErrorName, nameRef) ||
+        !lib.validateNonEmpty(vet.region, setErrorRegion, regionRef) || 
+        !lib.validateEmail(vet.email, setErrorEmail, emailRef))
       return;
 
     setIsLoading(true);
 
-    vetData.pre_access_token = pre_access_token;
+    vet.pre_access_token = pre_access_token;
 
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}vets?create_vet`,
-        vetData
+        vet
       );
       const response2 = await axios.post(
         `${import.meta.env.VITE_API_URL}users?email_auth_web`,
@@ -180,19 +180,19 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
     }
   }
 
-  const update = () => {
+  const update = async () => {
 
   }
 
-  const validateRegion = () => {
-    if (!vetData.region) {
-      setErrorRegion(strings.error_corrige_campo);
-      regionRef.current.focus();
-      return false;
-    }
+  // const validateRegion = () => {
+  //   if (!vet.region) {
+  //     setErrorRegion(strings.error_corrige_campo);
+  //     regionRef.current.focus();
+  //     return false;
+  //   }
 
-    return lib.validateNonEmpty(vetData.region.friendly_name, setErrorRegion, regionRef);
-  }
+  //   return lib.validateNonEmpty(vet.region.friendly_name, setErrorRegion, regionRef);
+  // }
 
   return (
     <Container>
@@ -239,7 +239,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
           fullWidth
           label="Nombre *"
           name="name"
-          value={vetData.name}
+          value={vet.name}
           onChange={handleChange}
           margin="normal"
           inputRef={nameRef}
@@ -251,7 +251,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
           fullWidth
           label="Dirección"
           name="address"
-          value={vetData.address}
+          value={vet.address}
           onChange={handleChange}
           margin="normal"
           multiline
@@ -261,9 +261,9 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
         <Autocomplete
           options={regions}
           getOptionLabel={(option) => (option ? option.friendly_name : "")}
-          value={vetData.region}
-          onChange={(event, newValue) => {
-            setVetData({ ...vetData, region: newValue });
+          value={vet.region}
+          onChange={(e, newValue) => {
+            setVet({ ...vet, region: newValue });
             fetchFiscalTypes(newValue.country);
           }}
           renderInput={(params) => (
@@ -283,7 +283,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
           fullWidth
           label="Teléfono"
           name="phone"
-          value={vetData.phone}
+          value={vet.phone}
           onChange={handleChange}
           margin="normal"
         />
@@ -293,7 +293,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
             fullWidth
             label="Email *"
             name="email"
-            value={vetData.email}
+            value={vet.email}
             onChange={handleChange}
             margin="normal"
             inputRef={emailRef}
@@ -306,7 +306,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
           fullWidth
           label="Página Web"
           name="web_page"
-          value={vetData.web_page}
+          value={vet.web_page}
           onChange={handleChange}
           margin="normal"
         />
@@ -315,7 +315,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
           fullWidth
           label="Notas"
           name="notes"
-          value={vetData.notes}
+          value={vet.notes}
           onChange={handleChange}
           margin="normal"
           multiline
@@ -336,7 +336,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
             labelId="owner-naming-label"
             label="Nombramiento de clientes"
             name="owner_naming"
-            value={vetData.owner_naming}
+            value={vet.owner_naming}
             onChange={handleChange}
           >
             {ownerNamingOptions.map((option, index) => (
@@ -354,7 +354,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
             labelId="pet-naming-label"
             label="Nombramiento de pacientes"
             name="pet_naming"
-            value={vetData.pet_naming}
+            value={vet.pet_naming}
             onChange={handleChange}
           >
             {petNamingOptions.map((option, index) => (
@@ -371,7 +371,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
           <RadioGroup
             row
             name="unit_system"
-            value={vetData.unit_system}
+            value={vet.unit_system}
             onChange={handleChange}
           >
             <FormControlLabel
@@ -393,7 +393,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
           <RadioGroup
             row
             name="hour_format"
-            value={vetData.hour_format}
+            value={vet.hour_format}
             onChange={handleChange}
           >
             <FormControlLabel
@@ -414,7 +414,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={vetData.mobile_services}
+                checked={vet.mobile_services}
                 onChange={handleChange}
                 name="mobile_services"
               />
@@ -424,7 +424,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={vetData.email_messaging}
+                checked={vet.email_messaging}
                 onChange={handleChange}
                 name="email_messaging"
               />
@@ -446,7 +446,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={vetData.sells_planning_activity}
+                checked={vet.sells_planning_activity}
                 onChange={handleChange}
                 name="sells_planning_activity"
               />
@@ -456,7 +456,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={vetData.sells_save_p1}
+                checked={vet.sells_save_p1}
                 onChange={handleChange}
                 name="sells_save_p1"
               />
@@ -466,7 +466,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={vetData.sells_accept_suggested}
+                checked={vet.sells_accept_suggested}
                 onChange={handleChange}
                 name="sells_accept_suggested"
               />
@@ -476,7 +476,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={vetData.sells_lock_price}
+                checked={vet.sells_lock_price}
                 onChange={handleChange}
                 name="sells_lock_price"
               />
@@ -493,7 +493,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
               labelId="default-sell-point-label"
               label="Punto de venta por defecto"
               name="default_sell_point"
-              value={vetData.default_sell_point ? vetData.default_sell_point : ''}
+              value={vet.default_sell_point ? vet.default_sell_point : ''}
               onChange={handleChange}
             >
               {sellPoints.map((option, index) => (
@@ -517,7 +517,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
           fullWidth
           label="CUIT/NIF/CIF (ID fiscal)"
           name="fiscal_id"
-          value={vetData.fiscal_id}
+          value={vet.fiscal_id}
           onChange={handleChange}
           margin="normal"
         />
@@ -525,9 +525,9 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
         <Autocomplete
           options={fiscalTypes}
           getOptionLabel={(option) => (option ? option.name : "")}
-          value={vetData.fiscal_type}
+          value={vet.fiscal_type}
           onChange={(event, newValue) => {
-            setVetData({ ...vetData, fiscalType: newValue });
+            setVet({ ...vet, fiscalType: newValue });
           }}
           renderInput={(params) => (
             <TextField
@@ -561,6 +561,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
         <Dialog open={isLoading} />
 
       </Box>
+
     </Container>
   );
 };

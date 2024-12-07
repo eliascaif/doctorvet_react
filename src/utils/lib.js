@@ -174,31 +174,40 @@ const compressedBase64ToString = (base64string) => {
   return decompressedArray;
 }
 
-export const validateNonEmpty = (field, setErrFunc, fieldRef) => {
-  if (!field.trim()) {
-    setErrFunc(strings.error_campo_empty);
-    fieldRef.current.focus();
-    return false;
-  } 
+export const validateNonEmpty = (fieldName, fieldValue, setErrFunc, fieldRef) => {
+  if (fieldValue.trim()) {
+    setErrFunc({});
+    return true;
+  }
 
-  setErrFunc('');
-  return true;
+  let error = {
+    [fieldName]: strings.error_campo_empty
+  };
+  setErrFunc(error);
+  fieldRef.current.focus();
+  fieldRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+  return false;
 }
-export const validateEmail = (field, setErrFunc, fieldRef) => {
+export const validateEmail = (fieldName, fieldValue, setErrFunc, fieldRef, nullPass) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(field)) {
-    setErrFunc(strings.error_corrige_campo);
-    fieldRef.current.focus();
-    return false;
-  } 
+  if ( (nullPass && !fieldValue) || (emailRegex.test(fieldValue)) ) {
+    setErrFunc({});
+    return true;
+  }
 
-  setErrFunc('');
-  return true;
+  let error = {
+    [fieldName]: strings.error_corrige_campo
+  };
+  setErrFunc(error);
+  fieldRef.current.focus();
+  fieldRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+  return false;
 }
 export const validatePassword = (field, setErrFunc, fieldRef) => {
   if (!field || field.length < 8) {
     setErrFunc(strings.error_campo_empty);
     fieldRef.current.focus();
+    fieldRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
     return false;
   }
 

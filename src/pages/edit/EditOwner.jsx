@@ -1,254 +1,204 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
-  AppBar,
-  Toolbar,
-  Typography,
   TextField,
-  Button,
-  Snackbar,
-  Alert,
-  InputAdornment,
   Autocomplete,
+  Fab,
+  Container,
+  Box,
+  Dialog,
+  CircularProgress,
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
-import SearchIcon from "@mui/icons-material/Search";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as lib from "../../utils/lib"; 
 import axios from "axios";
+import { useSnackbar } from "../../providers/SnackBarProvider";
+import { useTitle } from "../../contexts/TitleContext";
 
-const EditOwner = () => {
-  const [ownerData, setOwnerData] = useState({
-    name: "",
-    address: "",
-    region: "",
-    phone: "",
-    email: "",
-    idNumber: "",
-    taxType: "",
-    additionalNotes: "",
-    fiscal_id: "",
+const EditOwner = ( {updateOwner = null} ) => {
+
+  const [owner, setOwner] = useState( updateOwner || {
+    name: '',
+    address: '',
+    region: null,
+    phone: '',
+    email: '',
+    regional_id: '',
     fiscal_type: null,
+    notes: '',
   });
 
   const [errors, setErrors] = useState({});
-  const [message, setMessage] = useState({ type: "", text: "" });
+  const [refs, setRefs] = useState({
+    name: useRef(null),
+    email: useRef(null),
+  });
+
   const [isLoading, setIsLoading] = useState(true);
   const [regions, setRegions] = useState([]);
   const [fiscalTypes, setFiscalTypes] = useState([]);
+  
   const navigate = useNavigate();
-  const { id } = useParams();
+  const snackbar = useSnackbar();
+  const { updateTitle } = useTitle();
 
   useEffect(() => {
+
+    if (updateOwner)
+      updateTitle('Editando propietario', 'Completa los datos')
+    else
+      updateTitle('Nuevo propietario', 'Completa los datos')
     
-    if (id) {
-      const fetchOwnerData = async () => {
-        try {
-          const response = await axios.get(`/propietarios/${id}`);
-          setOwnerData(response.data);
-          setIsLoading(false);
-        } catch (error) {
-          setMessage({ type: "error", text: "Error al cargar los datos." });
-          setIsLoading(false);
-        }
-      };
-      fetchOwnerData();
-    } else {
-      
+    setIsLoading(true);
+
+    const fetchForInput = async () => {
+      const ownersForInput = await lib.fetchOwnersForInput();
+      setRegions(ownersForInput.regions);
+      setFiscalTypes(ownersForInput.finance_types_fiscal);
+
       setIsLoading(false);
-    }
-  
-    const fetchRegions = async () => {
-      const regions = await lib.fetchRegions();
-      setRegions(regions);
     };
-    fetchRegions();
-  }, [id]);
+    fetchForInput();
+
+  }, []);
   
-
-  const fetchFiscalTypes = async (country) => {
-    const fiscalTypes = await lib.fetchFiscalTypes(country);
-    setFiscalTypes(fiscalTypes);
-  }
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setOwnerData({ ...ownerData, [name]: value });
-  };
-
-  const validate = () => {
-    let tempErrors = {};
-    if (!ownerData.name.trim()) tempErrors.name = "El nombre es obligatorio.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ownerData.email))
-      tempErrors.email = "El email debe tener un formato válido.";
-    setErrors(tempErrors);
-    return Object.keys(tempErrors).length === 0;
+    setOwner({ ...owner, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validate()) return;
-  
-    try {
-      if (id) {
-       
-        await axios.put(`/propietarios/${id}`, ownerData);
-        setMessage({ type: "success", text: "Datos actualizados correctamente." });
-      } else {
-        
-        await axios.post(`/propietarios`, ownerData);
-        setMessage({ type: "success", text: "Propietario agregado correctamente." });
-      }
-      navigate(-1);  
-    } catch (error) {
-      setMessage({ type: "error", text: "Error al guardar los datos." });
-    }
+
+    if (!lib.validateNonEmpty('name', owner.name, setErrors, refs.name) ||
+        !lib.validateEmail('email', owner.email, setErrors, refs.email, true))
+      return;
+
+    if (updateOwner)
+      update();
+    else
+      save();
+
   };
   
-  if (isLoading) return <Typography>Cargando...</Typography>;
+  const save = async () => {
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}owners`,
+        owner,
+        { withCredentials: true }
+      );
+      // console.log(response);
+      navigate(`/owners/${response.data.data.id}`);
+    } catch (error) {
+      lib.handleError(error);
+      snackbar('Error, intenta nuevamente');
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const update = async () => {
+    setIsLoading(true);
+
+    try {
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_URL}owners`,
+        owner,
+        { withCredentials: true }
+      );
+      navigate(`/owners/${response.data.data.id}`);
+    } catch (error) {
+      lib.handleError(error);
+      snackbar('Error, intenta nuevamente');
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      noValidate
-      style={{
-        maxWidth: "600px",
-        margin: "32px auto",
-        padding: "16px",
-        boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
-        borderRadius: "8px",
-      }}
-    >
-      
-      <AppBar
-        position="static"
-        color="primary"
-        sx={{ borderRadius: 1, margin: 0, padding: 1 }}
-      >
-        <Toolbar
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: 1,
-          }}
+    <Container>
+
+      <Box 
+        sx={{ mb: 4 }}
+        component="form"
+        onSubmit={handleSubmit}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <ArrowBackIcon
-              color="inherit"
-              onClick={() => navigate(-1)} 
-              sx={{ color: "white" }} 
+
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Nombre *"
+          name="name"
+          value={owner.name}
+          onChange={handleChange}
+          inputRef={refs.name}
+          error={!!errors.name}
+          helperText={errors.name}
+        />
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Dirección"
+          name="address"
+          value={owner.address}
+          onChange={handleChange}
+        />
+        <Autocomplete
+          fullWidth
+          options={regions}
+          getOptionLabel={(option) => (option ? option.friendly_name : "")} 
+          value={owner.region}
+          onChange={(e, newValue) =>
+            setOwner({
+              ...owner,
+              region: newValue
+            })
+          }
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Región"
+              name="region"
+              margin="normal"
             />
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                borderRadius: "50%",
-                minWidth: "56px",
-                height: "56px",
-              }}
-            >
-              <AddAPhotoIcon />
-            </Button>
-            <Typography variant="h5">Editar Propietario</Typography>
-          </div>
-          <Typography
-            variant="subtitle1"
-            sx={{ fontSize: "0.875rem", marginLeft: "6rem" }}
-          >
-            Completa los datos
-          </Typography>
-        </Toolbar>
-      </AppBar>
-
-      <TextField
-        fullWidth
-        margin="normal"
-        label="Nombre"
-        name="name"
-        value={ownerData.name}
-        onChange={handleChange}
-        error={!!errors.name}
-        helperText={errors.name}
-        required
-      />
-      <TextField
-        fullWidth
-        margin="normal"
-        label="Dirección"
-        name="address"
-        value={ownerData.address}
-        onChange={handleChange}
-      />
-
-      
-      <Autocomplete
-        fullWidth
-        options={regions}
-        getOptionLabel={(option) => option.friendly_name || ""} 
-        value={ownerData.region}
-        onChange={(e, newValue) =>
-          setOwnerData({
-            ...ownerData,
-            region: newValue ? newValue.friendly_name : "",
-          })
-        }
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Región"
-            name="region"
-            InputProps={{
-              ...params.InputProps,
-              endAdornment: (
-                <InputAdornment position="end">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-        )}
-        sx={{ marginTop: 2 }}
-      />
-
-      <TextField
-        fullWidth
-        margin="normal"
-        label="Teléfono"
-        name="phone"
-        value={ownerData.phone}
-        onChange={handleChange}
-      />
-      <TextField
-        fullWidth
-        margin="normal"
-        label="Email"
-        name="email"
-        value={ownerData.email}
-        onChange={handleChange}
-        error={!!errors.email}
-        helperText={errors.email}
-      />
-      <TextField
-        fullWidth
-        margin="normal"
-        label="Identificación Fiscal (DNI/DU/Pasaporte)"
-        name="idNumber"
-        value={ownerData.idNumber}
-        onChange={handleChange}
-      />
-    
-      <Autocomplete
+          )}
+        />
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Teléfono"
+          name="phone"
+          value={owner.phone}
+          onChange={handleChange}
+        />
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Email"
+          name="email"
+          value={owner.email}
+          onChange={handleChange}
+          error={!!errors.email}
+          helperText={errors.email}
+        />
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Identificación regional (DNI/DU/Pasaporte)"
+          name="idNumber"
+          value={owner.regional_id}
+          onChange={handleChange}
+        />
+        <Autocomplete
           margin="normal"
           options={fiscalTypes}
           getOptionLabel={(option) => (option ? option.name : "")}
-          value={ownerData.fiscal_type}
-          onChange={(event, newValue) => {
-            setOwnerData({ ...ownerData, fiscalType: newValue });
+          value={owner.fiscal_type}
+          onChange={(e, newValue) => {
+            setOwner({ ...owner, fiscalType: newValue });
           }}
           renderInput={(params) => (
             <TextField
@@ -259,51 +209,45 @@ const EditOwner = () => {
             />
           )}
         />
-      <TextField
-        fullWidth
-        margin="normal"
-        label="Notas Adicionales"
-        name="additionalNotes"
-        value={ownerData.additionalNotes}
-        onChange={handleChange}
-        multiline
-        rows={4}
-      />
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginTop: "16px",
-        }}
-      >
-        <Button
-          variant="contained"
-          color="primary"
-          type="submit"
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Notas"
+          name="notes"
+          value={owner.notes}
+          onChange={handleChange}
+          multiline
+          rows={4}
+        />
+
+        <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            borderRadius: "50%",
-            minWidth: "56px",
-            height: "56px",
+            position: "fixed",
+            bottom: 16,
+            right: 16,
+            zIndex: 1000,
           }}
         >
-          <CheckIcon />
-        </Button>
-      </div>
-      <Snackbar
-        open={!!message.text}
-        autoHideDuration={4000}
-        onClose={() => setMessage({ type: "", text: "" })}
-      >
-        <Alert
-          severity={message.type}
-          onClose={() => setMessage({ type: "", text: "" })}
-        >
-          {message.text}
-        </Alert>
-      </Snackbar>
-    </form>
+          <Fab
+            color="primary"
+            aria-label="add"
+            onClick={handleSubmit}
+          >
+            <CheckIcon />
+          </Fab>
+        </Box>
+
+        {isLoading && (
+          <CircularProgress
+            size={42}
+            sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
+          />
+        )}
+        <Dialog open={isLoading} />
+        
+      </Box>
+
+    </Container>
   );
 };
 

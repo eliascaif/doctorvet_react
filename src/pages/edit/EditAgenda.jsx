@@ -134,22 +134,6 @@ const EditAgenda = ({ isUpdate = false, initialAgendaData = null }) => {
 
   return (
     <Container>
-      {/* Barra Superior
-      <AppBar position="static" color="primary" sx={{ mt: 4 }}>
-        <Toolbar>
-          <IconButton color="inherit" onClick={handleBackClick} edge="start" sx={{ mr: 2 }}>
-            <ArrowBackIcon />
-          </IconButton>
-          <Box sx={{ ml: 2 }}>
-            <Typography variant="h6" component="div">
-              {isUpdate ? 'Editar Agenda' : 'Nueva Agenda'}
-            </Typography>
-            <Typography variant="subtitle2" component="div">
-              Completa los datos
-            </Typography>
-          </Box>
-        </Toolbar>
-      </AppBar> */}
 
       {/* Contenido del formulario */}
       <Box sx={{ mt: 2, mb: 4 }}>
