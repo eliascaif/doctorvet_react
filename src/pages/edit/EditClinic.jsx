@@ -1,4 +1,8 @@
 import { useState, useEffect, useRef } from "react";
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 import PropTypes from "prop-types";
 import { TextField, Fab, Container, Box, Snackbar, Alert } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
@@ -6,7 +10,11 @@ import { useNavigate } from "react-router-dom";
 import * as lib from "../../utils/lib";
 import axios from "axios";
 import { useSnackbar } from "../../providers/SnackBarProvider";
+<<<<<<< Updated upstream
 import { useTitle } from "../../providers/TitleProvider";
+=======
+import { useAppBar } from "../../providers/AppBarProvider";
+>>>>>>> Stashed changes
 import { strings } from "../../constants/strings";
 import { useLoading } from "../../providers/LoadingProvider";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -35,7 +43,11 @@ const EditClinic = ({ updateClinic = null }) => {
 
   const navigate = useNavigate();
   const snackbar = useSnackbar();
+<<<<<<< Updated upstream
   const { updateTitle } = useTitle();
+=======
+  const { updateTitle } = useAppBar();
+>>>>>>> Stashed changes
   const { isLoading, setIsLoading } = useLoading();
 
   useEffect(() => {
@@ -55,7 +67,11 @@ const EditClinic = ({ updateClinic = null }) => {
 
   const handleDateChange = (newValue) => {
     setClinicData({ ...clinicData, date: newValue });
+<<<<<<< Updated upstream
     setErrors((prev) => ({ ...prev, date: "" })); 
+=======
+    setErrors((prev) => ({ ...prev, date: "" })); // Limpia error al actualizar
+>>>>>>> Stashed changes
   };
 
   const handleTimeChange = (newValue) => {
@@ -203,6 +219,7 @@ const EditClinic = ({ updateClinic = null }) => {
           rows={4}
         />
 
+<<<<<<< Updated upstream
         <Box
           sx={{
             position: "fixed",
@@ -212,6 +229,10 @@ const EditClinic = ({ updateClinic = null }) => {
           }}
         >
           <Fab color="primary" aria-label="add" onClick={handleSubmit}>
+=======
+        <Box sx={{ position: "fixed", bottom: 16, right: 16, zIndex: 1000 }}>
+          <Fab color="primary" aria-label="save" onClick={handleSubmit}>
+>>>>>>> Stashed changes
             <CheckIcon />
           </Fab>
         </Box>

@@ -57,7 +57,10 @@ function Main() {
             sx={{
               ml: `${172}px`,
               display: title ? 'flex' : 'none',
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
               alignItems: 'center',
             }}
           >

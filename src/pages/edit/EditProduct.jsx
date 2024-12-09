@@ -16,7 +16,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import * as lib from "../../utils/lib";
 import axios from "axios";
 import { useSnackbar } from "../../providers/SnackBarProvider";
+<<<<<<< Updated upstream
 import { useTitle } from "../../providers/TitleProvider";
+=======
+
+import { useAppBar } from "../../providers/AppBarProvider";
+
+>>>>>>> Stashed changes
 import { strings } from "../../constants/strings";
 import { useLoading } from "../../providers/LoadingProvider";
 import PropTypes from "prop-types";
@@ -56,12 +62,20 @@ const EditProduct = ({ updateProduct = null }) => {
     finalPrice: useRef(null),
   });
   const [checked, setChecked] = useState(false);
+<<<<<<< Updated upstream
   
+=======
+>>>>>>> Stashed changes
 
   const { id } = useParams();
   const navigate = useNavigate();
   const snackbar = useSnackbar();
+<<<<<<< Updated upstream
   const { updateTitle } = useTitle();
+=======
+  const { updateTitle } = useAppBar();
+
+>>>>>>> Stashed changes
   const { isLoading, setIsLoading } = useLoading();
 
   useEffect(() => {
@@ -74,34 +88,29 @@ const EditProduct = ({ updateProduct = null }) => {
     setIsLoading(true);
 
     const fetchForInput = async () => {
-      setIsLoading(true); 
+      setIsLoading(true);
 
       try {
-        
         const [regionsData, fiscalTypesData, productsData] = await Promise.all([
-          lib.fetchRegions(), 
+          lib.fetchRegions(),
           lib.fetchFiscalTypes(""),
-          lib.fetchProducts(), 
+          lib.fetchProducts(),
         ]);
 
-        
-        if (productsData) setCategories(productsData); 
-        if (fiscalTypesData) setUnits(fiscalTypesData); 
+        if (productsData) setCategories(productsData);
+        if (fiscalTypesData) setUnits(fiscalTypesData);
       } catch (error) {
-        
         lib.handleError(error);
-        snackbar("Error al cargar los datos necesarios"); 
+        snackbar("Error al cargar los datos necesarios");
       } finally {
-        setIsLoading(false); 
+        setIsLoading(false);
       }
     };
 
-    
     fetchForInput();
 
-   
     if (id && !updateProduct) {
-      fetchProduct(id); 
+      fetchProduct(id);
     }
   }, [id, updateProduct]);
 
@@ -196,7 +205,7 @@ const EditProduct = ({ updateProduct = null }) => {
         <Autocomplete
           fullWidth
           options={categories}
-          getOptionLabel={(option) => option.name} 
+          getOptionLabel={(option) => option.name}
           value={product.category}
           onChange={handleCategoryChange}
           renderInput={(params) => (
@@ -211,7 +220,7 @@ const EditProduct = ({ updateProduct = null }) => {
         <Autocomplete
           fullWidth
           options={units}
-          getOptionLabel={(option) => option.name} 
+          getOptionLabel={(option) => option.name}
           value={product.unit}
           onChange={handleUnitChange}
           renderInput={(params) => (
@@ -332,7 +341,7 @@ const EditProduct = ({ updateProduct = null }) => {
             value={product.price}
             onInputChange={handleChange}
             inputValue={product.price}
-            options={[]} 
+            options={[]}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -383,7 +392,7 @@ const EditProduct = ({ updateProduct = null }) => {
             value={product.price}
             onInputChange={handleChange}
             inputValue={product.price}
-            options={[]} 
+            options={[]}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -435,7 +444,7 @@ const EditProduct = ({ updateProduct = null }) => {
             value={product.price}
             onInputChange={handleChange}
             inputValue={product.price}
-            options={[]} 
+            options={[]}
             renderInput={(params) => (
               <TextField
                 {...params}

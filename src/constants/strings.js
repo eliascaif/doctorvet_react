@@ -15,6 +15,7 @@ export const strings = {
   regional_id: 'DNI / DU / Pasaporte / Identificación regional',
   fiscal_type: 'Tipo fiscal',
   web_page: 'Página web',  
+<<<<<<< Updated upstream
   product_name:'Nombre Producto',
   category:'Categoria',
   unit:'Unidad de Medida',
@@ -35,4 +36,16 @@ export const strings = {
   payment_method:'Método de Pago',
   movement_type:'Tipo de Movimiento',
   update_cash:'Editando Movimiento de Caja',
+=======
+  subscription_until: 'Suscripción hasta',
+  race: 'Raza',
+  pelage : 'Pelaje',
+  gender: 'Género',
+  character: 'Carácter',
+  birthday: 'Nacimiento',
+  weight: 'Peso',
+  chip: 'Chip',
+  update_category: 'Editando categoría',
+  new_category: 'Nueva categoría',
+>>>>>>> Stashed changes
 };
