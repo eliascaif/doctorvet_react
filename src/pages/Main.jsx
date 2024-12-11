@@ -3,11 +3,11 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, Drawer, List, ListItem, ListItemText, Typography, CssBaseline, Box, IconButton } from '@mui/material';
 import { useTitle } from '../providers/TitleProvider';
 import CloseIcon from '@mui/icons-material/Close';
-import BottomSheet from './BottomSheet';
+import BottomSheet from '../layouts/BottomSheet';
 
 const drawerWidth = 240;
 
-function MainLayout() {
+function Main() {
   const location = useLocation();
 
   const navigate = useNavigate();
@@ -93,4 +93,4 @@ function MainLayout() {
   );
 }
 
-export default MainLayout;
+export default Main;

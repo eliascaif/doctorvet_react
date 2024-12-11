@@ -8,7 +8,7 @@ import LoginChoice from './pages/LoginChoice';
 import LoginForgotPassword from './pages/LoginForgotPassword';
 import LoginForgotPassword2 from './pages/LoginForgotPassword2';
 
-import MainLayout from './layouts/MainLayout';
+import Main from './pages/Main';
 import Home from './pages/Home';
 import About from './pages/About';
 
@@ -43,7 +43,7 @@ function App() {
           path="main"
           element={
             <PrivateRoute>
-              <MainLayout />
+              <Main />
             </PrivateRoute>
           }
         >
