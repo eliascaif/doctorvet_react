@@ -1,4 +1,3 @@
-import { useSnackbar } from '../providers/SnackBarProvider';
 import axios from 'axios';
 import pako from 'pako';
 import { strings } from '../constants/strings';
@@ -114,6 +113,33 @@ export const fetchOwnersForInput = async () => {
   } else {
     // console.log('cached data');
     return JSON.parse(localStorage.getItem('owners_for_input'));
+  }
+};
+export const fetchPetsForInput = async () => {
+  const mustDoRequest_ = await mustDoRequest(undefined, 'pets_for_input');
+
+  if (mustDoRequest_) {
+    try {
+      const queryParams = {
+        for_input: '',
+        compress: '',
+      };
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}pets`, 
+        { params: queryParams, withCredentials: true },
+      );
+      //console.log(response);
+      
+      const stringData = compressedBase64ToString(response.data.data);
+      localStorage.setItem('pets_for_input', stringData);
+      return JSON.parse(stringData);
+    } catch (error) {
+      handleError(error);
+      return null;
+    }
+  } else {
+    // console.log('cached data');
+    return JSON.parse(localStorage.getItem('pets_for_input'));
   }
 };
 
