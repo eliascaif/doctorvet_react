@@ -20,6 +20,8 @@ import SearchVet from './pages/search/SearchVet';
 import EditOwner from './pages/edit/EditOwner';
 
 import { useAuth } from './providers/AuthProvider';
+import ViewOwner from './pages/view/ViewOwner';
+import ViewVet from './pages/view/ViewVet';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -48,7 +50,11 @@ function App() {
           }
         >
           <Route path="home" element={<Home />} />
+          
+          {/* debug */}
           <Route path="about" element={<About />} />
+          <Route path="view-owner/:id" element={<ViewOwner />} />
+          <Route path="view-vet" element={<ViewVet />} />
 
           {/* edits */}
           <Route path="edit-owner" element={<EditOwner />} />

@@ -142,6 +142,84 @@ export const fetchPetsForInput = async () => {
     return JSON.parse(localStorage.getItem('pets_for_input'));
   }
 };
+export const fetchOwner = async (id, updateLastView) => {
+  try {
+    const queryParams = {
+      id: id,      
+    };
+
+    if (updateLastView)
+      queryParams.updateLastView = 1;
+
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}owners`, 
+      { params: queryParams, withCredentials: true },
+    );
+    //console.log(response);
+    
+    return response.data.data;
+  } catch (error) {
+    handleError(error);
+    return null;
+  }
+};
+export const fetchPet = async (id, updateLastView) => {
+  try {
+    const queryParams = {
+      id: id,      
+    };
+
+    if (updateLastView)
+      queryParams.updateLastView = 1;
+
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}pets`, 
+      { params: queryParams, withCredentials: true },
+    );
+    //console.log(response);
+    
+    return JSON.parse(response.data.data);
+  } catch (error) {
+    handleError(error);
+    return null;
+  }
+};
+export const fetchVet = async ( id ) => {
+  try {
+    const queryParams = {
+      id: id,      
+    };
+
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}vets`, 
+      { params: queryParams, withCredentials: true },
+    );
+    //console.log(response);
+    
+    return response.data.data;
+  } catch (error) {
+    handleError(error);
+    return null;
+  }
+};
+export const fetchUser = async ( id ) => {
+  try {
+    const queryParams = {
+      id: id,      
+    };
+
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}users`, 
+      { params: queryParams, withCredentials: true },
+    );
+    //console.log(response);
+    
+    return response.data.data;
+  } catch (error) {
+    handleError(error);
+    return null;
+  }
+};
 
 const mustDoRequest = async (table_name, object_name) => {
   
@@ -250,4 +328,13 @@ export const verifyCaptchaToken = async (token) => {
     handleError(error);
     return false;
   }
+}
+
+export const formatCurrency = ( number ) => {
+  const currencyFormat = new Intl.NumberFormat(navigator.language, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  return currencyFormat.format(number);
 }

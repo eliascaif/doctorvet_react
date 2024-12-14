@@ -7,7 +7,7 @@ function About() {
   const { updateTitle } = useTitle();
 
   useEffect(() => {
-    updateTitle("Home Page", "Bienvenido a la página principal");
+    updateTitle("", "Home Page", "Bienvenido a la página principal");
   }, [updateTitle]);
 
   return (

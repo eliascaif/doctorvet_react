@@ -6,4 +6,13 @@ export const strings = {
   new_owner: 'Nuevo propietario',
   complete_data: 'Completa los datos',
   update_owner: 'Editando propietario',
+  name: 'Nombre',
+  address: 'Dirección',
+  email: 'Email',
+  phone: 'Teléfono',
+  region: 'Región',
+  notes: 'Notas',
+  regional_id: 'DNI / DU / Pasaporte / Identificación regional',
+  fiscal_type: 'Tipo fiscal',
+  web_page: 'Página web',  
 };

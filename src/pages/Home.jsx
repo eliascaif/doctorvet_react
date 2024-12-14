@@ -9,7 +9,7 @@ function Home() {
   const { updateTitle } = useTitle();
 
   useEffect(() => {
-    updateTitle('', '');
+    updateTitle('', '', '');
   }, [updateTitle]);
 
   const handleLogin = async() => {

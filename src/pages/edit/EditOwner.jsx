@@ -5,8 +5,6 @@ import {
   Fab,
   Container,
   Box,
-  Dialog,
-  CircularProgress,
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +13,7 @@ import axios from "axios";
 import { useSnackbar } from "../../providers/SnackBarProvider";
 import { useTitle } from "../../providers/TitleProvider";
 import { strings } from "../../constants/strings"
+import { useLoading } from '../../providers/LoadingProvider';
 
 const EditOwner = ( {updateOwner = null} ) => {
 
@@ -35,20 +34,21 @@ const EditOwner = ( {updateOwner = null} ) => {
     email: useRef(null),
   });
 
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   const [regions, setRegions] = useState([]);
   const [fiscalTypes, setFiscalTypes] = useState([]);
   
   const navigate = useNavigate();
   const snackbar = useSnackbar();
   const { updateTitle } = useTitle();
+  const { isLoading, setIsLoading } = useLoading();
 
   useEffect(() => {
 
     if (updateOwner)
-      updateTitle(strings.update_owner, strings.complete_data);
+      updateTitle('', strings.update_owner, strings.complete_data);
     else
-      updateTitle(strings.new_owner, strings.complete_data);
+      updateTitle('', strings.new_owner, strings.complete_data);
     
     setIsLoading(true);
 
@@ -92,7 +92,7 @@ const EditOwner = ( {updateOwner = null} ) => {
         { withCredentials: true }
       );
       // console.log(response);
-      navigate(`/owners/${response.data.data.id}`);
+      navigate(`/main/view-owner/${response.data.data.id}`);
     } catch (error) {
       lib.handleError(error);
       snackbar('Error, intenta nuevamente');
@@ -131,7 +131,7 @@ const EditOwner = ( {updateOwner = null} ) => {
         <TextField
           fullWidth
           margin="normal"
-          label="Nombre *"
+          label={strings.name + ' *'}
           name="name"
           value={owner.name}
           onChange={handleChange}
@@ -142,7 +142,7 @@ const EditOwner = ( {updateOwner = null} ) => {
         <TextField
           fullWidth
           margin="normal"
-          label="Dirección"
+          label={strings.address}
           name="address"
           value={owner.address}
           onChange={handleChange}
@@ -161,7 +161,7 @@ const EditOwner = ( {updateOwner = null} ) => {
           renderInput={(params) => (
             <TextField
               {...params}
-              label="Región"
+              label={strings.region}
               name="region"
               margin="normal"
             />
@@ -170,7 +170,7 @@ const EditOwner = ( {updateOwner = null} ) => {
         <TextField
           fullWidth
           margin="normal"
-          label="Teléfono"
+          label={strings.phone}
           name="phone"
           value={owner.phone}
           onChange={handleChange}
@@ -178,7 +178,7 @@ const EditOwner = ( {updateOwner = null} ) => {
         <TextField
           fullWidth
           margin="normal"
-          label="Email"
+          label={strings.email}
           name="email"
           value={owner.email}
           onChange={handleChange}
@@ -188,7 +188,7 @@ const EditOwner = ( {updateOwner = null} ) => {
         <TextField
           fullWidth
           margin="normal"
-          label="Identificación regional (DNI/DU/Pasaporte)"
+          label={strings.regional_id}
           name="idNumber"
           value={owner.regional_id}
           onChange={handleChange}
@@ -204,7 +204,7 @@ const EditOwner = ( {updateOwner = null} ) => {
           renderInput={(params) => (
             <TextField
               {...params}
-              label="Tipo fiscal"
+              label={strings.fiscal_type}
               name="fiscal_type"
               margin="normal"
             />
@@ -213,7 +213,7 @@ const EditOwner = ( {updateOwner = null} ) => {
         <TextField
           fullWidth
           margin="normal"
-          label="Notas"
+          label={strings.notes}
           name="notes"
           value={owner.notes}
           onChange={handleChange}
@@ -238,13 +238,13 @@ const EditOwner = ( {updateOwner = null} ) => {
           </Fab>
         </Box>
 
-        {isLoading && (
+        {/* {isLoading && (
           <CircularProgress
             size={42}
             sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
           />
         )}
-        <Dialog open={isLoading} />
+        <Dialog open={isLoading} /> */}
         
       </Box>
 
