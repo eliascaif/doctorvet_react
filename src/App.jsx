@@ -38,6 +38,7 @@ function App() {
         <Route path="login-forgot-password" element={<LoginForgotPassword />} />
         <Route path="login-forgot-password-2" element={<LoginForgotPassword2 />} />
         <Route path="edit-vet" element={<EditVet />} />
+        <Route path="edit-pet" element={<EditPet />} />
         <Route path="search-vet" element={<SearchVet />} />
         
         {/* private */}
@@ -58,6 +59,7 @@ function App() {
 
           {/* edits */}
           <Route path="edit-owner" element={<EditOwner />} />
+          <Route path="edit-pet" element={<EditPet />} />
 
           {/* search */}
           <Route path="search-test" element={<SearchTest />} />
