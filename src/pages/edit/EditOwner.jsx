@@ -121,7 +121,6 @@ const EditOwner = ( {updateOwner = null} ) => {
 
   return (
     <Container>
-
       <Box 
         sx={{ mb: 4 }}
         component="form"

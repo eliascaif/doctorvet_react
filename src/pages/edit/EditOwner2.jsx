@@ -7,9 +7,9 @@ import { useSnackbar } from "../../providers/SnackBarProvider";
 import { useTitle } from "../../providers/TitleProvider";
 import { strings } from "../../constants/strings";
 import { useLoading } from "../../providers/LoadingProvider";
-import EditPage from "../base/EditPage"; // Importar la página base
+import EditPage from "../../pages/edit/EditPage";
 
-const EditOwner = ({ updateOwner = null }) => {
+const EditOwner2 = ({ updateOwner = null }) => {
   const [owner, setOwner] = useState(
     updateOwner || {
       name: "",
@@ -37,7 +37,7 @@ const EditOwner = ({ updateOwner = null }) => {
 
   useEffect(() => {
     updateTitle(
-      "",
+      updateOwner ? updateOwner.thumb_url : '',
       updateOwner ? strings.update_owner : strings.new_owner,
       strings.complete_data
     );
@@ -50,7 +50,7 @@ const EditOwner = ({ updateOwner = null }) => {
       setIsLoading(false);
     };
     fetchForInput();
-  }, [updateOwner, updateTitle, setIsLoading]);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,18 +65,27 @@ const EditOwner = ({ updateOwner = null }) => {
     )
       return;
 
-    if (updateOwner) update();
-    else save();
+    save();
   };
 
   const save = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}owners`,
-        owner,
-        { withCredentials: true }
-      );
+      let response;
+      if (updateOwner) {
+        response = await axios.put(
+          `${import.meta.env.VITE_API_URL}owners`,
+          owner,
+          { withCredentials: true }
+        );
+      } else {
+        response = await axios.post(
+          `${import.meta.env.VITE_API_URL}owners`,
+          owner,
+          { withCredentials: true }
+        );
+      }
+
       navigate(`/main/view-owner/${response.data.data.id}`);
     } catch (error) {
       lib.handleError(error);
@@ -86,25 +95,12 @@ const EditOwner = ({ updateOwner = null }) => {
     }
   };
 
-  const update = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axios.put(
-        `${import.meta.env.VITE_API_URL}owners`,
-        owner,
-        { withCredentials: true }
-      );
-      navigate(`/owners/${response.data.data.id}`);
-    } catch (error) {
-      lib.handleError(error);
-      snackbar("Error, intenta nuevamente");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
-    <EditPage onSubmit={handleSubmit} isLoading={isLoading}>
+    <EditPage 
+      onSubmit={handleSubmit} 
+      // isLoading={isLoading}
+      >
+      
       <TextField
         fullWidth
         margin="normal"
@@ -191,4 +187,4 @@ const EditOwner = ({ updateOwner = null }) => {
   );
 };
 
-export default EditOwner;
+export default EditOwner2;

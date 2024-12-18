@@ -13,14 +13,16 @@ import Home from './pages/Home';
 import About from './pages/About';
 
 import EditVet from './pages/edit/EditVet';
+import EditOwner from './pages/edit/EditOwner';
+import EditOwner2 from './pages/edit/EditOwner2';
 
 import SearchTest from './pages/search/SearchTest';
 import SearchVet from './pages/search/SearchVet';
 
-import EditOwner from './pages/edit/EditOwner';
 
 import { useAuth } from './providers/AuthProvider';
 import ViewOwner from './pages/view/ViewOwner';
+
 import ViewVet from './pages/view/ViewVet';
 
 function App() {
@@ -58,6 +60,7 @@ function App() {
 
           {/* edits */}
           <Route path="edit-owner" element={<EditOwner />} />
+          <Route path="edit-owner2" element={<EditOwner2 />} />
 
           {/* search */}
           <Route path="search-test" element={<SearchTest />} />

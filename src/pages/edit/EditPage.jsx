@@ -5,7 +5,7 @@ import CheckIcon from "@mui/icons-material/Check";
 const EditPage = ({ 
   children, 
   onSubmit, 
-  isLoading, 
+  /*isLoading, */
   fabIcon = <CheckIcon />,
   fabAriaLabel = "save",
 }) => {

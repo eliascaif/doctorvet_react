@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
-  SwipeableDrawer,
   Box,
   Typography,
-  TextField,
-  LinearProgress,
   Container,
   CircularProgress,
   Dialog,
@@ -15,33 +12,43 @@ import { useTitle } from '../../providers/TitleProvider';
 import { fetchVet } from '../../utils/lib';
 import { strings } from "../../constants/strings"
 import { useConfig } from '../../providers/ConfigProvider';
+import { useLoading } from '../../providers/LoadingProvider';
 
 function ViewVet() {
-
   const [vet, setVet] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { updateTitle } = useTitle();
-  const { config } = useConfig();
+  const {updateTitle} = useTitle();
+  const {config} = useConfig();
+  // const { isLoading, setIsLoading } = useLoading();
 
-  useEffect(() => {
-
-    setIsLoading(true);
-
-    const fetchVet_ = async () => {
-      const vet = await fetchVet(config.vet.id);
-      setVet(vet);
-      updateTitle(vet.thumb_url, vet.name, vet.email);
-      
-      setIsLoading(false);
-    };
-    fetchVet_();
-
-  }, []);
+  useEffect(() => { 
+    if (config) {
+      setIsLoading(true);
+      const fetchVet_ = async () => {
+        const vet = await fetchVet(config.vet.id);
+        setVet(vet);
+        updateTitle(vet.thumb_url, vet.name, vet.email);
+        setIsLoading(false);
+      };
+      fetchVet_();
+    }
+  }, [config]);
 
   const handleFabClick = async () => {
   };
   
-  if (!vet) return (
+  // if (isLoading || !config || !vet) return
+  // (
+  //   <>
+  //     <CircularProgress
+  //       size={42}
+  //       sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
+  //     />
+  //     <Dialog open={isLoading} />
+  //   </>
+  // );
+  if (isLoading) return
+  (
     <>
       <CircularProgress
         size={42}
