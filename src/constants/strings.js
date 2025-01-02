@@ -15,4 +15,13 @@ export const strings = {
   regional_id: 'DNI / DU / Pasaporte / Identificación regional',
   fiscal_type: 'Tipo fiscal',
   web_page: 'Página web',  
+  subscription_until: 'Suscripción hasta',
+  race: 'Raza',
+  pelage : 'Pelage',
+  gender: 'Género',
+  character: 'Carácter',
+  birthday: 'Nacimiento',
+  weight: 'Peso',
+  chip: 'Chip',
+  
 };

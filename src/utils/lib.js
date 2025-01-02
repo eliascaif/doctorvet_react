@@ -156,7 +156,6 @@ export const fetchOwner = async (id, updateLastView) => {
       { params: queryParams, withCredentials: true },
     );
     //console.log(response);
-    
     return response.data.data;
   } catch (error) {
     handleError(error);
@@ -176,15 +175,14 @@ export const fetchPet = async (id, updateLastView) => {
       `${import.meta.env.VITE_API_URL}pets`, 
       { params: queryParams, withCredentials: true },
     );
-    //console.log(response);
-    
-    return JSON.parse(response.data.data);
+    // console.log(response);    
+    return response.data.data;
   } catch (error) {
     handleError(error);
     return null;
   }
 };
-export const fetchVet = async ( id ) => {
+export const fetchVet = async (id) => {
   try {
     const queryParams = {
       id: id,      
@@ -202,7 +200,7 @@ export const fetchVet = async ( id ) => {
     return null;
   }
 };
-export const fetchUser = async ( id ) => {
+export const fetchUser = async (id) => {
   try {
     const queryParams = {
       id: id,      
@@ -220,6 +218,77 @@ export const fetchUser = async ( id ) => {
     return null;
   }
 };
+
+export const fetchRecent = async (page, table) => {
+  try {
+    const queryParams = {
+      recent: '',
+      page: page,      
+    };
+
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}${table}`, 
+      { params: queryParams, withCredentials: true },
+    );
+    //console.log(response.data.data.content);
+    return response.data.data.content;
+  } catch (error) {
+    handleError(error);
+    return null;
+  }
+};
+export const fetch = async (table, params) => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}${table}`, 
+      { params: params ? params : null, withCredentials: true },
+    );
+    // console.log(response.data.data)
+    return response.data.data;
+  } catch (error) {
+    handleError(error);
+    return null;
+  }
+};
+
+// export const fetchOwnersRecent = async (page) => {
+//   try {
+//     const queryParams = {
+//       recent: '',
+//       page: page,      
+//     };
+
+//     const response = await axios.get(
+//       `${import.meta.env.VITE_API_URL}owners`, 
+//       { params: queryParams, withCredentials: true },
+//     );
+//     //console.log(response.data.data.content);
+    
+//     return response.data.data.content;
+//   } catch (error) {
+//     handleError(error);
+//     return null;
+//   }
+// };
+// export const fetchPetsRecent = async (page) => {
+//   try {
+//     const queryParams = {
+//       recent: '',
+//       page: page,      
+//     };
+
+//     const response = await axios.get(
+//       `${import.meta.env.VITE_API_URL}pets`, 
+//       { params: queryParams, withCredentials: true },
+//     );
+//     //console.log(response.data.data.content);
+    
+//     return response.data.data.content;
+//   } catch (error) {
+//     handleError(error);
+//     return null;
+//   }
+// };
 
 const mustDoRequest = async (table_name, object_name) => {
   
@@ -244,7 +313,6 @@ const mustDoRequest = async (table_name, object_name) => {
   const mustDoRequest = !last_update_cache || (last_update_server_date > last_update_local_date);
   return mustDoRequest;
 }
-
 const getLastUpdate = async (table_name, object_name) => {
   try {
     let url = `${import.meta.env.VITE_API_URL}sys_last_update`;
@@ -266,7 +334,6 @@ const getLastUpdate = async (table_name, object_name) => {
     return null;
   }
 }
-
 const compressedBase64ToString = (base64string) => {
   const binaryString = atob(base64string); // Decodificar Base64 a binario
   const len = binaryString.length;
@@ -277,7 +344,6 @@ const compressedBase64ToString = (base64string) => {
   const decompressedArray = pako.inflate(compressedArray, { to: 'string' });
   return decompressedArray;
 }
-
 export const validateNonEmpty = (fieldName, fieldValue, setErrFunc, fieldRef) => {
   if (fieldValue.trim()) {
     setErrFunc({});
@@ -318,7 +384,6 @@ export const validatePassword = (field, setErrFunc, fieldRef) => {
   setErrFunc('');
   return true;
 };
-
 export const verifyCaptchaToken = async (token) => {
   try {
     const res = await axios.post(`${import.meta.env.VITE_API_URL}users?verify_captcha_web`, { response: token });
@@ -329,12 +394,54 @@ export const verifyCaptchaToken = async (token) => {
     return false;
   }
 }
-
-export const formatCurrency = ( number ) => {
+export const formatCurrency = (number) => {
   const currencyFormat = new Intl.NumberFormat(navigator.language, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
 
   return currencyFormat.format(number);
+}
+export const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat(navigator.language).format(date);
+};
+export const formatDateLong = (dateString) => {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat(navigator.language, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(date);
+};
+export const formatHour = (dateString, hour12 = false) => {
+  const date = new Date(dateString);
+  const hour = new Intl.DateTimeFormat(undefined, {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: hour12,
+  }).format(date);
+  return hour;
+}
+export const getSupplyStr = (supplyStr) => {
+  if (supplyStr == 'NA')
+    return 'Sin suministro';
+  else if (supplyStr == 'PENDING')
+    return 'Suministro pendiente';
+  else if (supplyStr == 'EXPIRED')
+    return 'Suministro vencido';
+  else
+    return 'Suministro pendiente y vencido';
+}
+export const getReasonStr = (reasonStr) => {
+  if (reasonStr == 'SUPPLY')
+    return 'Suministro';
+  if (reasonStr == 'SELL')
+    return 'Venta';
+  if (reasonStr == 'CLINIC')
+    return 'Clínica';
+  if (reasonStr == 'RECIPE')
+    return 'Receta';
+  if (reasonStr == 'CLINIC2')
+    return 'Clínica extendida';
 }

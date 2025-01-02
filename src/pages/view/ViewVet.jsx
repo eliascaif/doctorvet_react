@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import AddIcon from "@mui/icons-material/Add";
 import { useTitle } from '../../providers/TitleProvider';
-import { fetchVet } from '../../utils/lib';
+import { fetchVet, formatDate } from '../../utils/lib';
 import { strings } from "../../constants/strings"
 import { useConfig } from '../../providers/ConfigProvider';
 import { useLoading } from '../../providers/LoadingProvider';
@@ -141,13 +141,17 @@ function ViewVet() {
         </Box>
       )}
 
-      {/* {isLoading && (
-        <CircularProgress
-          size={42}
-          sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
-        />
+      {vet.subscription_until && (
+        <Box style={{ marginBottom: '16px' }}>
+          <Typography variant="caption">{strings.subscription_until}</Typography>
+          <Typography
+            variant="body1"
+            style={{ fontSize: '16px' }}
+          >
+            {formatDate(vet.subscription_until)}
+          </Typography>
+        </Box>
       )}
-      <Dialog open={isLoading} /> */}
 
       <Box
         sx={{
@@ -171,4 +175,3 @@ function ViewVet() {
 }
 
 export default ViewVet;
-

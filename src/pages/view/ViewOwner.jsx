@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
-  SwipeableDrawer,
   Box,
   Typography,
-  TextField,
-  LinearProgress,
   Container,
   CircularProgress,
   Dialog,
@@ -15,33 +12,36 @@ import { useTitle } from '../../providers/TitleProvider';
 import { fetchOwner, formatCurrency } from '../../utils/lib';
 import { strings } from "../../constants/strings"
 import ListItemRectangle from '../../layouts/ListItemRectangle';
-import { useParams } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 
 function ViewOwner() {
 
-  const { id } = useParams();
+  const location = useLocation();
+  const [id, setId] = useState(location.state.id);
   const [owner, setOwner] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { updateTitle } = useTitle();
+  const {updateTitle} = useTitle();
 
   useEffect(() => {
-
     setIsLoading(true);
-
     const fetchOwner_ = async () => {
-      const owner = await fetchOwner(id, true);
+      const owner = await fetchOwner(id, !!location.state.updateLastView);
       setOwner(owner);
       updateTitle(owner.thumb_url, owner.name, owner.email);
-      
       setIsLoading(false);
     };
     fetchOwner_();
-
-  }, [id]);
+  }, []);
 
   const handleFabClick = async () => {
   };
   
+  if (!id) return (
+    <Typography variant="caption" style={{ margin: '8px' }}>
+      No hay id
+    </Typography>
+  );
+
   if (!owner) return (
     <>
       <CircularProgress
@@ -105,21 +105,6 @@ function ViewOwner() {
             No hay mascotas. Presiona + para crear
           </Typography>
         )}
-
-        {/* <Typography variant="caption" style={{ marginBottom: '8px' }}>
-          Title
-        </Typography>
-        <Box
-          style={{
-            display: 'flex',
-            overflowX: 'auto',
-            padding: '8px 0',
-          }}
-        >
-          <Box id="linear_pets" style={{ display: 'flex', gap: '8px' }}>
-          </Box>
-        </Box> */}
-
       </Box>
 
       {/* Info Section */}
@@ -217,14 +202,6 @@ function ViewOwner() {
           </Typography>
         </Box>
       )}
-
-      {/* {isLoading && (
-        <CircularProgress
-          size={42}
-          sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
-        />
-      )}
-      <Dialog open={isLoading} /> */}
 
       <Box
         sx={{
