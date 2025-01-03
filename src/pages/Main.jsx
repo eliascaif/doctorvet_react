@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, Drawer, List, ListItem, ListItemText, Typography, CssBaseline, Box, IconButton, ListItemAvatar, Avatar, Divider, Dialog, CircularProgress } from '@mui/material';
-import { useTitle } from '../providers/TitleProvider';
+import { useAppBar } from '../providers/AppBarProvider';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import BottomSheet from '../layouts/BottomSheet';
@@ -21,7 +21,7 @@ function Main() {
   };
 
   const { config, isLoadingConfig, error } = useConfig();
-  const { thumbUrl, title, subtitle, showCloseIcon } = useTitle();
+  const { thumbUrl, title, subtitle, showCloseIcon } = useAppBar();
 
   //Empty icons for avatar
   const isOwnerRoute = location.pathname.includes('owner');
@@ -67,6 +67,7 @@ function Main() {
               alignItems: 'center',
             }}
           >
+            {console.log(thumbUrl)}
             {thumbUrl != undefined &&
               <Avatar
                 src={thumbUrl}
@@ -181,23 +182,7 @@ function Main() {
       <Box component="main" sx={{ flexGrow: 1, padding: 3, margin: 0 }}>
         <Toolbar />
         <Outlet />
-        <BottomSheet />
-
-        {/* {(config == null) && (
-          <CircularProgress
-            size={42}
-            sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
-          />
-        )}
-        <Dialog open={config == null} /> */}
-        {/* {isLoading && (
-          <CircularProgress
-            size={42}
-            sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
-          />
-        )}
-        <Dialog open={isLoading} /> */}
-  
+        <BottomSheet />  
       </Box>
 
     </Box>

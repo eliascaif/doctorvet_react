@@ -9,7 +9,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { fetchRecent } from '../utils/lib';
 import PetsRecentList from '../layouts/PetsRecentList';
-import { useTitle } from '../providers/TitleProvider';
+import { useAppBar } from '../providers/AppBarProvider';
 import { useConfig } from '../providers/ConfigProvider';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,14 +19,14 @@ function MainPets() {
   const [pets, setPets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  const {updateTitle} = useTitle();
+  const {updateTitle} = useAppBar();
   const {config, isLoadingConfig} = useConfig();
 
   useEffect(() => {
     const fetchPetsRecent = async () => {
       const pets = await fetchRecent(page, 'pets');
       setPets(pets);
-      updateTitle('', config.vet.pet_naming_es_plural);
+      updateTitle(undefined, config.vet.pet_naming_es_plural);
       setIsLoading(false);
     };
     fetchPetsRecent();

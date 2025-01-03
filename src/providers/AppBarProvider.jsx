@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState } from 'react';
 
-const TitleContext = createContext();
+const AppBarContext = createContext();
 
-export const TitleProvider = ({ children }) => {
+export const AppBarProvider = ({ children }) => {
   const [thumbUrl, setThumbUrl] = useState("");
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
@@ -16,10 +16,10 @@ export const TitleProvider = ({ children }) => {
   };
 
   return (
-    <TitleContext.Provider value={{ thumbUrl, title, subtitle, updateTitle }}>
+    <AppBarContext.Provider value={{ thumbUrl, title, subtitle, updateTitle }}>
       {children}
-    </TitleContext.Provider>
+    </AppBarContext.Provider>
   );
 };
 
-export const useTitle = () => useContext(TitleContext);
+export const useAppBar = () => useContext(AppBarContext);

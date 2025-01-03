@@ -8,7 +8,7 @@ import {
   Fab,
 } from '@mui/material';
 import AddIcon from "@mui/icons-material/Add";
-import { useTitle } from '../../providers/TitleProvider';
+import { useAppBar } from '../../providers/AppBarProvider';
 import { fetchVet, formatDate } from '../../utils/lib';
 import { strings } from "../../constants/strings"
 import { useConfig } from '../../providers/ConfigProvider';
@@ -17,7 +17,7 @@ import { useLoading } from '../../providers/LoadingProvider';
 function ViewVet() {
   const [vet, setVet] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const {updateTitle} = useTitle();
+  const {updateTitle} = useAppBar();
   const {config} = useConfig();
   // const { isLoading, setIsLoading } = useLoading();
 
@@ -27,7 +27,7 @@ function ViewVet() {
       const fetchVet_ = async () => {
         const vet = await fetchVet(config.vet.id);
         setVet(vet);
-        updateTitle(vet.thumb_url, vet.name, vet.email);
+        updateTitle(vet.thumb_url || '', vet.name, vet.email);
         setIsLoading(false);
       };
       fetchVet_();
@@ -54,7 +54,7 @@ function ViewVet() {
         size={42}
         sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
       />
-      <Dialog open={isLoading} />
+      {/* <Dialog open={isLoading} /> */}
     </>
   );
 

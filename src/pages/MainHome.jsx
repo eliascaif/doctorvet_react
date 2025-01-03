@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import AddIcon from "@mui/icons-material/Add";
 import { fetch } from '../utils/lib';
-import { useTitle } from '../providers/TitleProvider';
+import { useAppBar } from '../providers/AppBarProvider';
 //import { useConfig } from '../providers/ConfigProvider';
 import { useNavigate } from 'react-router-dom';
 import HomeList from '../layouts/HomeList';
@@ -18,7 +18,7 @@ function MainHome() {
   const [notifications, setNotifications] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  const {updateTitle} = useTitle();
+  const {updateTitle} = useAppBar();
   //const {config, isLoadingConfig} = useConfig();
 
   useEffect(() => {

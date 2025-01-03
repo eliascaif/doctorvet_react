@@ -5,7 +5,7 @@ import { theme } from './theme/ThemeProviderLocal.jsx';
 import { SnackBarProvider } from './providers/SnackBarProvider.jsx'
 import { AuthProvider } from './providers/AuthProvider.jsx';
 import { ConfigProvider } from './providers/ConfigProvider.jsx';
-import { TitleProvider } from './providers/TitleProvider.jsx';
+import { AppBarProvider } from './providers/AppBarProvider.jsx';
 import { LoadingProvider } from './providers/LoadingProvider.jsx';
 import App from './App.jsx'
 
@@ -16,9 +16,9 @@ createRoot(document.getElementById('root')).render(
         <LoadingProvider>
           <AuthProvider>
             <ConfigProvider>
-              <TitleProvider>
+              <AppBarProvider>
                 <App />
-              </TitleProvider>
+              </AppBarProvider>
             </ConfigProvider>
           </AuthProvider>
         </LoadingProvider>

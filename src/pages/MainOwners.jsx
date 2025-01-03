@@ -9,7 +9,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { fetchRecent } from '../utils/lib';
 import OwnersRecentList from '../layouts/OwnersRecentList';
-import { useTitle } from '../providers/TitleProvider';
+import { useAppBar } from '../providers/AppBarProvider';
 import { useConfig } from '../providers/ConfigProvider';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,7 +19,7 @@ function MainOwners() {
   const [owners, setOwners] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  const {updateTitle} = useTitle();
+  const {updateTitle} = useAppBar();
   const {config, isLoadingConfig} = useConfig();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ function MainOwners() {
       setIsLoading(true);
       const owners = await fetchRecent(page, 'owners');
       setOwners(owners);
-      updateTitle('', config.vet.owner_naming_es_plural);
+      updateTitle(undefined, config.vet.owner_naming_es_plural);
       setIsLoading(false);
     };
     fetchOwnersRecent();

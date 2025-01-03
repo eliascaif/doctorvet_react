@@ -8,7 +8,7 @@ import {
   Fab,
 } from '@mui/material';
 import AddIcon from "@mui/icons-material/Add";
-import { useTitle } from '../../providers/TitleProvider';
+import { useAppBar } from '../../providers/AppBarProvider';
 import { fetchOwner, formatCurrency } from '../../utils/lib';
 import { strings } from "../../constants/strings"
 import ListItemRectangle from '../../layouts/ListItemRectangle';
@@ -20,14 +20,14 @@ function ViewOwner() {
   const [id, setId] = useState(location.state.id);
   const [owner, setOwner] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const {updateTitle} = useTitle();
+  const {updateTitle} = useAppBar();
 
   useEffect(() => {
     setIsLoading(true);
     const fetchOwner_ = async () => {
       const owner = await fetchOwner(id, !!location.state.updateLastView);
       setOwner(owner);
-      updateTitle(owner.thumb_url, owner.name, owner.email);
+      updateTitle(owner.thumb_url || '', owner.name, owner.email);
       setIsLoading(false);
     };
     fetchOwner_();
@@ -48,7 +48,7 @@ function ViewOwner() {
         size={42}
         sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
       />
-      <Dialog open={isLoading} />
+      {/* <Dialog open={isLoading} /> */}
     </>
   );
 

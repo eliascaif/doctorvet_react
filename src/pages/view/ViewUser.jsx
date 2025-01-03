@@ -8,7 +8,7 @@ import {
   Fab,
 } from '@mui/material';
 import AddIcon from "@mui/icons-material/Add";
-import { useTitle } from '../../providers/TitleProvider';
+import { useAppBar } from '../../providers/AppBarProvider';
 import { fetchUser, formatDate } from '../../utils/lib';
 import { strings } from "../../constants/strings"
 import { useConfig } from '../../providers/ConfigProvider';
@@ -16,7 +16,7 @@ import { useConfig } from '../../providers/ConfigProvider';
 function ViewUser() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const {updateTitle} = useTitle();
+  const {updateTitle} = useAppBar();
   const {config} = useConfig();
   // const { isLoading, setIsLoading } = useLoading();
 
@@ -26,7 +26,7 @@ function ViewUser() {
       const fetchUser_ = async () => {
         const user = await fetchUser(config.id);
         setUser(user);
-        updateTitle(user.thumb_url, user.name, user.email, false);
+        updateTitle(user.thumb_url || '', user.name, user.email, false);
         setIsLoading(false);
       };
       fetchUser_();
@@ -43,7 +43,7 @@ function ViewUser() {
         size={42}
         sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
       />
-      <Dialog open={isLoading} />
+      {/* <Dialog open={isLoading} /> */}
     </>
   );
 

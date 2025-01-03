@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import * as lib from "../../utils/lib"; 
 import axios from "axios";
 import { useSnackbar } from "../../providers/SnackBarProvider";
-import { useTitle } from "../../providers/TitleProvider";
+import { useAppBar } from "../../providers/AppBarProvider";
 import { strings } from "../../constants/strings"
 import { useLoading } from '../../providers/LoadingProvider';
 
@@ -40,7 +40,7 @@ const EditOwner = ( {updateOwner = null} ) => {
   
   const navigate = useNavigate();
   const snackbar = useSnackbar();
-  const { updateTitle } = useTitle();
+  const { updateTitle } = useAppBar();
   const { isLoading, setIsLoading } = useLoading();
 
   useEffect(() => {

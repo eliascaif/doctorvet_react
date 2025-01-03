@@ -8,7 +8,7 @@ import {
   Fab,
 } from '@mui/material';
 import AddIcon from "@mui/icons-material/Add";
-import { useTitle } from '../../providers/TitleProvider';
+import { useAppBar } from '../../providers/AppBarProvider';
 import { fetchPet, formatCurrency, formatHour, getSupplyStr, formatDateLong, getReasonStr, formatDate } from '../../utils/lib';
 import { strings } from "../../constants/strings"
 import ListItemRectangle from '../../layouts/ListItemRectangle';
@@ -21,15 +21,14 @@ function ViewPet() {
   const [pet, setPet] = useState(null);
   const [petStates, setPetStates] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const {updateTitle} = useTitle();
+  const {updateTitle} = useAppBar();
 
   useEffect(() => {
-    setIsLoading(true);
     const fetchPet_ = async () => {
       const pet = await fetchPet(id, !!location.state.updateLastView);
-      console.log(pet);
+      //console.log(pet);
       setPet(pet);
-      updateTitle(pet.thumb_url, pet.name, pet.email);
+      updateTitle(pet.thumb_url || '', pet.name, pet.owners_es);
 
       //pet states
       if (
@@ -52,7 +51,7 @@ function ViewPet() {
       setIsLoading(false);
     };
     fetchPet_();
-  }, [id]);
+  }, []);
 
   const handleFabClick = async () => {
   };
@@ -69,7 +68,7 @@ function ViewPet() {
         size={42}
         sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
       />
-      <Dialog open={isLoading} />
+      {/* <Dialog open={isLoading} /> */}
     </>
   );
 
@@ -101,22 +100,23 @@ function ViewPet() {
               En sala de espera
             </Typography>
           }
-          {pet.owners.forEach(owner => {
-            if (owner.balance > 0) {
+          {pet.owners
+            .filter(owner => owner.balance > 0)
+            .map(owner => (
               <Typography 
                 key={owner.id}
                 variant="caption">
-                Deuda: {formatCurrency(owner.balance)}
+                {`Deuda: ${formatCurrency(owner.balance)}`}
               </Typography>
-            }
-          })}
-          {pet.states_pet.appointments_tasks.forEach(agenda => {
+            ))
+          }
+          {pet.states_pet.appointments_tasks.map(agenda => (
             <Typography 
               key={agenda.id}
               variant="caption">
               {`Agenda: ${agenda.event_name} ${formatHour(agenda.begin_time)}`}
             </Typography>
-          })}
+          ))}
           {pet.states_pet.supply != 'NA' &&
             <Typography variant="caption">
               {getSupplyStr(pet.states_pet.supply)}
