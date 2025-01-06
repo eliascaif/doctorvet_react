@@ -20,6 +20,7 @@ export const theme = createTheme({
           '& .MuiInputBase-input': {
             color: 'black', // Mantener el color del texto del input en negro
           },
+          
         },
       },
     },

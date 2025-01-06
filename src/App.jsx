@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import  { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import PrivateRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
@@ -24,6 +24,11 @@ import { useAuth } from './providers/AuthProvider';
 import ViewOwner from './pages/view/ViewOwner';
 
 import ViewVet from './pages/view/ViewVet';
+//import EditProduct from './pages/edit/EditProduct';
+import EditAgenda from './pages/edit/EditAgenda';
+import EditClinic from './pages/edit/EditClinic';
+import EditManualCash from './pages/edit/EditManualCash';
+/* import { EditProductCategory } from './pages/edit/EditProductCategory'; */
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -40,7 +45,16 @@ function App() {
         <Route path="login-forgot-password" element={<LoginForgotPassword />} />
         <Route path="login-forgot-password-2" element={<LoginForgotPassword2 />} />
         <Route path="edit-vet" element={<EditVet />} />
-        <Route path="edit-pet" element={<EditPet />} />
+         <Route path="edit-agenda" element={<EditAgenda />} /> 
+         <Route path="edit-owner" element={<EditOwner />} />
+         <Route path="edit-manual-cash" element={<EditManualCash />} /> 
+        {/*  <Route path="edit-product-category" element={<EditProductCategory />} /> */} 
+         <Route
+            path="/edit-clinic/:clinicId?"
+            element={<EditClinic onSuccess={(data) => alert('Consulta guardada!')} />}
+          />
+        {/* <Route path="edit-product" element={<EditProduct />} /> */}
+        
         <Route path="search-vet" element={<SearchVet />} />
         
         {/* private */}
@@ -62,7 +76,7 @@ function App() {
           {/* edits */}
           <Route path="edit-owner" element={<EditOwner />} />
           <Route path="edit-owner2" element={<EditOwner2 />} />
-          <Route path="edit-pet" element={<EditPet />} />
+          {/*<Route path="edit-pet" element={<EditPet />} />  */}
 
           {/* search */}
           <Route path="search-test" element={<SearchTest />} />

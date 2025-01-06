@@ -1,13 +1,6 @@
-import { useState, useEffect, useRef } from "react"; 
+import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
-import {
-  TextField,
-  Fab,
-  Container,
-  Box,
-  Snackbar,
-  Alert,
-} from "@mui/material";
+import { TextField, Fab, Container, Box, Snackbar, Alert } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import { useNavigate } from "react-router-dom";
 import * as lib from "../../utils/lib";
@@ -62,12 +55,12 @@ const EditClinic = ({ updateClinic = null }) => {
 
   const handleDateChange = (newValue) => {
     setClinicData({ ...clinicData, date: newValue });
-    setErrors((prev) => ({ ...prev, date: "" })); // Limpia error al actualizar
+    setErrors((prev) => ({ ...prev, date: "" })); 
   };
 
   const handleTimeChange = (newValue) => {
     setClinicData({ ...clinicData, hour: newValue });
-    setErrors((prev) => ({ ...prev, hour: "" })); // Limpia error al actualizar
+    setErrors((prev) => ({ ...prev, hour: "" })); 
   };
 
   const validateFields = () => {
@@ -87,7 +80,7 @@ const EditClinic = ({ updateClinic = null }) => {
     e.preventDefault();
 
     if (!validateFields()) {
-      setShowAlert(true); // Muestra el mensaje de error si la validación falla
+      setShowAlert(true); 
       return;
     }
 
@@ -210,12 +203,18 @@ const EditClinic = ({ updateClinic = null }) => {
           rows={4}
         />
 
-        <Box sx={{ position: "fixed", bottom: 16, right: 16, zIndex: 1000 }}>
-          <Fab color="primary" aria-label="save" onClick={handleSubmit}>
+        <Box
+          sx={{
+            position: "fixed",
+            bottom: 16,
+            right: 16,
+            zIndex: 1000,
+          }}
+        >
+          <Fab color="primary" aria-label="add" onClick={handleSubmit}>
             <CheckIcon />
           </Fab>
         </Box>
-   
       </Box>
 
       <Snackbar
@@ -228,7 +227,8 @@ const EditClinic = ({ updateClinic = null }) => {
           severity="error"
           sx={{ width: "100%" }}
         >
-          {strings.complete_required_fields || "Por favor, complete los campos requeridos."}
+          {strings.complete_required_fields ||
+            "Por favor, complete los campos requeridos."}
         </Alert>
       </Snackbar>
     </Container>
@@ -246,5 +246,3 @@ EditClinic.propTypes = {
 };
 
 export default EditClinic;
-
-
