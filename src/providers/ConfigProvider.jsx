@@ -8,7 +8,7 @@ export const ConfigProvider = ({ children }) => {
   const [config, setConfig] = useState(null);
   const [isLoadingConfig, setIsLoadingConfig] = useState(true);
   const [error, setError] = useState(null);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   
   useEffect(() => {
     if (!isAuthenticated)
@@ -23,6 +23,7 @@ export const ConfigProvider = ({ children }) => {
         setConfig(response.data.data);
       } catch (err) {
         setError(err.message);
+        logout();
       } finally {
         setIsLoadingConfig(false);
       }

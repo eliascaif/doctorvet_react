@@ -74,15 +74,17 @@ function ViewUser() {
         </Box>
       )}
       
-      <Box style={{ marginBottom: '16px' }}>
-        <Typography variant="caption">{strings.region}</Typography>
-        <Typography
-          variant="body1"
-          style={{ fontSize: '16px' }}
-        >
-          {user.region.friendly_name}
-        </Typography>
-      </Box>
+      {user.region && (
+        <Box style={{ marginBottom: '16px' }}>
+          <Typography variant="caption">{strings.region}</Typography>
+          <Typography
+            variant="body1"
+            style={{ fontSize: '16px' }}
+          >
+            {user.region.friendly_name}
+          </Typography>
+        </Box>
+      )}
 
       {user.phone && (
         <Box style={{ marginBottom: '16px' }}>
