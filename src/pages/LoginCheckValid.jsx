@@ -22,7 +22,7 @@ function LoginCheckValid() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const info = `Enviamos un correo electrónico a ${email}. Clic en el link que contiene para continuar.`;
+  const info = `Revisa ${email} para continuar.`;
 
   const handleCheckAccount = async () => {
     setIsLoading(true);

@@ -71,12 +71,12 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
   });
 
   //required and errors
-  const [errorName, setErrorName] = useState('');
-  const nameRef = useRef(null);
-  const [errorRegion, setErrorRegion] = useState('');
-  const regionRef = useRef(null);
-  const [errorEmail, setErrorEmail] = useState('');
-  const emailRef = useRef(null);
+  const [errors, setErrors] = useState({});
+  const [refs, setRefs] = useState({
+    name: useRef(null),
+    region: useRef(null),
+    email: useRef(null),
+  });
 
   //fetch data
   const [regions, setRegions] = useState([]);
@@ -112,7 +112,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
     //   setDefaultSellPoint();
     // }
 
-    nameRef.current.focus();
+    refs.name.current.focus();
   }, []);
 
   const fetchFiscalTypes = async (country) => {
@@ -139,9 +139,9 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
 
   const save = async () => {
 
-    if (!lib.validateNonEmpty(vet.name, setErrorName, nameRef) ||
-        !lib.validateNonEmpty(vet.region, setErrorRegion, regionRef) || 
-        !lib.validateEmail(vet.email, setErrorEmail, emailRef))
+    if (!lib.validateNonEmpty('name', vet.name, setErrors, refs.name) ||
+        !lib.validateNonEmpty('region', vet.region.friendly_name, setErrors, refs.region) || 
+        !lib.validateEmail('email', vet.email, setErrors, refs.email))
       return;
 
     setIsLoading(true);
@@ -160,19 +160,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
       );
 
       login();
-      navigate('/main');
-
-      //localStorage.setItem('isAuthenticated', true);
-      //navigate('/main');
-
-      // const { login } = useAuth();
-      // login();
-      // navigate('/main');
-      // useEffect(() => {
-      //   const { login } = useAuth();
-      //   login();
-      //   navigate('/');
-      // }, []);
+      navigate('/main/home');
     } catch (error) {
       lib.handleError(error);
     } finally {
@@ -183,16 +171,6 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
   const update = async () => {
 
   }
-
-  // const validateRegion = () => {
-  //   if (!vet.region) {
-  //     setErrorRegion(strings.error_corrige_campo);
-  //     regionRef.current.focus();
-  //     return false;
-  //   }
-
-  //   return lib.validateNonEmpty(vet.region.friendly_name, setErrorRegion, regionRef);
-  // }
 
   return (
     <Container>
@@ -242,9 +220,9 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
           value={vet.name}
           onChange={handleChange}
           margin="normal"
-          inputRef={nameRef}
-          error={Boolean(errorName)}
-          helperText={errorName}
+          inputRef={refs.name}
+          error={!!errors.name}
+          helperText={errors.name}
         />
 
         <TextField
@@ -272,9 +250,9 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
               label="Región *"
               name="region"
               margin="normal"
-              inputRef={regionRef}
-              error={Boolean(errorRegion)}
-              helperText={errorRegion}
+              inputRef={refs.region}
+              error={!!errors.region}
+              helperText={errors.region}
             />
           )}
         />
@@ -296,9 +274,9 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
             value={vet.email}
             onChange={handleChange}
             margin="normal"
-            inputRef={emailRef}
-            error={Boolean(errorEmail)}
-            helperText={errorEmail}
+            inputRef={refs.email}
+            error={!!errors.email}
+            helperText={errors.email}
           />
         )}
 
@@ -558,7 +536,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
             sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
           />
         )}
-        <Dialog open={isLoading} />
+        {/* <Dialog open={isLoading} /> */}
 
       </Box>
 

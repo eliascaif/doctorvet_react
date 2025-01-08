@@ -17,7 +17,7 @@ export const strings = {
   web_page: 'Página web',  
   subscription_until: 'Suscripción hasta',
   race: 'Raza',
-  pelage : 'Pelage',
+  pelage : 'Pelaje',
   gender: 'Género',
   character: 'Carácter',
   birthday: 'Nacimiento',

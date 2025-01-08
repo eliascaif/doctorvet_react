@@ -182,6 +182,22 @@ export const fetchPet = async (id, updateLastView) => {
     return null;
   }
 };
+export const fetchClinic = async (id_pet, page) => {
+  try {
+    const queryParams = {
+      id_pet: id_pet,
+      page: page,      
+    };
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}pets_clinic`, 
+      { params: queryParams, withCredentials: true },
+    );
+    return response.data.data.content;
+  } catch (error) {
+    handleError(error);
+    return null;
+  }
+};
 export const fetchVet = async (id) => {
   try {
     const queryParams = {
@@ -373,16 +389,29 @@ export const validateEmail = (fieldName, fieldValue, setErrFunc, fieldRef, nullP
   fieldRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
   return false;
 }
-export const validatePassword = (field, setErrFunc, fieldRef) => {
-  if (!field || field.length < 8) {
-    setErrFunc(strings.error_campo_empty);
-    fieldRef.current.focus();
-    fieldRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
-    return false;
+export const validatePassword = (fieldName, fieldValue, setErrFunc, fieldRef) => {
+  if (fieldValue.length >= 8) {
+    setErrFunc({});
+    return true;
   }
 
-  setErrFunc('');
-  return true;
+  let error = {
+    [fieldName]: strings.error_campo_empty
+  };
+  setErrFunc(error);
+  fieldRef.current.focus();
+  fieldRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+  return false;
+
+  // if (!fieldValue || field.length < 8) {
+  //   setErrFunc(strings.error_campo_empty);
+  //   fieldRef.current.focus();
+  //   fieldRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+  //   return false;
+  // }
+
+  // setErrFunc('');
+  // return true;
 };
 export const verifyCaptchaToken = async (token) => {
   try {
@@ -423,6 +452,13 @@ export const formatHour = (dateString, hour12 = false) => {
   }).format(date);
   return hour;
 }
+export const formatDateHour = (dateString) => {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat(navigator.language, {
+    dateStyle: 'medium', // Formato para la fecha (short, medium, long o full)
+    timeStyle: 'short',  // Formato para la hora (short, medium, long o full)
+  }).format(date);
+};
 export const getSupplyStr = (supplyStr) => {
   if (supplyStr == 'NA')
     return 'Sin suministro';
@@ -445,3 +481,46 @@ export const getReasonStr = (reasonStr) => {
   if (reasonStr == 'CLINIC2')
     return 'Clínica extendida';
 }
+
+export const openCache = async () => {
+  const cache = await caches.open('doctorvet-cache');
+  return cache;
+};
+
+// Almacenar un archivo en el caché usando su nombre y la URL
+export const cacheResource = async (fileName, url) => {
+  const cache = await openCache();
+  const response = await fetch(url);
+
+  const cachedResource = {
+    fileName,
+    response,
+  };
+
+  // Almacenamos el archivo en el cache con el nombre del archivo como clave
+  await cache.put(fileName, new Response(JSON.stringify(cachedResource)));
+};
+
+export const getResource = async (fileName, url) => {
+  const cache = await openCache();
+  
+  //const cachedResponse = await cache.match(fileName);
+
+  // if (cachedResponse) {
+  //   const cachedData = await cachedResponse.json();
+  //   console.log(cachedData);
+
+  //   //return cachedData.response; // Si existe en el caché, lo retornamos
+  //   return URL.createObjectURL(await cachedData.response.blob());
+  // }
+
+  // Si el archivo no está en caché, lo descargamos desde la URL
+  console.log(url);
+
+  const response = await axios.get(url, { responseType: 'blob' });
+  console.log(response);
+
+  //await cacheResource(fileName, url);
+  //return response;
+  //return URL.createObjectURL(await response.blob());
+};

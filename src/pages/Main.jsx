@@ -67,7 +67,6 @@ function Main() {
               alignItems: 'center',
             }}
           >
-            {console.log(thumbUrl)}
             {thumbUrl != undefined &&
               <Avatar
                 src={thumbUrl}
@@ -149,10 +148,10 @@ function Main() {
               <ListItemText primary="Inicio" />
             </ListItem>
             <ListItem button component={Link} to="pets" selected={location.pathname === '/main/pets'}>
-              <ListItemText primary="Mascotas" />
+              <ListItemText primary={config.vet.pet_naming_es_plural} />
             </ListItem>
             <ListItem button component={Link} to="owners" selected={location.pathname === '/main/owners'}>
-              <ListItemText primary="Propietarios" />
+              <ListItemText primary={config.vet.owner_naming_es_plural} />
             </ListItem>
             <ListItem button component={Link} to="agenda" selected={location.pathname === '/main/agenda'}>
               <ListItemText primary="Agenda" />

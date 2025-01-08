@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from '../providers/SnackBarProvider';
 import * as lib from '../utils/lib';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { ErrorSharp } from '@mui/icons-material';
 
 const LoginCreateAccount = () => {
   const navigate = useNavigate();
@@ -21,32 +22,40 @@ const LoginCreateAccount = () => {
 
   const recaptcha = useRef();
 
+  const [errors, setErrors] = useState({});
+  const [refs, setRefs] = useState({
+    name: useRef(null),
+    email: useRef(null),
+    password: useRef(null),
+    passwordRepeat: useRef(null),
+  });
+
   const [name, setName] = useState('');
-  const [errorName, setErrorName] = useState('');
-  const nameRef = useRef(null);
+  // const [errorName, setErrorName] = useState('');
+  // const nameRef = useRef(null);
 
   const [email, setEmail] = useState('');
-  const [errorEmail, setErrorEmail] = useState('');
-  const emailRef = useRef(null);
+  // const [errorEmail, setErrorEmail] = useState('');
+  // const emailRef = useRef(null);
 
   const [password, setPassword] = useState('');
-  const [errorPassword, setErrorPassword] = useState('');
-  const passwordRef = useRef(null);
+  // const [errorPassword, setErrorPassword] = useState('');
+  // const passwordRef = useRef(null);
 
   const [passwordRepeat, setPasswordRepeat] = useState('');
-  const [errorPasswordRepeat, setErrorPasswordRepeat] = useState('');
-  const passwordRepeatRef = useRef(null);
+  // const [errorPasswordRepeat, setErrorPasswordRepeat] = useState('');
+  // const passwordRepeatRef = useRef(null);
 
   useEffect(() => {
-    nameRef.current.focus();
+    refs.name.current.focus();
   }, []);
 
   const handleSubmit = async(e) => {
     e.preventDefault();
 
-    if (!lib.validateNonEmpty(name, setErrorName, nameRef) || 
-        !lib.validateEmail(email, setErrorEmail, emailRef) || 
-        !lib.validatePassword(password, setErrorPassword, passwordRef) || 
+    if (!lib.validateNonEmpty('name', name, setErrors, refs.name) || 
+        !lib.validateEmail('email', email, setErrors, refs.email) || 
+        !lib.validatePassword('password', password, setErrors, refs.password) || 
         !validatePasswordRepeat())
       return;
 
@@ -84,12 +93,15 @@ const LoginCreateAccount = () => {
 
   const validatePasswordRepeat = () => {
     if (password !== passwordRepeat) {
-      setErrorPasswordRepeat('Las contraseñas no coinciden');
-      passwordRepeatRef.current.focus();
+      let error = {
+        ['passwordRepeat']: 'Las contraseñas no coinciden'
+      };
+      setErrors(error);
+      refs.passwordRepeat.current.focus();
       return false;
     }
 
-    setErrorPasswordRepeat('');
+    setErrors({});
     return true;
   };
 
@@ -109,9 +121,9 @@ const LoginCreateAccount = () => {
             margin="normal"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            error={Boolean(errorName)}
-            helperText={errorName}
-            inputRef={nameRef}
+            error={!!errors.name}
+            helperText={errors.name}
+            inputRef={refs.name}
           />
           <TextField
             label="Email"
@@ -119,9 +131,9 @@ const LoginCreateAccount = () => {
             margin="normal"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            error={!!errorEmail}
-            helperText={errorEmail}
-            inputRef={emailRef}
+            error={!!errors.email}
+            helperText={errors.email}
+            inputRef={refs.email}
           />
           <TextField
             label="Contraseña"
@@ -130,9 +142,9 @@ const LoginCreateAccount = () => {
             margin="normal"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            error={!!errorPassword}
-            helperText={errorPassword}
-            inputRef={passwordRef}
+            error={!!errors.password}
+            helperText={errors.password}
+            inputRef={refs.password}
           />
           <TextField
             label="Repetir Contraseña"
@@ -141,9 +153,9 @@ const LoginCreateAccount = () => {
             fullWidth
             value={passwordRepeat}
             onChange={(e) => setPasswordRepeat(e.target.value)}
-            error={Boolean(errorPasswordRepeat)}
-            helperText={errorPasswordRepeat}
-            inputRef={passwordRepeatRef}
+            error={!!errors.passwordRepeat}
+            helperText={errors.passwordRepeat}
+            inputRef={refs.passwordRepeat}
             onKeyPress={(e) => {
               if (e.key === 'Enter') {
                 handleSubmit();
