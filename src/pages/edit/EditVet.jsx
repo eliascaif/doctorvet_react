@@ -160,7 +160,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
       );
 
       login();
-      navigate('/main');
+      navigate('/main/home');
     } catch (error) {
       lib.handleError(error);
     } finally {
