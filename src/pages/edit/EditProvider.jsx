@@ -1,21 +1,23 @@
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "../../providers/SnackBarProvider";
-import {useAppBar} from "../../providers/AppBarProvider";
+import { useAppBar } from "../../providers/AppBarProvider";
 import { useLoading } from "../../providers/LoadingProvider";
 import { strings } from "../../constants/strings";
 import * as lib from "../../utils/lib";
-import { Box, Container, TextField,Autocomplete,Fab } from "@mui/material";
+import { Box, Container, TextField, Autocomplete, Fab } from "@mui/material";
 import axios from "axios";
 import CheckIcon from "@mui/icons-material/Check";
 
- const EditProvider = ({ updateProvider = null }) => {
-  const [provider, setProvider] = useState(updateProvider || {
-    name: "",
-    regions: null,
-    email: "",
-    phone: "",
-  });
+const EditProvider = ({ updateProvider = null }) => {
+  const [provider, setProvider] = useState(
+    updateProvider || {
+      name: "",
+      regions: null,
+      email: "",
+      phone: "",
+    }
+  );
 
   const [errors, setErrors] = useState({});
   const [refs, setRefs] = useState({
@@ -30,6 +32,7 @@ import CheckIcon from "@mui/icons-material/Check";
   const { isLoading, setIsLoading } = useLoading();
 
   useEffect(() => {
+    console.log("API URL:", import.meta.env.VITE_API_URL);
     if (updateProvider) {
       updateTitle("", strings.update_provider, strings.complete_data);
     } else {
@@ -71,37 +74,33 @@ import CheckIcon from "@mui/icons-material/Check";
   };
 
   const save = async () => {
+    console.log("Enviando los datos del proveedor:", provider);
     setIsLoading(true);
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}products_providers${provider.id ? `?id=${provider.id}` : ""}`,
+        `${import.meta.env.VITE_API_URL}products_providers${
+          provider.id ? `?id=${provider.id}` : ""
+        }`,
         provider,
         { withCredentials: true }
       );
-      console.log("Save successful:", response.data);
+      console.log("Respuesta de la API:", response.data);
       navigate("/main/view-provider", { state: { id: response.data.data.id } });
     } catch (error) {
-      console.error("Error details:", error); // Log completo del error
+      console.error("Error details:", error);
       if (error.response) {
-        // El servidor devolvió un estado de error
-        console.error("Response data:", error.response.data);
-        console.error("Response status:", error.response.status);
-        snackbar(`Error del servidor: ${error.response.data.message || "Intente nuevamente"}`);
+        console.error("Respuesta del servidor:", error.response.data);
+        console.error("Estado de la respuesta:", error.response.status);
       } else if (error.request) {
-        // La solicitud fue enviada pero no se recibió respuesta
-        console.error("Request details:", error.request);
-        snackbar("No se recibió respuesta del servidor. Verifique su conexión.");
+        console.error("Detalles de la solicitud:", error.request);
       } else {
-        // Error en la configuración de la solicitud
-        console.error("Error en la configuración:", error.message);
-        snackbar(`Error: ${error.message}`);
+        console.error("Error de configuración:", error.message);
       }
     } finally {
       setIsLoading(false);
     }
   };
-  
-  
+
   const update = async () => {
     setIsLoading(true);
     try {
@@ -119,7 +118,6 @@ import CheckIcon from "@mui/icons-material/Check";
       setIsLoading(false);
     }
   };
-  
 
   return (
     <Container>
@@ -157,7 +155,7 @@ import CheckIcon from "@mui/icons-material/Check";
           onChange={(e, newValue) =>
             setProvider({
               ...provider,
-              region: newValue
+              region: newValue,
             })
           }
           renderInput={(params) => (
@@ -205,20 +203,15 @@ import CheckIcon from "@mui/icons-material/Check";
           multiline
           rows={4}
         />
-
         <Box
           sx={{
-            position: "fixed",
-            bottom: 16,
-            right: 16,
-            zIndex: 1000,
+            position: "relative",
+            display: "flex",
+            justifyContent: "flex-end",
+            mt: 2,
           }}
         >
-          <Fab
-            color="primary"
-            aria-label="add"
-            onClick={handleSubmit}
-          >
+          <Fab color="primary" aria-label="add" onClick={handleSubmit}>
             <CheckIcon />
           </Fab>
         </Box>
@@ -230,20 +223,6 @@ export default EditProvider;
 import PropTypes from "prop-types";
 
 EditProvider.propTypes = {
-  /**
-   * Object containing provider data to be updated. If null, the component will handle creating a new provider.
-   * Expected shape:
-   * {
-   *   name: string,
-   *   address: string,
-   *   region: object (optional, contains the selected region details),
-   *   phone: string,
-   *   email: string,
-   *   regional_id: string (optional, unique identifier for the region),
-   *   fiscal_type: string (optional, fiscal categorization of the provider),
-   *   notes: string (optional, additional notes about the provider)
-   * }
-   */
   updateProvider: PropTypes.shape({
     name: PropTypes.string.isRequired,
     address: PropTypes.string,
