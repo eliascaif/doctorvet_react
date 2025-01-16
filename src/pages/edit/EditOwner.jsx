@@ -92,7 +92,6 @@ const EditOwner = ( {updateOwner = null} ) => {
         { withCredentials: true }
       );
       // console.log(response);
-      // navigate(`/main/view-owner/${response.data.data.id}`);
       navigate('/main/view-owner', { state: { id: response.data.data.id } });
     } catch (error) {
       lib.handleError(error);

@@ -14,6 +14,9 @@ import PetsIcon from '@mui/icons-material/Pets';
 const drawerWidth = 240;
 
 function Main() {
+
+  console.log("sdkfgdskfgsdhkfgdshkfgkhsdgfhdsgjsg");
+
   const location = useLocation();
   const navigate = useNavigate();
   const handleCloseClick = () => {

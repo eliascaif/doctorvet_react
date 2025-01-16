@@ -10,9 +10,8 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-function SearchPage({fetchFunction, fetchArgs, renderItem, placeholder}) {
+function SearchPage({fetchFunction, fetchArgs, renderItem, placeholder, results, setResults}) {
   const [searchText, setSearchText] = React.useState('');
-  const [results, setResults] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -23,8 +22,6 @@ function SearchPage({fetchFunction, fetchArgs, renderItem, placeholder}) {
   }, []);
 
   const handleSearch = () => {
-    console.log('search: ' + searchText);
-    
     setPage(1);
     setIsLoading(true);
     fetchFunction(searchText, page, ...fetchArgs).then((data) => {
@@ -43,11 +40,8 @@ function SearchPage({fetchFunction, fetchArgs, renderItem, placeholder}) {
     });   
   };
 
-  // Configura el IntersectionObserver para detectar el último elemento
   const lastElementRef = useCallback((node) => {
-    console.log('observer');
-
-    if (isLoading) return; // No observamos mientras estamos cargando
+    if (isLoading) return;
     if (observerRef.current) observerRef.current.disconnect();
 
     observerRef.current = new IntersectionObserver((entries) => {
@@ -60,7 +54,7 @@ function SearchPage({fetchFunction, fetchArgs, renderItem, placeholder}) {
   }, [isLoading, hasMore]);
 
   useEffect(() => {
-    if (page === 1) return; // Evita cargar datos al iniciar
+    if (page === 1) return;
     handleScroll();
   }, [page]);
   

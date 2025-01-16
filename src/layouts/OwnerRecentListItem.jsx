@@ -1,11 +1,8 @@
 import React from 'react';
 import { Box, Grid, Typography, Divider, Avatar, Stack } from '@mui/material';
 import { formatDate } from '../utils/lib';
-//import { useConfig } from '../providers/ConfigProvider';
 
 const OwnerRecentListItem = ({owner, onClick, onPetClick, isMultiUser = false}) => {
-  //const { config } = useConfig();
-
   return (
     <Box
       onClick={() => onClick(owner)} 

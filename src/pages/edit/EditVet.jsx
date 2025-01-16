@@ -25,11 +25,9 @@ import {
   IconButton,
 } from '@mui/material';
 import StoreIcon from '@mui/icons-material/Store';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import * as lib from '../../utils/lib';
-import { strings } from '../../constants/strings';
 import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import { useAuth } from '../../providers/AuthProvider';
 
@@ -41,7 +39,11 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
   };
 
   const location = useLocation();
-  const { pre_access_token, isInitCreate } = location.state || {};
+  // const { pre_access_token, isInitCreate } = location.state || {};
+  
+  const [searchParams] = useSearchParams();
+  const isInitCreate = searchParams.get("isInitCreate"); 
+  const preAccessToken = searchParams.get("pre_access_token");
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -155,12 +157,12 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
       );
       const response2 = await axios.post(
         `${import.meta.env.VITE_API_URL}users?email_auth_web`,
-        { vet: { id: response.data.data.id }, pre_access_token: pre_access_token },
+        { vet: { id: response.data.data.id }, pre_access_token: preAccessToken },
         { withCredentials: true }
       );
 
       login();
-      navigate('/main/home');
+      navigate('/main');
     } catch (error) {
       lib.handleError(error);
     } finally {

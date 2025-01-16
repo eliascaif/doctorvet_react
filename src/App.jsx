@@ -28,14 +28,14 @@ import ViewUser from './pages/view/ViewUser';
 import ViewPet from './pages/view/ViewPet';
 
 function App() {
-  const { isAuthenticated } = useAuth();
+  const { isAuth } = useAuth();
 
   return (
     <Router>
       <Routes>
 
         {/* public */}
-        <Route path="/" element={ isAuthenticated ? <Navigate to="/main" /> : <Login /> } />        
+        <Route path="/" element={ isAuth ? <Navigate to="/main" /> : <Login /> } />        
         <Route path="login-create-account" element={<LoginCreateAccount />} />
         <Route path="login-check-valid" element={<LoginCheckValid />} />
         <Route path="login-choice" element={<LoginChoice />} />

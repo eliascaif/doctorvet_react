@@ -4,7 +4,7 @@ import {
   Container,
   Fab,
   CircularProgress,
-  Dialog,
+  Typography,
 } from '@mui/material';
 import AddIcon from "@mui/icons-material/Add";
 import { fetchRecent } from '../utils/lib';
@@ -44,14 +44,23 @@ function MainOwners() {
     navigate('/main/view-pet', { state: { id: pet.id, updateLastView: false } });
   }
 
-  if (isLoading || isLoadingConfig) return
-  (
+  if (isLoading || isLoadingConfig) return (
     <>
       <CircularProgress
         size={42}
         sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
       />
     </>
+  );
+
+  if (owners.length == 0) return (
+    <Container style={{ overflow: 'auto', maxHeight: '100vh' }}>
+      <Typography
+        variant="subtitle1"
+        >
+          No hay nada aquí. Presiona + para crear o buscar.
+      </Typography>
+    </Container>
   );
 
   return (

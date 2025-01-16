@@ -8,10 +8,10 @@ export const ConfigProvider = ({ children }) => {
   const [config, setConfig] = useState(null);
   const [isLoadingConfig, setIsLoadingConfig] = useState(true);
   const [error, setError] = useState(null);
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuth, logout } = useAuth();
   
   useEffect(() => {
-    if (!isAuthenticated)
+    if (!isAuth)
       return;
 
     const fetchConfig = async () => {
@@ -29,7 +29,7 @@ export const ConfigProvider = ({ children }) => {
       }
     };
     fetchConfig();
-  }, []);
+  }, [isAuth]);
 
   return (
     <ConfigContext.Provider value={{ config, isLoadingConfig, error }}>

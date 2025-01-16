@@ -8,21 +8,27 @@ import {
   Container,
 } from '@mui/material';
 import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useSnackbar } from '../providers/SnackBarProvider';
 import { strings } from '../constants/strings';
 import { handleError } from '../utils/lib';
 
 function LoginCheckValid() {
   const location = useLocation();
-  const { pre_access_token, email } = location.state || {};
+  // const { pre_access_token, email } = location.state || {};
+  // const [preAccessToken, SetPreAccessToken] = location.state.preAccessToken;
+  // const [email, SetEmail] = location.state.email;
+
+  const [searchParams] = useSearchParams();
+  const email = searchParams.get("email"); 
+  const preAccessToken = searchParams.get("pre_access_token");
 
   const navigate = useNavigate();
   const showSnackbar = useSnackbar();
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const info = `Revisa ${email} para continuar.`;
+  const info = `Revisa ${email} para continuar`;
 
   const handleCheckAccount = async () => {
     setIsLoading(true);
@@ -30,14 +36,15 @@ function LoginCheckValid() {
     try {
       const params = {
         check_for_valid_account_web: '',
-        pre_access_token: pre_access_token,
+        pre_access_token: preAccessToken,
       };
 
       const response = await axios.post(`${import.meta.env.VITE_API_URL}users`, null, { params: params });
       //console.log(response);
 
       if (response.data.data == 1)
-        navigate('/login-choice', { state: { pre_access_token: pre_access_token } });
+        // navigate('/login-choice', { state: { email: email, pre_access_token: preAccessToken } });
+        navigate(`/login-choice?email=${encodeURIComponent(email)}&pre_access_token=${encodeURIComponent(preAccessToken)}`);
       else
         showSnackbar(info);
     } catch (error) {

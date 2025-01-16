@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography, Divider, Avatar, Grid } from '@mui/material';
 import StoreIcon from "@mui/icons-material/Store";
 
-const ListItemMed = ({ vet, onClick }) => {  
+const ListItemVet = ({ vet, onClick }) => {  
   return (
     <Box
       onClick={() => onClick(vet)} 
@@ -100,4 +100,4 @@ const ListItemMed = ({ vet, onClick }) => {
   );
 };
 
-export default ListItemMed;
+export default ListItemVet;
