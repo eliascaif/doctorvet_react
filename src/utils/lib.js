@@ -88,60 +88,7 @@ export const fetchVets = async (searchText, page, user_email) => {
     return null;
   }
 };
-export const fetchOwnersForInput = async () => {
-  const mustDoRequest_ = await mustDoRequest(undefined, 'owners_for_input');
 
-  if (mustDoRequest_) {
-    try {
-      const queryParams = {
-        for_input: '',
-        compress: '',
-      };
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}owners`, 
-        { params: queryParams, withCredentials: true },
-      );
-      //console.log(response);
-      
-      const stringData = compressedBase64ToString(response.data.data);
-      localStorage.setItem('owners_for_input', stringData);
-      return JSON.parse(stringData);
-    } catch (error) {
-      handleError(error);
-      return null;
-    }
-  } else {
-    // console.log('cached data');
-    return JSON.parse(localStorage.getItem('owners_for_input'));
-  }
-};
-export const fetchPetsForInput = async () => {
-  const mustDoRequest_ = await mustDoRequest(undefined, 'pets_for_input');
-
-  if (mustDoRequest_) {
-    try {
-      const queryParams = {
-        for_input: '',
-        compress: '',
-      };
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}pets`, 
-        { params: queryParams, withCredentials: true },
-      );
-      //console.log(response);
-      
-      const stringData = compressedBase64ToString(response.data.data);
-      localStorage.setItem('pets_for_input', stringData);
-      return JSON.parse(stringData);
-    } catch (error) {
-      handleError(error);
-      return null;
-    }
-  } else {
-    // console.log('cached data');
-    return JSON.parse(localStorage.getItem('pets_for_input'));
-  }
-};
 export const fetchOwner = async (id, updateLastView) => {
   try {
     const queryParams = {
@@ -198,32 +145,161 @@ export const fetchClinic = async (id_pet, page) => {
     return null;
   }
 };
-export const fetchVet = async (id) => {
-  try {
-    const queryParams = {
-      id: id,      
-    };
 
-    const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}vets`, 
-      { params: queryParams, withCredentials: true },
-    );
-    //console.log(response);
-    
-    return response.data.data;
-  } catch (error) {
-    handleError(error);
-    return null;
+// export const fetchOwnersForInput = async () => {
+//   const mustDoRequest_ = await mustDoRequest(undefined, 'owners_for_input');
+
+//   if (mustDoRequest_) {
+//     try {
+//       const queryParams = {
+//         for_input: '',
+//         compress: '',
+//       };
+//       const response = await axios.get(
+//         `${import.meta.env.VITE_API_URL}owners`, 
+//         { params: queryParams, withCredentials: true },
+//       );
+//       //console.log(response);
+      
+//       const stringData = compressedBase64ToString(response.data.data);
+//       localStorage.setItem('owners_for_input', stringData);
+//       return JSON.parse(stringData);
+//     } catch (error) {
+//       handleError(error);
+//       return null;
+//     }
+//   } else {
+//     // console.log('cached data');
+//     return JSON.parse(localStorage.getItem('owners_for_input'));
+//   }
+// };
+// export const fetchPetsForInput = async () => {
+//   const mustDoRequest_ = await mustDoRequest(undefined, 'pets_for_input');
+
+//   if (mustDoRequest_) {
+//     try {
+//       const queryParams = {
+//         for_input: '',
+//         compress: '',
+//       };
+//       const response = await axios.get(
+//         `${import.meta.env.VITE_API_URL}pets`, 
+//         { params: queryParams, withCredentials: true },
+//       );
+//       //console.log(response);
+      
+//       const stringData = compressedBase64ToString(response.data.data);
+//       localStorage.setItem('pets_for_input', stringData);
+//       return JSON.parse(stringData);
+//     } catch (error) {
+//       handleError(error);
+//       return null;
+//     }
+//   } else {
+//     // console.log('cached data');
+//     return JSON.parse(localStorage.getItem('pets_for_input'));
+//   }
+// };
+// export const fetchSellsForInput = async () => {
+//   const mustDoRequest_ = await mustDoRequest(undefined, 'sells_for_input');
+
+//   if (mustDoRequest_) {
+//     try {
+//       const queryParams = {
+//         for_input: '',
+//         compress: '',
+//       };
+//       const response = await axios.get(
+//         `${import.meta.env.VITE_API_URL}pets`, 
+//         { params: queryParams, withCredentials: true },
+//       );
+//       //console.log(response);
+      
+//       const stringData = compressedBase64ToString(response.data.data);
+//       localStorage.setItem('sells_for_input', stringData);
+//       return JSON.parse(stringData);
+//     } catch (error) {
+//       handleError(error);
+//       return null;
+//     }
+//   } else {
+//     // console.log('cached data');
+//     return JSON.parse(localStorage.getItem('sells_for_input'));
+//   }
+// };
+export const fetchForInput = async (table, objectName) => {
+  const mustDoRequest_ = await mustDoRequest(undefined, objectName);
+
+  if (mustDoRequest_) {
+    try {
+      const queryParams = {
+        for_input: '',
+        compress: '',
+      };
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}table`, 
+        { params: queryParams, withCredentials: true },
+      );
+      //console.log(response);
+      
+      const stringData = compressedBase64ToString(response.data.data);
+      localStorage.setItem(objectName, stringData);
+      return JSON.parse(stringData);
+    } catch (error) {
+      handleError(error);
+      return null;
+    }
+  } else {
+    // console.log('cached data');
+    return JSON.parse(localStorage.getItem(objectName));
   }
 };
-export const fetchUser = async (id) => {
+
+
+// export const fetchVet = async (id) => {
+//   try {
+//     const queryParams = {
+//       id: id,      
+//     };
+
+//     const response = await axios.get(
+//       `${import.meta.env.VITE_API_URL}vets`, 
+//       { params: queryParams, withCredentials: true },
+//     );
+//     //console.log(response);
+    
+//     return response.data.data;
+//   } catch (error) {
+//     handleError(error);
+//     return null;
+//   }
+// };
+// export const fetchUser = async (id) => {
+//   try {
+//     const queryParams = {
+//       id: id,      
+//     };
+
+//     const response = await axios.get(
+//       `${import.meta.env.VITE_API_URL}users`, 
+//       { params: queryParams, withCredentials: true },
+//     );
+//     //console.log(response);
+    
+//     return response.data.data;
+//   } catch (error) {
+//     handleError(error);
+//     return null;
+//   }
+// };
+export const fetchById = async (id, endpoint) => {
   try {
     const queryParams = {
       id: id,      
     };
 
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}users`, 
+      `${import.meta.env.VITE_API_URL}${endpoint}`, 
       { params: queryParams, withCredentials: true },
     );
     //console.log(response);
@@ -266,6 +342,77 @@ export const fetch = async (table, params) => {
     return null;
   }
 };
+export const fetchSearchPage = async (table, searchText, page, productsGlobalsInclude = false) => {
+  try {
+    const params = {
+      search: searchText,
+      page: page,
+      globals_include: productsGlobalsInclude ? 1 : null,
+    };
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}${table}`, 
+      {params: params, withCredentials: true},
+    );
+    return response.data.data;
+  } catch (error) {
+    handleError(error);
+    return null;
+  }
+};
+export const fetchSearchPageServices = async (searchText, page) => {
+  try {
+    const params = {
+      search: searchText,
+      page: page,
+      services: '',
+    };
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}products`, 
+      {params: params, withCredentials: true},
+    );
+    return response.data.data;
+  } catch (error) {
+    handleError(error);
+    return null;
+  }
+};
+export const fetchSearchPageServicesCategories = async (searchText, page) => {
+  try {
+    const params = {
+      search: searchText,
+      page: page,
+      only_services: '',
+      format: 'SEARCH',
+    };
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}products_categories`, 
+      {params: params, withCredentials: true},
+    );
+    return response.data.data;
+  } catch (error) {
+    handleError(error);
+    return null;
+  }
+};
+
+// export const fetchSearchProducts = async (searchText, page, globalsInclude) => {
+//   try {
+//     const params = {
+//       search: searchText,
+//       page: page,
+//       globals_include: globalsInclude,
+//     };
+//     const response = await axios.get(
+//       `${import.meta.env.VITE_API_URL}products`, 
+//       { params: params, withCredentials: true },
+//     );
+//     return response.data.data;
+//   } catch (error) {
+//     handleError(error);
+//     return null;
+//   }
+// };
+
 
 // export const fetchOwnersRecent = async (page) => {
 //   try {
@@ -524,3 +671,8 @@ export const getResource = async (fileName, url) => {
   //return response;
   //return URL.createObjectURL(await response.blob());
 };
+
+export const capitalizeFirstLetter = (string) => {
+  if (!string) return '';
+  return string.charAt(0).toUpperCase() + string.slice(1);
+} 

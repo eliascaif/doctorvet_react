@@ -5,7 +5,6 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
 
   const [isAuth, setisAuth] = useState(localStorage.getItem('isAuth') === 'true');
-  // console.log(isAuth);
 
   const login = () => {
     setisAuth(true);
@@ -16,10 +15,6 @@ export function AuthProvider({ children }) {
     setisAuth(false);
     localStorage.setItem('isAuth', false);
   };
-
-  // console.log(isAuth);
-  // login();
-  // console.log(isAuth);
 
   return (
     <AuthContext.Provider value={{ isAuth, login, logout }}>

@@ -8,7 +8,7 @@ export const AppBarProvider = ({ children }) => {
   const [subtitle, setSubtitle] = useState("");
   const [showCloseIcon, setShowCloseIcon] = useState(false);
 
-  const updateTitle = (newThumbUrl, newTitle, newSubtitle, showCloseIcon) => {
+  const updateTitle = (newThumbUrl, newTitle, newSubtitle, showCloseIcon = false) => {
     setThumbUrl(newThumbUrl);
     setTitle(newTitle);
     setSubtitle(newSubtitle);

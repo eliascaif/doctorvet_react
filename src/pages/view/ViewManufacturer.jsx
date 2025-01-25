@@ -4,49 +4,37 @@ import {
   Typography,
   Container,
   CircularProgress,
-  Dialog,
   Fab,
 } from '@mui/material';
 import AddIcon from "@mui/icons-material/Add";
 import { useAppBar } from '../../providers/AppBarProvider';
-import { fetchById, formatDate } from '../../utils/lib';
+import { fetchById } from '../../utils/lib';
 import { strings } from "../../constants/strings"
-import { useConfig } from '../../providers/ConfigProvider';
 import { useLoading } from '../../providers/LoadingProvider';
+import { useLocation } from 'react-router-dom';
 
-function ViewVet() {
-  const [vet, setVet] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+function ViewManufacturer() {
+  const location = useLocation();
+  const [id, setId] = useState(location.state.id);
+  const [manufacturer, setManufacturer] = useState(null);
   const {updateTitle} = useAppBar();
-  const {config} = useConfig();
-  // const { isLoading, setIsLoading } = useLoading();
+  //const { isLoading, setIsLoading } = useLoading();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => { 
-    if (config) {
-      setIsLoading(true);
-      const fetchVet_ = async () => {
-        const vet = await fetchById(config.vet.id, 'vets');
-        setVet(vet);
-        updateTitle(vet.thumb_url || '', vet.name, vet.email);
-        setIsLoading(false);
-      };
-      fetchVet_();
-    }
-  }, [config]);
+    setIsLoading(true);
+    const fetchManufacturer_ = async () => {
+      const manufacturer = await fetchById(id, 'products_manufacturers');
+      setManufacturer(manufacturer);
+      updateTitle(manufacturer.thumb_url || '', manufacturer.name, manufacturer.email);
+      setIsLoading(false);
+    };
+    fetchManufacturer_();
+  }, []);
 
   const handleFabClick = async () => {
   };
   
-  // if (isLoading || !config || !vet) return
-  // (
-  //   <>
-  //     <CircularProgress
-  //       size={42}
-  //       sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
-  //     />
-  //     <Dialog open={isLoading} />
-  //   </>
-  // );
   if (isLoading) return
   (
     <>
@@ -54,7 +42,6 @@ function ViewVet() {
         size={42}
         sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
       />
-      {/* <Dialog open={isLoading} /> */}
     </>
   );
 
@@ -68,19 +55,19 @@ function ViewVet() {
           variant="body1"
           style={{ fontSize: '16px' }}
         >
-          {vet.name}
+          {manufacturer.name}
         </Typography>
       </Box>
 
       {/* Text fields with optional visibility */}
-      {vet.address && (
+      {manufacturer.address && (
         <Box style={{ marginBottom: '16px' }}>
           <Typography variant="caption">{strings.address}</Typography>
           <Typography
             variant="body1"
             style={{ fontSize: '16px' }}
           >
-            {vet.address}
+            {manufacturer.address}
           </Typography>
         </Box>
       )}
@@ -91,64 +78,54 @@ function ViewVet() {
           variant="body1"
           style={{ fontSize: '16px' }}
         >
-          {vet.region.friendly_name}
+          {manufacturer.region.friendly_name}
         </Typography>
       </Box>
 
-      {vet.phone && (
+      {manufacturer.phone && (
         <Box style={{ marginBottom: '16px' }}>
           <Typography variant="caption">{strings.phone}</Typography>
           <Typography
             variant="body1"
             style={{ fontSize: '16px' }}
           >
-            {vet.phone}
+            {manufacturer.phone}
           </Typography>
         </Box>
       )}
 
-      <Box style={{ marginBottom: '16px' }}>
-        <Typography variant="caption">{strings.email}</Typography>
-        <Typography
-          variant="body1"
-          style={{ fontSize: '16px' }}
-        >
-          {vet.email}
-        </Typography>
-      </Box>
+      {manufacturer.email && (
+        <Box style={{ marginBottom: '16px' }}>
+          <Typography variant="caption">{strings.email}</Typography>
+          <Typography
+            variant="body1"
+            style={{ fontSize: '16px' }}
+          >
+            {manufacturer.email}
+          </Typography>
+        </Box>
+      )}
 
-      {vet.web_page && (
+      {manufacturer.web_page && (
         <Box style={{ marginBottom: '16px' }}>
           <Typography variant="caption">{strings.web_page}</Typography>
           <Typography
             variant="body1"
             style={{ fontSize: '16px' }}
           >
-            {vet.web_page}
+            {manufacturer.web_page}
           </Typography>
         </Box>
       )}
 
-      {vet.notes && (
+      {manufacturer.notes && (
         <Box style={{ marginBottom: '16px' }}>
           <Typography variant="caption">{strings.notes}</Typography>
           <Typography
             variant="body1"
             style={{ fontSize: '16px' }}
           >
-            {vet.notes}
-          </Typography>
-        </Box>
-      )}
-
-      {vet.subscription_until && (
-        <Box style={{ marginBottom: '16px' }}>
-          <Typography variant="caption">{strings.subscription_until}</Typography>
-          <Typography
-            variant="body1"
-            style={{ fontSize: '16px' }}
-          >
-            {formatDate(vet.subscription_until)}
+            {manufacturer.notes}
           </Typography>
         </Box>
       )}
@@ -174,4 +151,4 @@ function ViewVet() {
   );
 }
 
-export default ViewVet;
+export default ViewManufacturer;

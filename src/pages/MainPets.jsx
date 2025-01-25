@@ -12,12 +12,15 @@ import PetsRecentList from '../layouts/PetsRecentList';
 import { useAppBar } from '../providers/AppBarProvider';
 import { useConfig } from '../providers/ConfigProvider';
 import { useNavigate } from 'react-router-dom';
+import { useLoading } from '../providers/LoadingProvider';
 
 function MainPets() {
 
   const [page, setPage] = useState(1);
   const [pets, setPets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  // const {isLoading, setIsLoading} = useLoading();
+
   const navigate = useNavigate();
   const {updateTitle} = useAppBar();
   const {config, isLoadingConfig} = useConfig();
@@ -47,7 +50,7 @@ function MainPets() {
       />
     </>
   );
-
+  
   if (pets.length == 0) return (
     <Container style={{ overflow: 'auto', maxHeight: '100vh' }}>
       <Box>

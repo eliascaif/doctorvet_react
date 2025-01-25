@@ -12,12 +12,14 @@ import OwnersRecentList from '../layouts/OwnersRecentList';
 import { useAppBar } from '../providers/AppBarProvider';
 import { useConfig } from '../providers/ConfigProvider';
 import { useNavigate } from 'react-router-dom';
+import { useLoading } from '../providers/LoadingProvider';
 
 function MainOwners() {
 
   const [page, setPage] = useState(1);
   const [owners, setOwners] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  // const {isLoading, setIsLoading} = useLoading();
   const navigate = useNavigate();
   const {updateTitle} = useAppBar();
   const {config, isLoadingConfig} = useConfig();

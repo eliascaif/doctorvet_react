@@ -4,17 +4,19 @@ import {
   Typography,
   Container,
   CircularProgress,
-  Dialog,
   Fab,
 } from '@mui/material';
 import AddIcon from "@mui/icons-material/Add";
 import { useAppBar } from '../../providers/AppBarProvider';
-import { fetchById, formatDate } from '../../utils/lib';
+import { fetchById, formatDateHour } from '../../utils/lib';
 import { strings } from "../../constants/strings"
 import { useConfig } from '../../providers/ConfigProvider';
 
-function ViewUser() {
-  const [user, setUser] = useState(null);
+function ViewAgendaEvent() {
+
+  const location = useLocation();
+  const [id, setId] = useState(location.state.id);
+  const [agendaEvent, setAgendaEvent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const {updateTitle} = useAppBar();
   const {config} = useConfig();
@@ -22,13 +24,13 @@ function ViewUser() {
   useEffect(() => { 
     if (config) {
       setIsLoading(true);
-      const fetchUser_ = async () => {
-        const user = await fetchById(config.id, 'users');
-        setUser(user);
-        updateTitle(user.thumb_url || '', user.name, user.email, false);
+      const fetchAgendaEvent_ = async () => {
+        const agendaEvent = await fetchById(id, 'agenda');
+        setAgendaEvent(agendaEvent);
+        updateTitle(undefined, agendaEvent.name);
         setIsLoading(false);
       };
-      fetchUser_();
+      fetchAgendaEvent_();
     }
   }, [config]);
 
@@ -48,75 +50,81 @@ function ViewUser() {
   return (
     <Container>
 
-      {/* Info Section */}
-      <Box style={{ marginBottom: '16px' }}>
-        <Typography variant="caption">{strings.name}</Typography>
-        <Typography
-          variant="body1"
-          style={{ fontSize: '16px' }}
-        >
-          {user.name}
-        </Typography>
-      </Box>
-
-      {/* Text fields with optional visibility */}
-      {user.address && (
+      {agendaEvent.pet && (
         <Box style={{ marginBottom: '16px' }}>
-          <Typography variant="caption">{strings.address}</Typography>
+          <Typography variant="caption">{config.vet.pet_naming_es}</Typography>
           <Typography
             variant="body1"
             style={{ fontSize: '16px' }}
           >
-            {user.address}
+            {agendaEvent.pet.name}
           </Typography>
         </Box>
       )}
+
+      <Box style={{ marginBottom: '16px' }}>
+        <Typography variant="caption">{'Servicio / Nombre del evento'}</Typography>
+        <Typography
+          variant="body1"
+          style={{ fontSize: '16px' }}
+        >
+          {agendaEvent.event_name}
+        </Typography>
+      </Box>
       
-      {user.region && (
+      <Box style={{ marginBottom: '16px' }}>
+        <Typography variant="caption">{'Fecha de inicio'}</Typography>
+        <Typography
+          variant="body1"
+          style={{ fontSize: '16px' }}
+        >
+          {formatDateHour(agendaEvent.begin_time)}
+        </Typography>
+      </Box>
+
+      {agendaEvent.end_time && (
         <Box style={{ marginBottom: '16px' }}>
-          <Typography variant="caption">{strings.region}</Typography>
+          <Typography variant="caption">{'Fecha de finalización'}</Typography>
           <Typography
             variant="body1"
             style={{ fontSize: '16px' }}
           >
-            {user.region.friendly_name}
+            {formatDateHour(agendaEvent.end_time)}
           </Typography>
         </Box>
       )}
 
-      {user.phone && (
+      {eventName.description && (
         <Box style={{ marginBottom: '16px' }}>
-          <Typography variant="caption">{strings.phone}</Typography>
+          <Typography variant="caption">{'Descripción'}</Typography>
           <Typography
             variant="body1"
             style={{ fontSize: '16px' }}
           >
-            {user.phone}
+            {eventName.description}
           </Typography>
         </Box>
       )}
 
       <Box style={{ marginBottom: '16px' }}>
-        <Typography variant="caption">{strings.email}</Typography>
+        <Typography variant="caption">{'Usuario'}</Typography>
         <Typography
           variant="body1"
           style={{ fontSize: '16px' }}
         >
-          {user.email}
+          {eventName.user.name}
         </Typography>
       </Box>
 
-      {user.notes && (
-        <Box style={{ marginBottom: '16px' }}>
-          <Typography variant="caption">{strings.notes}</Typography>
-          <Typography
-            variant="body1"
-            style={{ fontSize: '16px' }}
-          >
-            {user.notes}
-          </Typography>
-        </Box>
-      )}
+      <Box style={{ marginBottom: '16px' }}>
+        <Typography variant="caption">{'Estado'}</Typography>
+        <Typography
+          variant="body1"
+          style={{ fontSize: '16px' }}
+        >
+          {user.executed === 1 ? 'Realizado' : 'No realizado' }
+        </Typography>
+      </Box>
 
       <Box
         sx={{
@@ -139,4 +147,4 @@ function ViewUser() {
   );
 }
 
-export default ViewUser;
+export default ViewAgendaEvent;

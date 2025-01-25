@@ -44,7 +44,8 @@ const EditOwner2 = ({ updateOwner = null }) => {
 
     setIsLoading(true);
     const fetchForInput = async () => {
-      const ownersForInput = await lib.fetchOwnersForInput();
+      //const ownersForInput = await lib.fetchOwnersForInput();
+      const ownersForInput = await lib.fetchForInput('owners', 'owners_for_input');
       setRegions(ownersForInput.regions);
       setFiscalTypes(ownersForInput.finance_types_fiscal);
       setIsLoading(false);
