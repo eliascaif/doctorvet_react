@@ -8,6 +8,7 @@ import { useLoading } from "../../providers/LoadingProvider";
 import * as lib from "../../utils/lib"; 
 import axios from "axios";
 import { strings } from "../../constants/strings";
+import EditPage from "./EditPage";
 
 const EditVetDeposit = ({ updateDeposit = null }) => {
   const { id } = useParams();
@@ -23,8 +24,8 @@ const EditVetDeposit = ({ updateDeposit = null }) => {
   const { setIsLoading } = useLoading();
 
   useEffect(() => {
-    updateTitle("", deposit.id || updateDeposit ? strings.update_deposit : strings.new_deposit);
-    // Aquí podrías cargar los datos existentes si es necesario
+    updateTitle("", deposit.id || updateDeposit ? strings.update_deposit : strings.new_deposit ,
+          strings.complete_data);
   }, [updateTitle, updateDeposit, deposit.id]);
 
   const handleChange = (e) => {
@@ -35,7 +36,6 @@ const EditVetDeposit = ({ updateDeposit = null }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!lib.validateNonEmpty("name", deposit.name, setErrors, refs.name)) return;
-    // Verifica tanto si existe deposit.id como updateDeposit
     if (deposit.id || updateDeposit) {
       await update();
     } else {
@@ -80,8 +80,7 @@ const EditVetDeposit = ({ updateDeposit = null }) => {
   };
 
   return (
-    <Container>
-      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+    <EditPage onSubmit={handleSubmit}>
         <TextField
           fullWidth
           margin="normal"
@@ -99,12 +98,9 @@ const EditVetDeposit = ({ updateDeposit = null }) => {
           justifyContent: "flex-end",
           mt: 2,
         }}>
-          <Fab color="primary" type="submit" aria-label="save">
-            <CheckIcon />
-          </Fab>
+          
         </Box>
-      </Box>
-    </Container>
+        </EditPage>
   );
 };
 
