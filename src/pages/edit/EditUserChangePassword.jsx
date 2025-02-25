@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Container, Box, TextField, Fab } from "@mui/material";
-import CheckIcon from "@mui/icons-material/Check";
+import { Container, Box, TextField } from "@mui/material";
 import { useSnackbar } from "../../providers/SnackBarProvider";
 import { useAppBar } from "../../providers/AppBarProvider";
 import { useLoading } from "../../providers/LoadingProvider";
 import * as lib from "../../utils/lib";
 import { strings } from "../../constants/strings";
+import EditPage from "./EditPage";
 
-export const EditUserChangePassword = () => {
+export const EditUserChangePassword = ({updateUserChangePassword=null}) => {
   const [password, setPassword] = useState({
     currentPassword: "",
     newPassword: "",
@@ -26,7 +26,9 @@ export const EditUserChangePassword = () => {
   const { setIsLoading } = useLoading();
 
   useEffect(() => {
-    updateTitle("Cambiar contraseña");
+    updateTitle( updateUserChangePassword ? updateUserChangePassword.thumb_url : "",
+      updateUserChangePassword ? strings.update_change_paswword : strings.new_password,
+      strings.complete_data);
   }, [updateTitle]);
 
   const handleChange = (e) => {
@@ -123,8 +125,7 @@ export const EditUserChangePassword = () => {
   };
 
   return (
-    <Container>
-      <Box component="form" onSubmit={handleSubmit}>
+    <EditPage onSubmit={handleSubmit}>
         <TextField
           fullWidth
           label="Contraseña actual"
@@ -161,20 +162,8 @@ export const EditUserChangePassword = () => {
           error={!!errors.confirmNewPassword}
           helperText={errors.confirmNewPassword}
         />
-        <Box
-          sx={{
-            position: "relative",
-            display: "flex",
-            justifyContent: "flex-end",
-            mt: 2,
-          }}
-        >
-          <Fab type="submit" color="primary" aria-label="save">
-            <CheckIcon />
-          </Fab>
-        </Box>
-      </Box>
-    </Container>
+       
+        </EditPage>
   );
 };
 
