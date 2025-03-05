@@ -46,11 +46,13 @@ export const EditService = ({ updateService = null }) => {
   const { updateTitle } = useAppBar();
 
   useEffect(() => {
-    if (updateTitle) {
-      updateTitle("Editar servicio");
-    } else {
-      updateTitle("Nuevo servicio");
-    }
+    updateTitle(
+      updateService ? updateService.thumb_url : "",
+      updateService
+        ? strings.update_service
+        : strings.new_service,
+      strings.complete_data
+    );
 
     setIsLoading(true);
 
