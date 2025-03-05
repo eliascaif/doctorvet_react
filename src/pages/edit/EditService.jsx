@@ -9,7 +9,6 @@ import {
   TextField,
   Autocomplete,
   Fab,
-  Container,
   Box,
   Checkbox,
   FormControlLabel,
@@ -17,6 +16,7 @@ import {
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import PropTypes from "prop-types";
+import EditPage from "../../pages/edit/EditPage";
 
 export const EditService = ({ updateService = null }) => {
   const [service, setService] = useState({
@@ -144,8 +144,7 @@ export const EditService = ({ updateService = null }) => {
   };
 
   return (
-    <Container>
-      <Box sx={{ mb: 4 }} component="form" onSubmit={handleSubmit}>
+    <EditPage onSubmit={handleSubmit}>
         <TextField
           fullWidth
           margin="normal"
@@ -317,13 +316,8 @@ export const EditService = ({ updateService = null }) => {
           />
         </Box>
 
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-          <Fab color="primary" aria-label="save" onClick={handleSubmit}>
-            <CheckIcon />
-          </Fab>
-        </Box>
-      </Box>
-    </Container>
+        
+        </EditPage>
   );
 };
 
