@@ -15,6 +15,7 @@ import About from './pages/About';
 import EditVet from './pages/edit/EditVet';
 import EditOwner from './pages/edit/EditOwner';
 import EditOwner2 from './pages/edit/EditOwner2';
+import EditPet from './pages/edit/EditPet';
 
 import SearchTest from './pages/search/SearchTest';
 import SearchVet from './pages/search/SearchVet';
@@ -24,6 +25,7 @@ import { useAuth } from './providers/AuthProvider';
 import ViewOwner from './pages/view/ViewOwner';
 
 import ViewVet from './pages/view/ViewVet';
+import { EditProductCategory } from './pages/edit/EditProductCategory';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -58,11 +60,12 @@ function App() {
           <Route path="about" element={<About />} />
           <Route path="view-owner/:id" element={<ViewOwner />} />
           <Route path="view-vet" element={<ViewVet />} />
+          <Route path="edit-product-category" element={<EditProductCategory />} />
 
           {/* edits */}
           <Route path="edit-owner" element={<EditOwner />} />
           <Route path="edit-owner2" element={<EditOwner2 />} />
-          <Route path="edit-pet" element={<EditPet />} />
+         {/*  <Route path="edit-pet" element={<EditPet />} /> */}
 
           {/* search */}
           <Route path="search-test" element={<SearchTest />} />
