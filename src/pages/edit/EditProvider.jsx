@@ -5,9 +5,10 @@ import { useAppBar } from "../../providers/AppBarProvider";
 import { useLoading } from "../../providers/LoadingProvider";
 import { strings } from "../../constants/strings";
 import * as lib from "../../utils/lib";
-import { Box, Container, TextField, Autocomplete, Fab } from "@mui/material";
+import {  TextField, Autocomplete} from "@mui/material";
 import axios from "axios";
-import CheckIcon from "@mui/icons-material/Check";
+import EditPage from "../../pages/edit/EditPage";
+
 
 const EditProvider = ({ updateProvider = null }) => {
   const [provider, setProvider] = useState(
@@ -32,12 +33,13 @@ const EditProvider = ({ updateProvider = null }) => {
   const { isLoading, setIsLoading } = useLoading();
 
   useEffect(() => {
-    console.log("API URL:", import.meta.env.VITE_API_URL);
-    if (updateProvider) {
-      updateTitle("", strings.update_provider, strings.complete_data);
-    } else {
-      updateTitle("", strings.new_provider, strings.complete_data);
-    }
+    updateTitle(
+      updateProvider ? updateProvider.thumb_url : "",
+      updateProvider
+        ? strings.update_provider
+        : strings.new_provider,
+      strings.complete_data
+    );
     setIsLoading(true);
 
     const getRegions = async () => {
@@ -120,14 +122,7 @@ const EditProvider = ({ updateProvider = null }) => {
   };
 
   return (
-    <Container>
-      <Box
-        sx={{
-          mb: 4,
-        }}
-        component="form"
-        onSubmit={handleSubmit}
-      >
+    <EditPage onSubmit={handleSubmit}>
         <TextField
           fullWidth
           margin="normal"
@@ -203,24 +198,11 @@ const EditProvider = ({ updateProvider = null }) => {
           multiline
           rows={4}
         />
-        <Box
-          sx={{
-            position: "relative",
-            display: "flex",
-            justifyContent: "flex-end",
-            mt: 2,
-          }}
-        >
-          <Fab color="primary" aria-label="add" onClick={handleSubmit}>
-            <CheckIcon />
-          </Fab>
-        </Box>
-      </Box>
-    </Container>
+       </EditPage>
   );
 };
 export default EditProvider;
-import PropTypes from "prop-types";
+/* import PropTypes from "prop-types";
 
 EditProvider.propTypes = {
   updateProvider: PropTypes.shape({
@@ -234,3 +216,4 @@ EditProvider.propTypes = {
     notes: PropTypes.string,
   }),
 };
+ */
