@@ -16,7 +16,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import * as lib from "../../utils/lib";
 import axios from "axios";
 import { useSnackbar } from "../../providers/SnackBarProvider";
+<<<<<<< HEAD
 import { useTitle } from "../../providers/TitleProvider";
+=======
+import { useAppBar } from "../../providers/AppBarProvider";
+>>>>>>> origin/master
 import { strings } from "../../constants/strings";
 import { useLoading } from "../../providers/LoadingProvider";
 import PropTypes from "prop-types";
@@ -56,10 +60,19 @@ const EditProduct = ({ updateProduct = null }) => {
     finalPrice: useRef(null),
   });
   const [checked, setChecked] = useState(false);
+<<<<<<< HEAD
   const { id } = useParams();
   const navigate = useNavigate();
   const snackbar = useSnackbar();
   const { updateTitle } = useTitle();
+=======
+  
+
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const snackbar = useSnackbar();
+  const { updateTitle } = useAppBar();
+>>>>>>> origin/master
   const { isLoading, setIsLoading } = useLoading();
 
   useEffect(() => {

@@ -1,90 +1,111 @@
-import React from 'react';
-import SearchPage from './SearchPage';
-import { ListItemText } from '@mui/material';
+import React, { useState } from 'react';
+import SearchPageUpdateItem from './SearchPageUpdateItem';
 import { fetchVets } from '../../utils/lib';
+import { useSearchParams } from 'react-router-dom';
+import { handleError } from '../../utils/lib';
+import ListItemVetSuscribe from '../../layouts/ListItemVetSuscribe';
+import axios from 'axios';
+import useConfirmDialog from '../../hooks/UseConfirmDialog';
+import { useLoading } from "../../providers/LoadingProvider";
 
 const SearchVet = () => {
+  const [searchParams] = useSearchParams();
+  const email = searchParams.get("email"); 
+  //const preAccessToken = searchParams.get("pre_access_token");
+  const [results, setResults] = useState([]);
+  const { showDialog, ConfirmDialog } = useConfirmDialog();
+  const { isLoading, setIsLoading } = useLoading();
 
   const renderVetItem = (vet) => (
-    <ListItemText primary={vet.name} secondary={vet.email} />
+    <ListItemVetSuscribe 
+      key={vet.id} 
+      vet={vet}
+      associated={vet.associated}
+      requested={vet.requested}
+      onSuscribeClick={() => handleSuscribe(vet, email)}
+      onCancelSuscribeClick={() => handleCancelSuscribe(vet, email)}
+      />
   );
 
+  const handleSuscribe = async (vet, email) => {
+    try {
+      setIsLoading(true);
+
+      const userConfirmed = await showDialog(
+        '¿Unirse a veterinaria?'
+      );
+      
+      if (userConfirmed) {
+        const response = await axios.post(
+          `${import.meta.env.VITE_API_URL}users_requests?create_request`,
+          { user_email: email, id_vet: vet.id }
+        );
+        console.log(response);
+  
+        // Actualizar el estado local del veterinario
+        setResults((prevResults) =>
+          prevResults.map((item) =>
+            item.id === vet.id
+              ? { ...item, requested: 1 } 
+              : item
+          )
+        );
+      }
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCancelSuscribe = async (vet, email) => {
+    try {
+      setIsLoading(true);
+
+      const userConfirmed = await showDialog(
+        '¿Eliminar solicitud?'
+      );
+
+      if (userConfirmed) {
+        const params = {
+          user_email: email,
+          id_vet: vet.id,
+        };
+        const response = await axios.delete(
+          `${import.meta.env.VITE_API_URL}users_requests`,
+          { params: params }
+        );
+        //console.log(response);
+  
+        // Actualizar el estado local del veterinario
+        setResults((prevResults) =>
+          prevResults.map((item) =>
+            item.id === vet.id
+              ? { ...item, requested: 0 } 
+              : item
+          )
+        );
+      }
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <SearchPage
-      fetchFunction={fetchVets}
-      fetchArgs={[config.user.email]}
-      renderItem={renderVetItem}
-      placeholder="Buscar veterinarias..."
-    />
+    <>
+      <SearchPageUpdateItem
+        fetchFunction={fetchVets}
+        fetchArgs={[email]}
+        renderItem={renderVetItem}
+        placeholder="Buscar veterinaria..."
+        results={results}
+        setResults={setResults}      
+      />
+      <ConfirmDialog />
+    </>
   );
 };
 
 export default SearchVet;
-
-
-
-
-
-
-
-
-
-
-
-
-// // Función simulada para hacer llamadas a la API
-// async function fetchRegions(searchText, page) {
-//   // Aquí se realizaría la llamada real a la API
-//   return new Promise((resolve) => {
-//     setTimeout(() => {
-//       const total_pages = 3;
-//       const regions = [];
-//       for (let i = 0; i < 10; i++) {
-//         regions.push({ id: i + (page - 1) * 10, name: `Región ${i + 1}` });
-//       }
-//       resolve({ content: regions, total_pages });
-//     }, 1000);
-//   });
-// }
-
-// function SearchRegion({ onSelect, onCreateNew, suggest }) {
-//   const fetchData = async (searchText, page) => {
-//     return await fetchRegions(searchText, page);
-//   };
-
-//   const renderItem = (item) => <ListItemText primary={item.name} />;
-
-//   const onItemSelect = (item) => {
-//     if (onSelect) {
-//       onSelect(item);
-//     }
-//   };
-
-//   const handleCreateElement = () => {
-//     if (onCreateNew) {
-//       onCreateNew();
-//     }
-//   };
-
-//   const renderNoResults = () => (
-//     <div>
-//       <Typography variant="body1">No se encontraron regiones.</Typography>
-//       {suggest && (
-//         <Button variant="contained" color="secondary" onClick={handleCreateElement}>
-//           Crear Nueva Región
-//         </Button>
-//       )}
-//     </div>
-//   );
-
-//   return (
-//     <SearchBase
-//       fetchData={fetchData}
-//       renderItem={renderItem}
-//       onItemSelect={onItemSelect}
-//       renderNoResults={renderNoResults}
-//     />
-//   );
-// }
-
-// export default SearchRegion;

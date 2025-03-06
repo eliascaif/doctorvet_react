@@ -1,8 +1,7 @@
 import React from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, Drawer, List, ListItem, ListItemText, Typography, CssBaseline, Box, IconButton, ListItemAvatar, Avatar, Divider, Dialog, CircularProgress } from '@mui/material';
-import { useTitle } from '../providers/TitleProvider';
-import { useLoading } from '../providers/LoadingProvider';
+import { useAppBar } from '../providers/AppBarProvider';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import BottomSheet from '../layouts/BottomSheet';
@@ -21,9 +20,8 @@ function Main() {
     navigate(-1);
   };
 
-  const { config, /*isLoading,*/ error } = useConfig();
-  const { thumbUrl, title, subtitle } = useTitle();
-  const { isLoading } = useLoading();
+  const { config, isLoadingConfig, error } = useConfig();
+  const { thumbUrl, title, subtitle, showCloseIcon } = useAppBar();
 
   //Empty icons for avatar
   const isOwnerRoute = location.pathname.includes('owner');
@@ -32,16 +30,25 @@ function Main() {
   
   const handleFabClick = async () => {
   };
-
-  if (error) {
-    return (
-      <Box sx={{ display: 'flex' }}>
-        <Typography variant="h6" noWrap component="div">
-          Error de carga, intenta nuevamente
-        </Typography>
-      </Box>
-    )
-  }
+  
+  if (error) return 
+  (
+    <Box sx={{ display: 'flex' }}>
+      <Typography variant="h6" noWrap component="div">
+        Error de carga, intenta nuevamente
+      </Typography>
+    </Box>
+  )
+  
+  if (isLoadingConfig) return
+  (
+    <>
+      <CircularProgress
+        size={42}
+        sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
+      />
+    </>
+  );
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -60,15 +67,17 @@ function Main() {
               alignItems: 'center',
             }}
           >
-            <Avatar
-              src={thumbUrl}
-              alt="Section avatar"
-              sx={{ width: 50, height: 50, marginRight: '16px' }} 
-            >
-              {/* route empty icon */}
-              {!thumbUrl &&
-                (isOwnerRoute ? <PersonIcon sx={{ fontSize: 32 }} /> : isPetRoute ? <PetsIcon sx={{ fontSize: 32 }} /> : isVetRoute ? <StoreIcon sx={{ fontSize: 32 }} /> : null )}
-            </Avatar>
+            {thumbUrl != undefined &&
+              <Avatar
+                src={thumbUrl}
+                alt="Avatar section"
+                sx={{ width: 50, height: 50, marginRight: '16px' }} 
+              >
+                {/* route empty icon */}
+                {!thumbUrl &&
+                  (isOwnerRoute ? <PersonIcon sx={{ fontSize: 32 }} /> : isPetRoute ? <PetsIcon sx={{ fontSize: 32 }} /> : isVetRoute ? <StoreIcon sx={{ fontSize: 32 }} /> : null )}
+              </Avatar>
+            }
             <Box>
               <Typography variant="h6" noWrap>
                 {title}
@@ -84,7 +93,7 @@ function Main() {
 
           {/* Botón de cierre (X) en el extremo derecho */}
           <IconButton 
-            sx={{ display: title.length > 0 ? 'block' : 'none' }}  
+            sx={{ display: showCloseIcon ? 'block' : 'none' }}  
             color="inherit" 
             onClick={handleCloseClick} 
             edge="end"
@@ -136,13 +145,13 @@ function Main() {
             <Divider />
 
             <ListItem button component={Link} to="home" selected={location.pathname === '/main/home'}>
-              <ListItemText primary="Home" />
+              <ListItemText primary="Inicio" />
             </ListItem>
             <ListItem button component={Link} to="pets" selected={location.pathname === '/main/pets'}>
-              <ListItemText primary="Mascotas" />
+              <ListItemText primary={config.vet.pet_naming_es_plural} />
             </ListItem>
             <ListItem button component={Link} to="owners" selected={location.pathname === '/main/owners'}>
-              <ListItemText primary="Propietarios" />
+              <ListItemText primary={config.vet.owner_naming_es_plural} />
             </ListItem>
             <ListItem button component={Link} to="agenda" selected={location.pathname === '/main/agenda'}>
               <ListItemText primary="Agenda" />
@@ -167,20 +176,12 @@ function Main() {
 
       </Drawer>
 
-      {/* Main Content */}
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      {/* Main Content flexGrow: 1, p: 3, */}
+      {/* maxWidth: "none", */}
+      <Box component="main" sx={{ flexGrow: 1, padding: 3, margin: 0 }}>
         <Toolbar />
         <Outlet />
-        <BottomSheet />
-
-        {isLoading && (
-          <CircularProgress
-            size={42}
-            sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
-          />
-        )}
-        <Dialog open={isLoading} />
-  
+        <BottomSheet />  
       </Box>
 
     </Box>

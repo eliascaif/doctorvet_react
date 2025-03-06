@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import * as lib from "../../utils/lib"; 
 import axios from "axios";
 import { useSnackbar } from "../../providers/SnackBarProvider";
-import { useTitle } from "../../providers/TitleProvider";
+import { useAppBar } from "../../providers/AppBarProvider";
 import { strings } from "../../constants/strings"
 import { useLoading } from '../../providers/LoadingProvider';
 
@@ -40,7 +40,7 @@ const EditOwner = ( {updateOwner = null} ) => {
   
   const navigate = useNavigate();
   const snackbar = useSnackbar();
-  const { updateTitle } = useTitle();
+  const { updateTitle } = useAppBar();
   const { isLoading, setIsLoading } = useLoading();
 
   useEffect(() => {
@@ -53,7 +53,8 @@ const EditOwner = ( {updateOwner = null} ) => {
     setIsLoading(true);
 
     const fetchForInput = async () => {
-      const ownersForInput = await lib.fetchOwnersForInput();
+      // const ownersForInput = await lib.fetchOwnersForInput();
+      const ownersForInput = await lib.fetchForInput('owners', 'owners_for_input');
       setRegions(ownersForInput.regions);
       setFiscalTypes(ownersForInput.finance_types_fiscal);
 
@@ -92,7 +93,7 @@ const EditOwner = ( {updateOwner = null} ) => {
         { withCredentials: true }
       );
       // console.log(response);
-      navigate(`/main/view-owner/${response.data.data.id}`);
+      navigate('/main/view-owner', { state: { id: response.data.data.id } });
     } catch (error) {
       lib.handleError(error);
       snackbar('Error, intenta nuevamente');

@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography, Avatar } from '@mui/material';
 import PetsIcon from "@mui/icons-material/Pets";
 
-const ListItemRectangle = ({ id, name, thumb_url }) => {
+const ListItemRectangle = ({ id, name, thumb_url, email }) => {
   return (
     <Box
       sx={{
@@ -32,13 +32,14 @@ const ListItemRectangle = ({ id, name, thumb_url }) => {
           >
               {name}
           </Typography>
-
-          {/* <Typography
+          {email &&
+            <Typography
               variant="caption"
               noWrap
-          >
-              {name}
-          </Typography> */}
+            >
+              {email}
+            </Typography>
+          }
       </Box>
     </Box>
   );

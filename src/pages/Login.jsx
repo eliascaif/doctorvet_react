@@ -17,19 +17,20 @@ function Login() {
 
   const recaptcha = useRef();
 
+  const [errors, setErrors] = useState({});
+  const [refs, setRefs] = useState({
+    email: useRef(null),
+    password: useRef(null),
+  });
+  
   const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const emailRef = useRef(null);
-
   const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const passwordRef = useRef(null);
 
   const handleSubmit = async(e) => {
     e.preventDefault();
 
-    if (!lib.validateEmail(email, setEmailError, emailRef) || 
-        !lib.validatePassword(password, setPasswordError, passwordRef))
+    if (!lib.validateEmail('email', email, setErrors, refs.email) || 
+        !lib.validatePassword('password', password, setErrors, refs.password))
       return;
 
     const captchaValue = recaptcha.current.getValue();
@@ -55,12 +56,14 @@ function Login() {
       
       switch (response.data.data.state) {
         case 'ACCOUNT_WAITING_FOR_EMAIL_CHECK':
-          navigate('/login-check-valid', { state: { email: email, pre_access_token: response.data.data.pre_access_token } });
+          // navigate('/login-check-valid', { state: { email: email, pre_access_token: response.data.data.pre_access_token } });
+          navigate(`/login-check-valid?email=${encodeURIComponent(email)}&pre_access_token=${encodeURIComponent(response.data.data.pre_access_token)}`);
           break;
 
         case 'VALID':
         case 'ACCOUNT_WAITING_FOR_VET_ASSOCIATION':
-          navigate('/login-choice', { state: { pre_access_token: response.data.data.pre_access_token } });
+          // navigate('/login-choice', { state: { email: email, pre_access_token: response.data.data.pre_access_token } });
+          navigate(`/login-choice?email=${encodeURIComponent(email)}&pre_access_token=${encodeURIComponent(response.data.data.pre_access_token)}`);
           break;
       }
     } catch (error) {
@@ -98,12 +101,13 @@ function Login() {
             label="Email"
             variant="outlined"
             fullWidth
+            type="email"
             margin="normal"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            error={!!emailError}
-            helperText={emailError}
-            inputRef={emailRef}
+            error={!!errors.email}
+            helperText={errors.email}
+            inputRef={refs.email}
           />
           <TextField
             label="Password"
@@ -113,9 +117,9 @@ function Login() {
             margin="normal"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            error={!!passwordError}
-            helperText={passwordError}
-            inputRef={passwordRef}
+            error={!!errors.password}
+            helperText={errors.password}
+            inputRef={refs.password}
           />
           
           <Box display="flex" justifyContent="center" mt={1}>

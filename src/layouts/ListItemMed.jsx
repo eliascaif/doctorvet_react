@@ -1,7 +1,61 @@
 import React from 'react';
-import { Box, Typography, Divider, Avatar } from '@mui/material';
+import { Box, Typography, Divider, Avatar, Grid } from '@mui/material';
+import StoreIcon from "@mui/icons-material/Store";
 
-const ListItemMed = ({ vet, onSelect }) => {
+const ListItemMed = ({ vet, onClick }) => {  
+  return (
+    <Box
+      onClick={() => onClick(vet)} 
+      sx={{ 
+        px: 2, 
+        py: 1, 
+        display: 'flex', 
+        flexDirection: 'column', 
+        width: '100%',
+        cursor: 'pointer',
+        '&:hover': {
+          boxShadow: 5,
+        },
+      }}
+    >
+      <Grid container spacing={2} alignItems="center">
+        {/* Thumbnail */}
+        <Grid item>
+          <Avatar 
+            sx={{ width: 56, height: 56, bgcolor: 'grey.800' }} 
+            alt="Thumbnail"
+            src={vet.thumb_url}
+          >
+            {!vet.thumb_url && <StoreIcon/>}
+          </Avatar>
+        </Grid>
+        
+        {/* Name and Email/Phone */}
+        <Grid item xs>
+          <Typography 
+            variant="subtitle1" 
+            noWrap
+            sx={{ mb: 0.5 }}
+          >
+            {vet.name}
+          </Typography>
+
+          <Typography 
+              variant="caption" 
+              noWrap 
+              sx={{ flex: 1 }}
+            >
+              {vet.email}
+            </Typography>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+
+  
+  
+  
+  
   return (
     <>
       <Box

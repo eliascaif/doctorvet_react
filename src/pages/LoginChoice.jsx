@@ -8,21 +8,31 @@ import {
   Box,
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import ListItemMed from '../layouts/ListItemMed';
 import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { strings } from '../constants/strings';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { handleError } from '../utils/lib';
+import { useAuth } from '../providers/AuthProvider';
+import ListItemVet from '../layouts/ListItemVet';
 
 const LoginChoice = () => {
   const location = useLocation();
-  const { pre_access_token } = location.state || {};
 
+  //const { pre_access_token } = location.state || {};
+  //const { preAccessToken, email } = location.state || {};
+
+  const [searchParams] = useSearchParams();
+  const email = searchParams.get("email"); 
+  const preAccessToken = searchParams.get("pre_access_token");
+  
   const navigate = useNavigate();
+  // const [preAccessToken, SetPreAccessToken] = useState(location.state.pre_access_token || {});
+  // const [email, SetEmail] = useState(location.state.email || {});
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [vets, setVets] = useState([]);
+
+  const { login } = useAuth();
     
   useEffect(() => {
     fetchVets();
@@ -30,11 +40,11 @@ const LoginChoice = () => {
 
   const fetchVets = async () => {
     setIsLoading(true);
-    try {
 
+    try {
       const params = {
         user_vets_web: '',
-        pre_access_token: pre_access_token,
+        pre_access_token: preAccessToken,
       };
       
       const response = await axios.get(`${import.meta.env.VITE_API_URL}users`, { params: params })
@@ -54,16 +64,37 @@ const LoginChoice = () => {
     fetchVets();
   };
 
-  const handleSelectVet = (vet) => {
-    navigate('/search-vet');
+  const handleSelectVet = async (vet) => {
+    setIsLoading(true);
+
+    vet.pre_access_token = preAccessToken;
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}users?email_auth_web`,
+        { vet: { id: vet.id }, pre_access_token: preAccessToken },
+        { withCredentials: true }
+      );
+      //console.log(response);
+
+      login();
+      navigate('/main');
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleCreateVet = () => {
-    navigate('/edit-vet', { state: { pre_access_token: pre_access_token, isInitCreate: 1 } });
+    // navigate('/edit-vet', { state: { pre_access_token: preAccessToken, isInitCreate: 1 } });
+    navigate(`/edit-vet?isInitCreate=1&pre_access_token=${encodeURIComponent(preAccessToken)}`);
   };
 
-  const handleJoinVet = () => {
-    
+  const handleSearchVet = () => {
+    // navigate('/search-vet', { state: { pre_access_token: preAccessToken, email: email } });
+    // navigate(`/search-vet?email=${encodeURIComponent(email)}&pre_access_token=${encodeURIComponent(preAccessToken)}`);
+    navigate(`/search-vet?email=${encodeURIComponent(email)}`);
   };
 
   return (
@@ -99,7 +130,7 @@ const LoginChoice = () => {
       {/* Lista de veterinarias */}
       <Box sx={{ maxHeight: 300, overflow: 'auto', backgroundColor: '#f5f5f5', minHeight: 300 }}>
       {vets.map((vet) => (
-        <ListItemMed key={vet.id} vet={vet} onSelect={handleSelectVet} />
+        <ListItemVet key={vet.id} vet={vet} onClick={handleSelectVet} />
       ))}
     </Box>
 
@@ -129,7 +160,7 @@ const LoginChoice = () => {
           variant="contained"
           color="primary"
           fullWidth
-          onClick={handleJoinVet}
+          onClick={handleSearchVet}
         >
           Unirse a establecimiento
         </Button>

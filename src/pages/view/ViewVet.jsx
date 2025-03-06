@@ -8,8 +8,8 @@ import {
   Fab,
 } from '@mui/material';
 import AddIcon from "@mui/icons-material/Add";
-import { useTitle } from '../../providers/TitleProvider';
-import { fetchVet } from '../../utils/lib';
+import { useAppBar } from '../../providers/AppBarProvider';
+import { fetchById, formatDate } from '../../utils/lib';
 import { strings } from "../../constants/strings"
 import { useConfig } from '../../providers/ConfigProvider';
 import { useLoading } from '../../providers/LoadingProvider';
@@ -17,7 +17,7 @@ import { useLoading } from '../../providers/LoadingProvider';
 function ViewVet() {
   const [vet, setVet] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const {updateTitle} = useTitle();
+  const {updateTitle} = useAppBar();
   const {config} = useConfig();
   // const { isLoading, setIsLoading } = useLoading();
 
@@ -25,9 +25,9 @@ function ViewVet() {
     if (config) {
       setIsLoading(true);
       const fetchVet_ = async () => {
-        const vet = await fetchVet(config.vet.id);
+        const vet = await fetchById(config.vet.id, 'vets');
         setVet(vet);
-        updateTitle(vet.thumb_url, vet.name, vet.email);
+        updateTitle(vet.thumb_url || '', vet.name, vet.email);
         setIsLoading(false);
       };
       fetchVet_();
@@ -54,7 +54,7 @@ function ViewVet() {
         size={42}
         sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
       />
-      <Dialog open={isLoading} />
+      {/* <Dialog open={isLoading} /> */}
     </>
   );
 
@@ -141,13 +141,17 @@ function ViewVet() {
         </Box>
       )}
 
-      {/* {isLoading && (
-        <CircularProgress
-          size={42}
-          sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
-        />
+      {vet.subscription_until && (
+        <Box style={{ marginBottom: '16px' }}>
+          <Typography variant="caption">{strings.subscription_until}</Typography>
+          <Typography
+            variant="body1"
+            style={{ fontSize: '16px' }}
+          >
+            {formatDate(vet.subscription_until)}
+          </Typography>
+        </Box>
       )}
-      <Dialog open={isLoading} /> */}
 
       <Box
         sx={{
@@ -171,4 +175,3 @@ function ViewVet() {
 }
 
 export default ViewVet;
-

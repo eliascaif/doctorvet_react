@@ -88,60 +88,7 @@ export const fetchVets = async (searchText, page, user_email) => {
     return null;
   }
 };
-export const fetchOwnersForInput = async () => {
-  const mustDoRequest_ = await mustDoRequest(undefined, 'owners_for_input');
 
-  if (mustDoRequest_) {
-    try {
-      const queryParams = {
-        for_input: '',
-        compress: '',
-      };
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}owners`, 
-        { params: queryParams, withCredentials: true },
-      );
-      //console.log(response);
-      
-      const stringData = compressedBase64ToString(response.data.data);
-      localStorage.setItem('owners_for_input', stringData);
-      return JSON.parse(stringData);
-    } catch (error) {
-      handleError(error);
-      return null;
-    }
-  } else {
-    // console.log('cached data');
-    return JSON.parse(localStorage.getItem('owners_for_input'));
-  }
-};
-export const fetchPetsForInput = async () => {
-  const mustDoRequest_ = await mustDoRequest(undefined, 'pets_for_input');
-
-  if (mustDoRequest_) {
-    try {
-      const queryParams = {
-        for_input: '',
-        compress: '',
-      };
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}pets`, 
-        { params: queryParams, withCredentials: true },
-      );
-      //console.log(response);
-      
-      const stringData = compressedBase64ToString(response.data.data);
-      localStorage.setItem('pets_for_input', stringData);
-      return JSON.parse(stringData);
-    } catch (error) {
-      handleError(error);
-      return null;
-    }
-  } else {
-    // console.log('cached data');
-    return JSON.parse(localStorage.getItem('pets_for_input'));
-  }
-};
 export const fetchOwner = async (id, updateLastView) => {
   try {
     const queryParams = {
@@ -156,7 +103,6 @@ export const fetchOwner = async (id, updateLastView) => {
       { params: queryParams, withCredentials: true },
     );
     //console.log(response);
-    
     return response.data.data;
   } catch (error) {
     handleError(error);
@@ -176,22 +122,184 @@ export const fetchPet = async (id, updateLastView) => {
       `${import.meta.env.VITE_API_URL}pets`, 
       { params: queryParams, withCredentials: true },
     );
-    //console.log(response);
-    
-    return JSON.parse(response.data.data);
+    // console.log(response);    
+    return response.data.data;
   } catch (error) {
     handleError(error);
     return null;
   }
 };
-export const fetchVet = async ( id ) => {
+export const fetchClinic = async (id_pet, page) => {
+  try {
+    const queryParams = {
+      id_pet: id_pet,
+      page: page,      
+    };
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}pets_clinic`, 
+      { params: queryParams, withCredentials: true },
+    );
+    return response.data.data.content;
+  } catch (error) {
+    handleError(error);
+    return null;
+  }
+};
+
+// export const fetchOwnersForInput = async () => {
+//   const mustDoRequest_ = await mustDoRequest(undefined, 'owners_for_input');
+
+//   if (mustDoRequest_) {
+//     try {
+//       const queryParams = {
+//         for_input: '',
+//         compress: '',
+//       };
+//       const response = await axios.get(
+//         `${import.meta.env.VITE_API_URL}owners`, 
+//         { params: queryParams, withCredentials: true },
+//       );
+//       //console.log(response);
+      
+//       const stringData = compressedBase64ToString(response.data.data);
+//       localStorage.setItem('owners_for_input', stringData);
+//       return JSON.parse(stringData);
+//     } catch (error) {
+//       handleError(error);
+//       return null;
+//     }
+//   } else {
+//     // console.log('cached data');
+//     return JSON.parse(localStorage.getItem('owners_for_input'));
+//   }
+// };
+// export const fetchPetsForInput = async () => {
+//   const mustDoRequest_ = await mustDoRequest(undefined, 'pets_for_input');
+
+//   if (mustDoRequest_) {
+//     try {
+//       const queryParams = {
+//         for_input: '',
+//         compress: '',
+//       };
+//       const response = await axios.get(
+//         `${import.meta.env.VITE_API_URL}pets`, 
+//         { params: queryParams, withCredentials: true },
+//       );
+//       //console.log(response);
+      
+//       const stringData = compressedBase64ToString(response.data.data);
+//       localStorage.setItem('pets_for_input', stringData);
+//       return JSON.parse(stringData);
+//     } catch (error) {
+//       handleError(error);
+//       return null;
+//     }
+//   } else {
+//     // console.log('cached data');
+//     return JSON.parse(localStorage.getItem('pets_for_input'));
+//   }
+// };
+// export const fetchSellsForInput = async () => {
+//   const mustDoRequest_ = await mustDoRequest(undefined, 'sells_for_input');
+
+//   if (mustDoRequest_) {
+//     try {
+//       const queryParams = {
+//         for_input: '',
+//         compress: '',
+//       };
+//       const response = await axios.get(
+//         `${import.meta.env.VITE_API_URL}pets`, 
+//         { params: queryParams, withCredentials: true },
+//       );
+//       //console.log(response);
+      
+//       const stringData = compressedBase64ToString(response.data.data);
+//       localStorage.setItem('sells_for_input', stringData);
+//       return JSON.parse(stringData);
+//     } catch (error) {
+//       handleError(error);
+//       return null;
+//     }
+//   } else {
+//     // console.log('cached data');
+//     return JSON.parse(localStorage.getItem('sells_for_input'));
+//   }
+// };
+export const fetchForInput = async (table, objectName) => {
+  const mustDoRequest_ = await mustDoRequest(undefined, objectName);
+
+  if (mustDoRequest_) {
+    try {
+      const queryParams = {
+        for_input: '',
+        compress: '',
+      };
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}table`, 
+        { params: queryParams, withCredentials: true },
+      );
+      //console.log(response);
+      
+      const stringData = compressedBase64ToString(response.data.data);
+      localStorage.setItem(objectName, stringData);
+      return JSON.parse(stringData);
+    } catch (error) {
+      handleError(error);
+      return null;
+    }
+  } else {
+    // console.log('cached data');
+    return JSON.parse(localStorage.getItem(objectName));
+  }
+};
+
+
+// export const fetchVet = async (id) => {
+//   try {
+//     const queryParams = {
+//       id: id,      
+//     };
+
+//     const response = await axios.get(
+//       `${import.meta.env.VITE_API_URL}vets`, 
+//       { params: queryParams, withCredentials: true },
+//     );
+//     //console.log(response);
+    
+//     return response.data.data;
+//   } catch (error) {
+//     handleError(error);
+//     return null;
+//   }
+// };
+// export const fetchUser = async (id) => {
+//   try {
+//     const queryParams = {
+//       id: id,      
+//     };
+
+//     const response = await axios.get(
+//       `${import.meta.env.VITE_API_URL}users`, 
+//       { params: queryParams, withCredentials: true },
+//     );
+//     //console.log(response);
+    
+//     return response.data.data;
+//   } catch (error) {
+//     handleError(error);
+//     return null;
+//   }
+// };
+export const fetchById = async (id, endpoint) => {
   try {
     const queryParams = {
       id: id,      
     };
 
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}vets`, 
+      `${import.meta.env.VITE_API_URL}${endpoint}`, 
       { params: queryParams, withCredentials: true },
     );
     //console.log(response);
@@ -202,24 +310,148 @@ export const fetchVet = async ( id ) => {
     return null;
   }
 };
-export const fetchUser = async ( id ) => {
+
+export const fetchRecent = async (page, table) => {
   try {
     const queryParams = {
-      id: id,      
+      recent: '',
+      page: page,      
     };
 
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}users`, 
+      `${import.meta.env.VITE_API_URL}${table}`, 
       { params: queryParams, withCredentials: true },
     );
-    //console.log(response);
-    
+    //console.log(response.data.data.content);
+    return response.data.data.content;
+  } catch (error) {
+    handleError(error);
+    return null;
+  }
+};
+export const fetch = async (table, params) => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}${table}`, 
+      { params: params ? params : null, withCredentials: true },
+    );
+    // console.log(response.data.data)
     return response.data.data;
   } catch (error) {
     handleError(error);
     return null;
   }
 };
+export const fetchSearchPage = async (table, searchText, page, productsGlobalsInclude = false) => {
+  try {
+    const params = {
+      search: searchText,
+      page: page,
+      globals_include: productsGlobalsInclude ? 1 : null,
+    };
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}${table}`, 
+      {params: params, withCredentials: true},
+    );
+    return response.data.data;
+  } catch (error) {
+    handleError(error);
+    return null;
+  }
+};
+export const fetchSearchPageServices = async (searchText, page) => {
+  try {
+    const params = {
+      search: searchText,
+      page: page,
+      services: '',
+    };
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}products`, 
+      {params: params, withCredentials: true},
+    );
+    return response.data.data;
+  } catch (error) {
+    handleError(error);
+    return null;
+  }
+};
+export const fetchSearchPageServicesCategories = async (searchText, page) => {
+  try {
+    const params = {
+      search: searchText,
+      page: page,
+      only_services: '',
+      format: 'SEARCH',
+    };
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}products_categories`, 
+      {params: params, withCredentials: true},
+    );
+    return response.data.data;
+  } catch (error) {
+    handleError(error);
+    return null;
+  }
+};
+
+// export const fetchSearchProducts = async (searchText, page, globalsInclude) => {
+//   try {
+//     const params = {
+//       search: searchText,
+//       page: page,
+//       globals_include: globalsInclude,
+//     };
+//     const response = await axios.get(
+//       `${import.meta.env.VITE_API_URL}products`, 
+//       { params: params, withCredentials: true },
+//     );
+//     return response.data.data;
+//   } catch (error) {
+//     handleError(error);
+//     return null;
+//   }
+// };
+
+
+// export const fetchOwnersRecent = async (page) => {
+//   try {
+//     const queryParams = {
+//       recent: '',
+//       page: page,      
+//     };
+
+//     const response = await axios.get(
+//       `${import.meta.env.VITE_API_URL}owners`, 
+//       { params: queryParams, withCredentials: true },
+//     );
+//     //console.log(response.data.data.content);
+    
+//     return response.data.data.content;
+//   } catch (error) {
+//     handleError(error);
+//     return null;
+//   }
+// };
+// export const fetchPetsRecent = async (page) => {
+//   try {
+//     const queryParams = {
+//       recent: '',
+//       page: page,      
+//     };
+
+//     const response = await axios.get(
+//       `${import.meta.env.VITE_API_URL}pets`, 
+//       { params: queryParams, withCredentials: true },
+//     );
+//     //console.log(response.data.data.content);
+    
+//     return response.data.data.content;
+//   } catch (error) {
+//     handleError(error);
+//     return null;
+//   }
+// };
 
 const mustDoRequest = async (table_name, object_name) => {
   
@@ -244,7 +476,6 @@ const mustDoRequest = async (table_name, object_name) => {
   const mustDoRequest = !last_update_cache || (last_update_server_date > last_update_local_date);
   return mustDoRequest;
 }
-
 const getLastUpdate = async (table_name, object_name) => {
   try {
     let url = `${import.meta.env.VITE_API_URL}sys_last_update`;
@@ -266,7 +497,6 @@ const getLastUpdate = async (table_name, object_name) => {
     return null;
   }
 }
-
 const compressedBase64ToString = (base64string) => {
   const binaryString = atob(base64string); // Decodificar Base64 a binario
   const len = binaryString.length;
@@ -277,7 +507,6 @@ const compressedBase64ToString = (base64string) => {
   const decompressedArray = pako.inflate(compressedArray, { to: 'string' });
   return decompressedArray;
 }
-
 export const validateNonEmpty = (fieldName, fieldValue, setErrFunc, fieldRef) => {
   if (fieldValue.trim()) {
     setErrFunc({});
@@ -307,18 +536,30 @@ export const validateEmail = (fieldName, fieldValue, setErrFunc, fieldRef, nullP
   fieldRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
   return false;
 }
-export const validatePassword = (field, setErrFunc, fieldRef) => {
-  if (!field || field.length < 8) {
-    setErrFunc(strings.error_campo_empty);
-    fieldRef.current.focus();
-    fieldRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
-    return false;
+export const validatePassword = (fieldName, fieldValue, setErrFunc, fieldRef) => {
+  if (fieldValue.length >= 8) {
+    setErrFunc({});
+    return true;
   }
 
-  setErrFunc('');
-  return true;
-};
+  let error = {
+    [fieldName]: strings.error_campo_empty
+  };
+  setErrFunc(error);
+  fieldRef.current.focus();
+  fieldRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+  return false;
 
+  // if (!fieldValue || field.length < 8) {
+  //   setErrFunc(strings.error_campo_empty);
+  //   fieldRef.current.focus();
+  //   fieldRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+  //   return false;
+  // }
+
+  // setErrFunc('');
+  // return true;
+};
 export const verifyCaptchaToken = async (token) => {
   try {
     const res = await axios.post(`${import.meta.env.VITE_API_URL}users?verify_captcha_web`, { response: token });
@@ -329,8 +570,7 @@ export const verifyCaptchaToken = async (token) => {
     return false;
   }
 }
-
-export const formatCurrency = ( number ) => {
+export const formatCurrency = (number) => {
   const currencyFormat = new Intl.NumberFormat(navigator.language, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -338,3 +578,101 @@ export const formatCurrency = ( number ) => {
 
   return currencyFormat.format(number);
 }
+export const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat(navigator.language).format(date);
+};
+export const formatDateLong = (dateString) => {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat(navigator.language, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(date);
+};
+export const formatHour = (dateString, hour12 = false) => {
+  const date = new Date(dateString);
+  const hour = new Intl.DateTimeFormat(undefined, {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: hour12,
+  }).format(date);
+  return hour;
+}
+export const formatDateHour = (dateString) => {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat(navigator.language, {
+    dateStyle: 'medium', // Formato para la fecha (short, medium, long o full)
+    timeStyle: 'short',  // Formato para la hora (short, medium, long o full)
+  }).format(date);
+};
+export const getSupplyStr = (supplyStr) => {
+  if (supplyStr == 'NA')
+    return 'Sin suministro';
+  else if (supplyStr == 'PENDING')
+    return 'Suministro pendiente';
+  else if (supplyStr == 'EXPIRED')
+    return 'Suministro vencido';
+  else
+    return 'Suministro pendiente y vencido';
+}
+export const getReasonStr = (reasonStr) => {
+  if (reasonStr == 'SUPPLY')
+    return 'Suministro';
+  if (reasonStr == 'SELL')
+    return 'Venta';
+  if (reasonStr == 'CLINIC')
+    return 'Clínica';
+  if (reasonStr == 'RECIPE')
+    return 'Receta';
+  if (reasonStr == 'CLINIC2')
+    return 'Clínica extendida';
+}
+
+export const openCache = async () => {
+  const cache = await caches.open('doctorvet-cache');
+  return cache;
+};
+
+// Almacenar un archivo en el caché usando su nombre y la URL
+export const cacheResource = async (fileName, url) => {
+  const cache = await openCache();
+  const response = await fetch(url);
+
+  const cachedResource = {
+    fileName,
+    response,
+  };
+
+  // Almacenamos el archivo en el cache con el nombre del archivo como clave
+  await cache.put(fileName, new Response(JSON.stringify(cachedResource)));
+};
+
+export const getResource = async (fileName, url) => {
+  const cache = await openCache();
+  
+  //const cachedResponse = await cache.match(fileName);
+
+  // if (cachedResponse) {
+  //   const cachedData = await cachedResponse.json();
+  //   console.log(cachedData);
+
+  //   //return cachedData.response; // Si existe en el caché, lo retornamos
+  //   return URL.createObjectURL(await cachedData.response.blob());
+  // }
+
+  // Si el archivo no está en caché, lo descargamos desde la URL
+  console.log(url);
+
+  const response = await axios.get(url, { responseType: 'blob' });
+  console.log(response);
+
+  //await cacheResource(fileName, url);
+  //return response;
+  //return URL.createObjectURL(await response.blob());
+};
+
+export const capitalizeFirstLetter = (string) => {
+  if (!string) return '';
+  return string.charAt(0).toUpperCase() + string.slice(1);
+} 
