@@ -1,14 +1,14 @@
 import { useState, useRef, useEffect } from "react";
-import { TextField, Autocomplete, Fab, Container, Box } from "@mui/material";
-import CheckIcon from "@mui/icons-material/Check";
+import { TextField, Autocomplete } from "@mui/material";
 import axios from "axios";
 import * as lib from "../../utils/lib";
 import { strings } from "../../constants/strings";
-import { useTitle } from "../../providers/TitleProvider";
+import { useAppBar } from "../../providers/AppBarProvider";
 import { useLoading } from "../../providers/LoadingProvider";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "../../providers/SnackBarProvider";
-import PropTypes from "prop-types";
+import EditPage from "../../pages/edit/EditPage";
+/* import PropTypes from "prop-types"; */
 
 const EditManualCash = ({ updateCashMovement = null }) => {
   const [cashMovement, setCashMovement] = useState(
@@ -32,17 +32,17 @@ const EditManualCash = ({ updateCashMovement = null }) => {
   ]);
 
   const [paymentMethods, setPaymentMethods] = useState([]);
-  const { updateTitle } = useTitle();
+  const { updateTitle } = useAppBar();
   const { isLoading, setIsLoading } = useLoading();
   const navigate = useNavigate();
   const snackbar = useSnackbar();
 
   useEffect(() => {
     updateTitle(
-      "",
+      updateCashMovement ? updateCashMovement.thumb_url : "",
       updateCashMovement
-        ? strings.update_cash_movement
-        : strings.new_cash_movement,
+        ? strings.update_cash
+        : strings.new_cash,
       strings.complete_data
     );
 
@@ -51,8 +51,10 @@ const EditManualCash = ({ updateCashMovement = null }) => {
     const fetchPaymentMethods = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}payment-methods`
+          `${import.meta.env.VITE_API_URL}finance?payment_types`,
+          { withCredentials: true }
         );
+        console.log('la api responde:',response.data)
 
         setPaymentMethods(response.data.data);
       } catch (error) {
@@ -119,9 +121,7 @@ const EditManualCash = ({ updateCashMovement = null }) => {
   };
 
   return (
-    <>
-      <Container>
-        <Box sx={{ mb: 4 }} component="form" onSubmit={handleSubmit}>
+    <EditPage onSubmit={handleSubmit}>
           <TextField
             fullWidth
             margin="normal"
@@ -205,25 +205,11 @@ const EditManualCash = ({ updateCashMovement = null }) => {
             InputLabelProps={{ shrink: true }}
           />
 
-          <Box
-            sx={{
-              position: "relative",
-              display: "flex",
-              justifyContent: "flex-end",
-              mt: 2,
-            }}
-          >
-            <Fab color="primary" aria-label="add" onClick={handleSubmit}>
-              <CheckIcon />
-            </Fab>
-          </Box>
-        </Box>
-      </Container>
-    </>
+       </EditPage>
   );
 };
 
-EditManualCash.propTypes = {
+/* EditManualCash.propTypes = {
   updateCashMovement: PropTypes.shape({
     amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     movementType: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
@@ -232,6 +218,6 @@ EditManualCash.propTypes = {
     date: PropTypes.string,
     hour: PropTypes.string,
   }),
-};
+}; */
 
 export default EditManualCash;

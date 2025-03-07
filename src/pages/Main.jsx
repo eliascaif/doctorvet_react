@@ -56,7 +56,8 @@ function Main() {
           <Box
             sx={{
               ml: `${172}px`,
-              display: title.length > 0 ? 'flex' : 'none',
+              display: title ? 'flex' : 'none',
+
               alignItems: 'center',
             }}
           >
@@ -84,7 +85,8 @@ function Main() {
 
           {/* Botón de cierre (X) en el extremo derecho */}
           <IconButton 
-            sx={{ display: title.length > 0 ? 'block' : 'none' }}  
+            sx={{ display: title ? 'flex' : 'none',
+            }}  
             color="inherit" 
             onClick={handleCloseClick} 
             edge="end"

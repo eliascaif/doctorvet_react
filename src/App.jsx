@@ -72,6 +72,7 @@ function App() {
           <Route path="about" element={<About />} />
           <Route path="view-owner/:id" element={<ViewOwner />} />
           <Route path="view-vet" element={<ViewVet />} />
+          <Route path="edit-manual-cash" element={<EditManualCash />} />
 
           {/* edits */}
           <Route path="edit-owner" element={<EditOwner />} />

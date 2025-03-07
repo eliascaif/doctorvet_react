@@ -31,6 +31,8 @@ export const strings = {
   temp:'Temperatura Corporal',
   weight:'Peso',
   anamnesis:'Historia Clínica',
-  amount:'Ingreso / Egreso Manual',
-  payment_method:'Método de Pago'
+  amount:'Ingresa Cantidad',
+  payment_method:'Método de Pago',
+  movement_type:'Tipo de Movimiento',
+  update_cash:'Editando Movimiento de Caja',
 };
