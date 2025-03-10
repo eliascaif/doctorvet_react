@@ -6,7 +6,6 @@ import {
   Container,
   Box,
 } from "@mui/material";
-import CheckIcon from "@mui/icons-material/Check";
 import { useNavigate } from "react-router-dom";
 import * as lib from "../../utils/lib";
 import axios from "axios";
@@ -14,7 +13,8 @@ import { useSnackbar } from "../../providers/SnackBarProvider";
 import { useAppBar } from "../../providers/AppBarProvider";
 import { strings } from "../../constants/strings";
 import { useLoading } from "../../providers/LoadingProvider";
-import PropTypes from "prop-types";
+/* import PropTypes from "prop-types"; */
+import EditPage from "../../pages/edit/EditPage";
 
 const EditSellPayment = ({ updatePayment = null }) => {
   const [payment, setPayment] = useState(
@@ -37,7 +37,13 @@ const EditSellPayment = ({ updatePayment = null }) => {
   const { isLoading, setIsLoading } = useLoading();
 
   useEffect(() => {
-    updateTitle("", strings.payment, strings.enter_amount);
+    updateTitle(
+      updatePayment ? updatePayment.thumb_url : "",
+      updatePayment
+        ? strings.update_payment
+        : strings.new_payment,
+      strings.complete_data
+    );
     setIsLoading(true);
 
     const financeTypes = async () => {
@@ -82,33 +88,54 @@ const EditSellPayment = ({ updatePayment = null }) => {
   const save = async () => {
     setIsLoading(true);
     try {
-      
       const currentDate = new Date().toISOString().slice(0, 19).replace("T", " ");
   
-      
+      if (!payment.method) {
+        snackbar("Por favor, selecciona un método de pago");
+        setIsLoading(false);
+        return;
+      }
+  
+      if (!payment.owner || !payment.owner.id) {
+        snackbar("Error: No se ha asignado un propietario (owner)");
+        console.error("Error: payment.owner es null o no tiene ID");
+        setIsLoading(false);
+        return;
+      }
+  
       const payload = {
         amount: payment.amount,
         date: currentDate, 
-        finance_payment_method: payment.method, 
+        finance_payment_method: {
+          deleted: 0,
+          id: payment.method.id,
+          name: payment.method.name
+        },
+        owner: {
+          id: payment.owner.id,
+          name: payment.owner.name
+        }
       };
   
-      console.log("Sending payment data:", payload); 
+      console.log("Enviando datos:", payload);
   
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}sells_payments`,
-        payload, 
+        payload,
         { withCredentials: true }
       );
   
-      console.log("API Response:", response.data); 
+      console.log("Respuesta API:", response.data);
       navigate("/main/view-sell-payment", { state: { id: response.data.data.id } });
     } catch (error) {
-      console.error("Error saving payment:", error.response ? error.response.data : error.message); 
+      console.error("Error al guardar el pago:", error.response ? error.response.data : error.message);
       snackbar("Error, intenta nuevamente");
     } finally {
       setIsLoading(false);
     }
   };
+  
+  
   
 
   const update = async () => {
@@ -129,8 +156,7 @@ const EditSellPayment = ({ updatePayment = null }) => {
   };
 
   return (
-    <Container>
-      <Box component="form" onSubmit={handleSubmit} sx={{ mb: 4 }}>
+    <EditPage onSubmit={handleSubmit}>
         <TextField
           fullWidth
           margin="normal"
@@ -154,17 +180,12 @@ const EditSellPayment = ({ updatePayment = null }) => {
             <TextField {...params} label={strings.payment_method} margin="normal" />
           )}
         />
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-          <Fab color="primary" aria-label="save" onClick={handleSubmit}>
-            <CheckIcon />
-          </Fab>
-        </Box>
-      </Box>
-    </Container>
+        
+      </EditPage>
   );
 };
 
-EditSellPayment.propTypes = {
+/* EditSellPayment.propTypes = {
   updatePayment: PropTypes.shape({
     amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     method: PropTypes.shape({
@@ -174,6 +195,6 @@ EditSellPayment.propTypes = {
     }),
   }),
 };
-
+ */
 
 export default EditSellPayment;
