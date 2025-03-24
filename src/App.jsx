@@ -24,6 +24,7 @@ import EditVetServiceAssoc from './pages/edit/EditVetServiceAssoc';
 import EditVetSchedule from './pages/edit/EditVetSchedule';
 import EditVetPoint from './pages/edit/EditVetPoint';
 import EditVetDeposit from './pages/edit/EditVetDeposit';
+import EditUser from './pages/edit/EditUser';
 
 //search
 import SearchVet from './pages/search/SearchVet';
@@ -92,6 +93,7 @@ function App() {
           <Route path="edit-vet-schedule" element={<EditVetSchedule />} />
           <Route path="edit-vet-point" element={<EditVetPoint />} />
           <Route path="edit-vet-deposit" element={<EditVetDeposit />} />
+          <Route path="edit-user" element={<EditUser />} />
 
           {/* search */}
           <Route path="search-diagnostic" element={<SearchDiagnostic />} />

@@ -49,7 +49,7 @@ function ViewUser() {
   );
 
   const handleEdit = () => {
-    navigate(`/main/users/${user.id}/edit`, { state: { updateUser: user } });
+    navigate('/main/edit-user', { state: { updateUser: user } });
   };
 
   const handleChangePassword = () => {
