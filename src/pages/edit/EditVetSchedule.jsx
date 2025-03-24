@@ -82,7 +82,6 @@ const EditVetSchedule = () => {
 
     updateTitle(undefined, "Crear horario", "Completa los datos");
     toggleFab(false);
-
     fetchServices();
   }, []);
 

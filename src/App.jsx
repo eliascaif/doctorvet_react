@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import  { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import PrivateRoute from './components/ProtectedRoute';
-import { useAuth } from './providers/AuthProvider';
+import AuthContext from './contexts/AuthContext';
 
 import Login from './pages/Login';
 import LoginCreateAccount from './pages/LoginCreateAccount';
@@ -10,12 +10,10 @@ import LoginChoice from './pages/LoginChoice';
 import LoginForgotPassword from './pages/LoginForgotPassword';
 import LoginForgotPassword2 from './pages/LoginForgotPassword2';
 
-import Main from './pages/Main';
-import MainHome from './pages/MainHome';
-import MainPets from './pages/MainPets';
-import MainOwners from './pages/MainOwners';
+import MainLayout from './layouts/MainLayout';
+import Home from './pages/Home';
+import About from './pages/About';
 
-//edits
 import EditVet from './pages/edit/EditVet';
 import EditOwner from './pages/edit/EditOwner';
 import EditOwner2 from './pages/edit/EditOwner2';
@@ -28,7 +26,6 @@ import EditVetPoint from './pages/edit/EditVetPoint';
 import EditVetDeposit from './pages/edit/EditVetDeposit';
 import EditUser from './pages/edit/EditUser';
 
-//search
 import SearchVet from './pages/search/SearchVet';
 import SearchDiagnostic from './pages/search/SearchDiagnostic';
 import SearchManufacturer from './pages/search/SearchManufacturer';
@@ -44,8 +41,9 @@ import SearchProvider from './pages/search/SearchProvider';
 import SearchUser from './pages/search/SearchUser';
 import SearchService from './pages/search/SearchService';
 
-//views
+import { useAuth } from './providers/AuthProvider';
 import ViewOwner from './pages/view/ViewOwner';
+
 import ViewVet from './pages/view/ViewVet';
 import ViewVetChange from './pages/view/ViewVetChange';
 import ViewUser from './pages/view/ViewUser';
@@ -56,40 +54,43 @@ import ViewVetServicesSchedules from './pages/view/ViewVetServicesSchedules';
 import ViewVetUsers from './pages/view/ViewVetUsers';
 import ViewVetPoints from './pages/view/ViewVetPoints';
 import ViewVetDeposits from './pages/view/ViewVetDeposits';
+import { EditProductCategory } from './pages/edit/EditProductCategory';
 
 function App() {
-  const { isAuth } = useAuth();
+  const { isAuthenticated } = useContext(AuthContext);
 
   return (
     <Router>
       <Routes>
 
         {/* public */}
-        <Route path="/" element={ isAuth ? <Navigate to="/main" /> : <Login /> } />        
+        <Route path="/" element={ isAuthenticated ? <Navigate to="/main" /> : <Login /> } />
         <Route path="login-create-account" element={<LoginCreateAccount />} />
         <Route path="login-check-valid" element={<LoginCheckValid />} />
         <Route path="login-choice" element={<LoginChoice />} />
         <Route path="login-forgot-password" element={<LoginForgotPassword />} />
         <Route path="login-forgot-password-2" element={<LoginForgotPassword2 />} />
-        <Route path="edit-vet" element={<EditVet />} />
-        <Route path="search-vet" element={<SearchVet />} />
         
+        <Route path="edit-vet" element={<EditVet />} />
+        <Route path="edit-pet" element={<EditPet />} />
+        
+        <Route path="search-test" element={<SearchTest />} />
+        <Route path="search-vet" element={<SearchVet />} />
+
         {/* private */}
         <Route
           path="main"
           element={
             <PrivateRoute>
-              <Main />
+              <MainLayout />
             </PrivateRoute>
           }
         >
-          {/* home redirect */}
-          <Route index element={<Navigate to="home" replace />} />
-
-          {/* sections */}
-          <Route path="home" element={<MainHome />} />
-          <Route path="pets" element={<MainPets />} />
-          <Route path="owners" element={<MainOwners />} />
+          <Route path="home" element={<Home />} />
+          <Route path="about" element={<About />} />
+          <Route path="view-owner/:id" element={<ViewOwner />} />
+          <Route path="view-vet" element={<ViewVet />} />
+          <Route path="edit-product-category" element={<EditProductCategory />} />
 
           {/* edits */}
           <Route path="edit-owner" element={<EditOwner />} />
@@ -131,6 +132,7 @@ function App() {
           <Route path="view-product" element={<ViewProduct />} />
 
           {/* debug */}
+          <Route path="edit-owner2" element={<EditOwner2 />} />
           <Route path="edit-owner2" element={<EditOwner2 />} />
 
         </Route>
