@@ -1,8 +1,10 @@
 import axios from 'axios';
 import pako from 'pako';
 import { strings } from '../constants/strings';
+import Decimal from "decimal.js";
 
 export function handleError(error) {
+  
   if (error.response) {
     // El servidor respondió con un estado diferente de 2xx
     // console.error('Error en la respuesta:', error.response.data.message);
@@ -60,7 +62,11 @@ export const fetchProducts = async () => {
         min: '',
         compress: '',
       };
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}products`, { params: queryParams }, { withCredentials: true } )
+      // const response = await axios.get(`${import.meta.env.VITE_API_URL}products`, { params: queryParams }, { withCredentials: true } )
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}products`, 
+        { params: queryParams, withCredentials: true },
+      );
       const stringData = compressedBase64ToString(response.data.data);
       localStorage.setItem('products', stringData);
       return JSON.parse(stringData);
@@ -146,87 +152,6 @@ export const fetchClinic = async (id_pet, page) => {
   }
 };
 
-// export const fetchOwnersForInput = async () => {
-//   const mustDoRequest_ = await mustDoRequest(undefined, 'owners_for_input');
-
-//   if (mustDoRequest_) {
-//     try {
-//       const queryParams = {
-//         for_input: '',
-//         compress: '',
-//       };
-//       const response = await axios.get(
-//         `${import.meta.env.VITE_API_URL}owners`, 
-//         { params: queryParams, withCredentials: true },
-//       );
-//       //console.log(response);
-      
-//       const stringData = compressedBase64ToString(response.data.data);
-//       localStorage.setItem('owners_for_input', stringData);
-//       return JSON.parse(stringData);
-//     } catch (error) {
-//       handleError(error);
-//       return null;
-//     }
-//   } else {
-//     // console.log('cached data');
-//     return JSON.parse(localStorage.getItem('owners_for_input'));
-//   }
-// };
-// export const fetchPetsForInput = async () => {
-//   const mustDoRequest_ = await mustDoRequest(undefined, 'pets_for_input');
-
-//   if (mustDoRequest_) {
-//     try {
-//       const queryParams = {
-//         for_input: '',
-//         compress: '',
-//       };
-//       const response = await axios.get(
-//         `${import.meta.env.VITE_API_URL}pets`, 
-//         { params: queryParams, withCredentials: true },
-//       );
-//       //console.log(response);
-      
-//       const stringData = compressedBase64ToString(response.data.data);
-//       localStorage.setItem('pets_for_input', stringData);
-//       return JSON.parse(stringData);
-//     } catch (error) {
-//       handleError(error);
-//       return null;
-//     }
-//   } else {
-//     // console.log('cached data');
-//     return JSON.parse(localStorage.getItem('pets_for_input'));
-//   }
-// };
-// export const fetchSellsForInput = async () => {
-//   const mustDoRequest_ = await mustDoRequest(undefined, 'sells_for_input');
-
-//   if (mustDoRequest_) {
-//     try {
-//       const queryParams = {
-//         for_input: '',
-//         compress: '',
-//       };
-//       const response = await axios.get(
-//         `${import.meta.env.VITE_API_URL}pets`, 
-//         { params: queryParams, withCredentials: true },
-//       );
-//       //console.log(response);
-      
-//       const stringData = compressedBase64ToString(response.data.data);
-//       localStorage.setItem('sells_for_input', stringData);
-//       return JSON.parse(stringData);
-//     } catch (error) {
-//       handleError(error);
-//       return null;
-//     }
-//   } else {
-//     // console.log('cached data');
-//     return JSON.parse(localStorage.getItem('sells_for_input'));
-//   }
-// };
 export const fetchForInput = async (table, objectName) => {
   const mustDoRequest_ = await mustDoRequest(undefined, objectName);
 
@@ -237,7 +162,7 @@ export const fetchForInput = async (table, objectName) => {
         compress: '',
       };
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}table`, 
+        `${import.meta.env.VITE_API_URL}${table}`, 
         { params: queryParams, withCredentials: true },
       );
       //console.log(response);
@@ -255,43 +180,6 @@ export const fetchForInput = async (table, objectName) => {
   }
 };
 
-
-// export const fetchVet = async (id) => {
-//   try {
-//     const queryParams = {
-//       id: id,      
-//     };
-
-//     const response = await axios.get(
-//       `${import.meta.env.VITE_API_URL}vets`, 
-//       { params: queryParams, withCredentials: true },
-//     );
-//     //console.log(response);
-    
-//     return response.data.data;
-//   } catch (error) {
-//     handleError(error);
-//     return null;
-//   }
-// };
-// export const fetchUser = async (id) => {
-//   try {
-//     const queryParams = {
-//       id: id,      
-//     };
-
-//     const response = await axios.get(
-//       `${import.meta.env.VITE_API_URL}users`, 
-//       { params: queryParams, withCredentials: true },
-//     );
-//     //console.log(response);
-    
-//     return response.data.data;
-//   } catch (error) {
-//     handleError(error);
-//     return null;
-//   }
-// };
 export const fetchById = async (id, endpoint) => {
   try {
     const queryParams = {
@@ -359,7 +247,7 @@ export const fetchSearchPage = async (table, searchText, page, productsGlobalsIn
     return null;
   }
 };
-export const fetchSearchPageServices = async (searchText, page) => {
+export const fetchSearchPageServices = async (table, searchText, page, productsGlobalsInclude = false) => {
   try {
     const params = {
       search: searchText,
@@ -433,25 +321,24 @@ export const fetchSearchPageServicesCategories = async (searchText, page) => {
 //     return null;
 //   }
 // };
-// export const fetchPetsRecent = async (page) => {
-//   try {
-//     const queryParams = {
-//       recent: '',
-//       page: page,      
-//     };
+export const fetchPetsDashboard = async () => {
+  try {
+    const queryParams = {
+      dashboard: '',
+    };
 
-//     const response = await axios.get(
-//       `${import.meta.env.VITE_API_URL}pets`, 
-//       { params: queryParams, withCredentials: true },
-//     );
-//     //console.log(response.data.data.content);
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}pets`, 
+      { params: queryParams, withCredentials: true },
+    );
+    console.log(response.data.data);
     
-//     return response.data.data.content;
-//   } catch (error) {
-//     handleError(error);
-//     return null;
-//   }
-// };
+    return response.data.data;
+  } catch (error) {
+    handleError(error);
+    return null;
+  }
+};
 
 const mustDoRequest = async (table_name, object_name) => {
   
@@ -508,7 +395,7 @@ const compressedBase64ToString = (base64string) => {
   return decompressedArray;
 }
 export const validateNonEmpty = (fieldName, fieldValue, setErrFunc, fieldRef) => {
-  if (fieldValue.trim()) {
+  if (fieldValue != null && fieldValue.trim() != '') {
     setErrFunc({});
     return true;
   }
@@ -560,6 +447,30 @@ export const validatePassword = (fieldName, fieldValue, setErrFunc, fieldRef) =>
   // setErrFunc('');
   // return true;
 };
+export const validateDecimal = (fieldName, fieldValue, setErrFunc, fieldRef) => {
+  const trimmedValue = fieldValue.trim();
+  
+  // Expresión regular para validar números decimales
+  const decimalPattern = /^[+-]?((\d+\.?\d*)|(\.\d+))$/;
+  
+  if (decimalPattern.test(trimmedValue) && !isNaN(trimmedValue)) {
+    setErrFunc({});
+    return true;
+  }
+
+  const error = {
+    [fieldName]: strings.error_corrige_campo
+  };
+  
+  setErrFunc(error);
+  
+  if (fieldRef?.current) {
+    fieldRef.current.focus();
+    fieldRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+  
+  return false;
+};
 export const verifyCaptchaToken = async (token) => {
   try {
     const res = await axios.post(`${import.meta.env.VITE_API_URL}users?verify_captcha_web`, { response: token });
@@ -582,8 +493,32 @@ export const formatDate = (dateString) => {
   const date = new Date(dateString);
   return new Intl.DateTimeFormat(navigator.language).format(date);
 };
-export const formatDateLong = (dateString) => {
+export const formatDate2 = (dateString) => {
+  // Handle both formats: with time (YYYY-MM-DD HH:mm:ss) and without (YYYY-MM-DD)
+  const localDate = dateString.includes(' ') ? dateString : `${dateString} 00:00:00`;
+  const date = new Date(localDate.replace(' ', 'T'));
+  return new Intl.DateTimeFormat(navigator.language).format(date);
+};
+export const formatDateReplaceHour = (dateString) => {
   const date = new Date(dateString);
+  const today = new Date();
+  const isToday = date.toDateString() === today.toDateString();
+  
+  if (isToday) {
+    return new Intl.DateTimeFormat(navigator.language, {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: false
+    }).format(date);
+  }
+  
+  return new Intl.DateTimeFormat(navigator.language).format(date);
+};
+
+export const formatDateLong = (dateString) => {
+  // Ensure the date is interpreted in local timezone by appending T00:00:00
+  const localDate = dateString.includes('T') ? dateString : `${dateString}T00:00:00`;
+  const date = new Date(localDate);
   return new Intl.DateTimeFormat(navigator.language, {
     year: 'numeric',
     month: 'long',
@@ -676,3 +611,45 @@ export const capitalizeFirstLetter = (string) => {
   if (!string) return '';
   return string.charAt(0).toUpperCase() + string.slice(1);
 } 
+
+export const getFirstPrincipalOwner = (owners) => {
+  const principalOwner = owners.find(owner => 
+    owner.is_principal !== null && owner.is_principal === 1
+  );
+  
+  if (principalOwner) return principalOwner;
+  if (owners.length > 0) return owners[0];
+  return null;
+};
+
+// Función que retorna la descripción de un producto (incluye cantidad, unidad, precio y descuento/recargo)
+export const getDescription = (item) => {
+  let unit = item.selected_unit;
+  if (!unit && item.product && item.product.unit) {
+    unit = item.product.unit.is_complex === 1
+      ? item.product.unit.second_unit_string
+      : item.product.unit.first_unit_string;
+  }
+  let description = `${item.quantity} ${unit} x ${formatCurrency(item.price)}`;
+  const discount_surcharge = item.discount_surcharge;
+  if (discount_surcharge == null) return description;
+  if (discount_surcharge > 0) {
+    description += ` (x -${discount_surcharge}%)`;
+  } else if (discount_surcharge < 0) {
+    description += ` (x +${Math.abs(discount_surcharge)}%)`;
+  }
+  return description;
+};
+
+// Calcula el subtotal aplicando descuento/recargo
+export const getSubtotal = (quantityValue, priceValue, discountValue) => {
+  const quantity = quantityValue != null ? new Decimal(quantityValue) : new Decimal(0);
+  let price = priceValue != null ? new Decimal(priceValue) : new Decimal(0);
+  const discount = discountValue != null ? new Decimal(discountValue) : new Decimal(0);
+
+  if (!discount.equals(0)) {
+    price = price.sub(price.mul(discount).div(100));
+  }
+  const subtotal = quantity.mul(price);
+  return subtotal.toDecimalPlaces(2, Decimal.ROUND_HALF_UP);
+};

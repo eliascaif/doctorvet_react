@@ -90,7 +90,7 @@ const EditProduct = ({ updateProduct = null }) => {
       } catch (error) {
         
         lib.handleError(error);
-        snackbar("Error al cargar los datos necesarios"); 
+        snackbar("Error al cargar");
       } finally {
         setIsLoading(false); 
       }
@@ -113,7 +113,7 @@ const EditProduct = ({ updateProduct = null }) => {
       setProduct(response.data);
     } catch (error) {
       lib.handleError(error);
-      snackbar("Error al cargar el producto");
+      snackbar("Error al cargar");
     }
   };
 
@@ -155,7 +155,7 @@ const EditProduct = ({ updateProduct = null }) => {
       navigate(`/main/view-product/${response.data.id}`);
     } catch (error) {
       lib.handleError(error);
-      snackbar("Error al guardar el producto");
+      snackbar("Error al guardar");
     } finally {
       setIsLoading(false);
     }
@@ -172,7 +172,7 @@ const EditProduct = ({ updateProduct = null }) => {
       navigate(`/main/view-product/${response.data.id}`);
     } catch (error) {
       lib.handleError(error);
-      snackbar("Error al actualizar el producto");
+      snackbar("Error al actualizar");
     } finally {
       setIsLoading(false);
     }

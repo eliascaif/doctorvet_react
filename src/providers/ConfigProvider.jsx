@@ -10,29 +10,37 @@ export const ConfigProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const { isAuth, logout } = useAuth();
   
+  const fetchConfig = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}users?user_and_vet_by_token`, 
+        { withCredentials: true }
+      );
+      console.log('Config response:', response.data);
+      setConfig(response.data.data);
+    } catch (err) {
+      console.error('Config error:', err);
+      setError(err.message);
+      logout();
+    } finally {
+      setIsLoadingConfig(false);
+    }
+  };
+
   useEffect(() => {
     if (!isAuth)
       return;
 
-    const fetchConfig = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}users?user_and_vet_by_token`, 
-          { withCredentials: true },
-        );
-        setConfig(response.data.data);
-      } catch (err) {
-        setError(err.message);
-        logout();
-      } finally {
-        setIsLoadingConfig(false);
-      }
-    };
     fetchConfig();
   }, [isAuth]);
 
+  const reloadConfig = () => {
+    setIsLoadingConfig(true);
+    fetchConfig();
+  };
+
   return (
-    <ConfigContext.Provider value={{ config, isLoadingConfig, error }}>
+    <ConfigContext.Provider value={{ config, isLoadingConfig, error, reloadConfig }}>
       {children}
     </ConfigContext.Provider>
   );

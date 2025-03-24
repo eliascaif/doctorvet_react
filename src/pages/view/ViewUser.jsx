@@ -12,12 +12,18 @@ import { useAppBar } from '../../providers/AppBarProvider';
 import { fetchById, formatDate } from '../../utils/lib';
 import { strings } from "../../constants/strings"
 import { useConfig } from '../../providers/ConfigProvider';
+import BottomSheet2 from '../../layouts/BottomSheet2';
+import EditIcon from "@mui/icons-material/Edit";
+import PasswordIcon from "@mui/icons-material/Password";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { useNavigate } from 'react-router-dom';
 
 function ViewUser() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const {updateTitle} = useAppBar();
-  const {config} = useConfig();
+  const {config, isLoadingConfig} = useConfig();
+  const navigate = useNavigate();
 
   useEffect(() => { 
     if (config) {
@@ -31,11 +37,8 @@ function ViewUser() {
       fetchUser_();
     }
   }, [config]);
-
-  const handleFabClick = async () => {
-  };
   
-  if (isLoading) return
+  if (isLoading || isLoadingConfig) return
   (
     <>
       <CircularProgress
@@ -45,8 +48,21 @@ function ViewUser() {
     </>
   );
 
+  const handleEdit = () => {
+    navigate(`/main/users/${user.id}/edit`, { state: { updateUser: user } });
+  };
+
+  const handleChangePassword = () => {
+
+  };
+
+  const handleLogout = () => {
+    // TODO: Implement logout logic
+    // This might involve clearing session/tokens and redirecting to login
+  };
+
   return (
-    <Container>
+    <Container maxWidth="xl">
 
       {/* Info Section */}
       <Box style={{ marginBottom: '16px' }}>
@@ -118,22 +134,33 @@ function ViewUser() {
         </Box>
       )}
 
-      <Box
-        sx={{
-          position: "fixed",
-          bottom: 16,
-          right: 16,
-          zIndex: 1000,
-        }}
-      >
-        <Fab
-          color="primary"
-          aria-label="add"
-          onClick={handleFabClick}
-        >
-          <AddIcon />
-        </Fab>
-      </Box>
+      {config.login_type === 'EMAIL' && (
+        <BottomSheet2 
+          zIndex={1001}
+          buttonGroups={[
+            {
+              label: "Usuario", 
+              buttons: [
+                {
+                  label: "Editar",
+                  action: handleEdit,
+                  icon: <EditIcon />
+                },
+                // {
+                //   label: "Cambiar contraseña",
+                //   action: handleChangePassword,
+                //   icon: <PasswordIcon />
+                // },
+                // {
+                //   label: "Cerrar sesión",
+                //   action: handleLogout,
+                //   icon: <LogoutIcon />
+                // },
+              ]
+            },
+          ]}
+        />
+      )}
 
     </Container>
   );

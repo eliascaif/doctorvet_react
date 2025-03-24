@@ -6,20 +6,31 @@ import {
   CircularProgress,
   Dialog,
   Fab,
+  BottomNavigation,
+  BottomNavigationAction,
+  Paper,
 } from '@mui/material';
-import AddIcon from "@mui/icons-material/Add";
 import { useAppBar } from '../../providers/AppBarProvider';
 import { fetchById, formatDate } from '../../utils/lib';
 import { strings } from "../../constants/strings"
 import { useConfig } from '../../providers/ConfigProvider';
 import { useLoading } from '../../providers/LoadingProvider';
+import EditIcon from "@mui/icons-material/Edit";
+import DesignServicesIcon from "@mui/icons-material/DesignServices";
+import GroupIcon from "@mui/icons-material/Group";
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
+import WarehouseIcon from "@mui/icons-material/Warehouse";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import { useNavigate } from 'react-router-dom';
+import BottomSheet2 from '../../layouts/BottomSheet2';
 
 function ViewVet() {
   const [vet, setVet] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const {updateTitle} = useAppBar();
   const {config} = useConfig();
-  // const { isLoading, setIsLoading } = useLoading();
+  const navigate = useNavigate();
 
   useEffect(() => { 
     if (config) {
@@ -33,20 +44,7 @@ function ViewVet() {
       fetchVet_();
     }
   }, [config]);
-
-  const handleFabClick = async () => {
-  };
   
-  // if (isLoading || !config || !vet) return
-  // (
-  //   <>
-  //     <CircularProgress
-  //       size={42}
-  //       sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
-  //     />
-  //     <Dialog open={isLoading} />
-  //   </>
-  // );
   if (isLoading) return
   (
     <>
@@ -54,12 +52,41 @@ function ViewVet() {
         size={42}
         sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
       />
-      {/* <Dialog open={isLoading} /> */}
     </>
   );
 
+  const handleEdit = () => {
+    navigate('/edit-vet', { state: { updateVet: vet } });
+  };
+
+  const handleServices = () => {
+    navigate('/main/view-vet-services-schedules');
+  };
+
+  const handleUsers = () => {
+    navigate('/main/view-vet-users');
+  };
+
+  const handleCreateBranch = () => {
+    navigate('/edit-vet', { state: { isBranch: true } });
+  };
+
+  const handleReceipts = () => {
+    navigate('/main/view-vet-points', { state: { vet } });
+  };
+
+  const handleWarehouses = () => {
+    navigate('/main/view-vet-deposits', { state: { vet } });
+  };
+
+  const handleBilling = () => {
+    navigate('/main/billing', { state: { vet } });
+  };
+
   return (
-    <Container style={{ overflow: 'auto', maxHeight: '100vh' }}>
+    <Container
+      maxWidth="xl"  
+      style={{ overflow: 'auto', maxHeight: '100vh' }}>
 
       {/* Info Section */}
       <Box style={{ marginBottom: '16px' }}>
@@ -141,7 +168,7 @@ function ViewVet() {
         </Box>
       )}
 
-      {vet.subscription_until && (
+      {/* {vet.subscription_until && (
         <Box style={{ marginBottom: '16px' }}>
           <Typography variant="caption">{strings.subscription_until}</Typography>
           <Typography
@@ -151,24 +178,53 @@ function ViewVet() {
             {formatDate(vet.subscription_until)}
           </Typography>
         </Box>
-      )}
+      )} */}
 
-      <Box
-        sx={{
-          position: "fixed",
-          bottom: 16,
-          right: 16,
-          zIndex: 1000,
-        }}
-      >
-        <Fab
-          color="primary"
-          aria-label="add"
-          onClick={handleFabClick}
-        >
-          <AddIcon />
-        </Fab>
-      </Box>
+      <BottomSheet2 
+        zIndex={1001}
+        buttonGroups={[
+          {
+            label: "Veterinaria", 
+            buttons: [
+              {
+                label: "Editar",
+                action: handleEdit,
+                icon: <EditIcon />
+              },
+              {
+                label: "Servicios y horarios",
+                action: handleServices,
+                icon: <DesignServicesIcon />
+              },
+              {
+                label: "Usuarios",
+                action: handleUsers,
+                icon: <GroupIcon />
+              },
+              {
+                label: "Crear sucursal",
+                action: handleCreateBranch,
+                icon: <StorefrontIcon />
+              },
+              {
+                label: "Comprobantes",
+                action: handleReceipts,
+                icon: <PointOfSaleIcon />
+              },
+              {
+                label: "Almacenes",
+                action: handleWarehouses,
+                icon: <WarehouseIcon />
+              },
+              // {
+              //   label: "Facturación electrónica",
+              //   action: handleBilling,
+              //   icon: <AttachMoneyIcon />
+              // }
+            ]
+          },
+        ]}
+      />
 
     </Container>
   );

@@ -7,6 +7,7 @@ export const AppBarProvider = ({ children }) => {
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [showCloseIcon, setShowCloseIcon] = useState(false);
+  const [showFab, setShowFab] = useState(true);
 
   const updateTitle = (newThumbUrl, newTitle, newSubtitle, showCloseIcon = false) => {
     setThumbUrl(newThumbUrl);
@@ -15,8 +16,12 @@ export const AppBarProvider = ({ children }) => {
     setShowCloseIcon(showCloseIcon);
   };
 
+  const toggleFab = (show) => {
+    setShowFab(show);
+  };
+
   return (
-    <AppBarContext.Provider value={{ thumbUrl, title, subtitle, updateTitle }}>
+    <AppBarContext.Provider value={{ thumbUrl, title, subtitle, updateTitle, showFab, toggleFab }}>
       {children}
     </AppBarContext.Provider>
   );

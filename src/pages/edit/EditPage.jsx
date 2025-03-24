@@ -10,7 +10,7 @@ const EditPage = ({
   fabAriaLabel = "save",
 }) => {
   return (
-    <Container>
+    <Container maxWidth="lg">
       <Box 
         component="form" 
         onSubmit={onSubmit} 

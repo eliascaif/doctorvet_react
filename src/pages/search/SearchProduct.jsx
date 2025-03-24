@@ -33,60 +33,16 @@ const SearchProduct = () => {
             thumbUrl={item.thumb_url}
           />
       </Box>
-
-      // <Box 
-      //   display="flex" 
-      //   alignItems="center" 
-      //   width="100%"
-      //   onClick={() => handleOnClick(item)}
-      //   key={item.id} 
-      //   >
-      //   <ListItemAvatar>
-      //     <Avatar alt={capitalizeFirstLetter(primary)} src={item.thumb_url} />
-      //   </ListItemAvatar>
-      //   <ListItemText 
-      //     primary={item.name}
-      //     secondary={
-      //       <>
-      //         {item.categories_es && <>{item.categories_es}<br /></>}
-      //         {item.quantity_string && <>{`Cantidad: ${item.quantity_string}`}<br /></>}
-      //         {item.price_es && <>{`Precios: ${item.price_es}`}<br /></>}
-      //         {!item.is_associate_with_vet && <>{`No asociado`}<br /></>}
-      //       </>           
-      //     }
-      //   />
-      // </Box>
-
-      // <Box
-      //   sx={{
-      //     width: '100%',
-      //     cursor: 'pointer',
-      //   }}
-      //   onClick={() => handleOnClick(item)}
-      // >
-      //   <ListItemText 
-      //     key={item.id} 
-      //     primary={item.name}
-      //     secondary={
-      //       <>
-      //         {item.categories_es && <>{item.categories_es}<br /></>}
-      //         {item.quantity_string && <>{`Cantidad: ${item.quantity_string}`}<br /></>}
-      //         {item.price_es && <>{`Precios: ${item.price_es}`}<br /></>}
-      //         {!item.is_associate_with_vet && <>{`No asociado`}<br /></>}
-      //       </>           
-      //     }
-      //   />
-      // </Box>
     );
   };
 
-  const handleOnClick = async (item) => {
+  const handleOnClick = async (product) => {
     const from = location.state?.from;
     
     if (from)
-      navigate(from, { state: { item } });
+      navigate(from, { state: { product } });
     else
-      navigate('/main/view-product', { state: { id: item.id } });
+      navigate('/main/view-product', { state: { id: product.id } });
   };
 
   return (

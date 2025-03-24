@@ -20,7 +20,13 @@ import EditVet from './pages/edit/EditVet';
 import EditOwner from './pages/edit/EditOwner';
 import EditOwner2 from './pages/edit/EditOwner2';
 import EditPet from './pages/edit/EditPet';
-import EditSell_1 from './pages/edit/EditSell_1';
+import EditSell from './pages/edit/EditSell';
+import EditPurchase from './pages/edit/EditPurchase';
+import EditVetServiceAssoc from './pages/edit/EditVetServiceAssoc';
+import EditVetSchedule from './pages/edit/EditVetSchedule';
+import EditVetPoint from './pages/edit/EditVetPoint';
+import EditVetDeposit from './pages/edit/EditVetDeposit';
+import EditUser from './pages/edit/EditUser';
 
 //search
 import SearchVet from './pages/search/SearchVet';
@@ -34,14 +40,22 @@ import SearchPetRace from './pages/search/SearchPetRace';
 import SearchProduct from './pages/search/SearchProduct';
 import SearchSymptom from './pages/search/SearchSymptom';
 import SearchTreatment from './pages/search/SearchTreatment';
+import SearchProvider from './pages/search/SearchProvider';
+import SearchUser from './pages/search/SearchUser';
+import SearchService from './pages/search/SearchService';
 
 //views
 import ViewOwner from './pages/view/ViewOwner';
 import ViewVet from './pages/view/ViewVet';
+import ViewVetChange from './pages/view/ViewVetChange';
 import ViewUser from './pages/view/ViewUser';
 import ViewPet from './pages/view/ViewPet';
 import ViewManufacturer from './pages/view/ViewManufacturer';
 import ViewProduct from './pages/view/ViewProduct';
+import ViewVetServicesSchedules from './pages/view/ViewVetServicesSchedules';
+import ViewVetUsers from './pages/view/ViewVetUsers';
+import ViewVetPoints from './pages/view/ViewVetPoints';
+import ViewVetDeposits from './pages/view/ViewVetDeposits';
 
 function App() {
   const { isAuth } = useAuth();
@@ -80,7 +94,13 @@ function App() {
           {/* edits */}
           <Route path="edit-owner" element={<EditOwner />} />
           <Route path="edit-pet" element={<EditPet />} />
-          <Route path="edit-sell-1" element={<EditSell_1 />} />
+          <Route path="edit-sell" element={<EditSell />} />
+          <Route path="edit-purchase" element={<EditPurchase />} />
+          <Route path="edit-vet-service-assoc" element={<EditVetServiceAssoc />} />
+          <Route path="edit-vet-schedule" element={<EditVetSchedule />} />
+          <Route path="edit-vet-point" element={<EditVetPoint />} />
+          <Route path="edit-vet-deposit" element={<EditVetDeposit />} />
+          <Route path="users/:id/edit" element={<EditUser />} />
 
           {/* search */}
           <Route path="search-diagnostic" element={<SearchDiagnostic />} />
@@ -93,12 +113,20 @@ function App() {
           <Route path="search-product" element={<SearchProduct />} />
           <Route path="search-symptom" element={<SearchSymptom />} />
           <Route path="search-treatment" element={<SearchTreatment />} />
+          <Route path="search-provider" element={<SearchProvider />} />
+          <Route path="search-user" element={<SearchUser />} />
+          <Route path="search-service" element={<SearchService />} />
 
           {/* views */}
+          <Route path="view-vet" element={<ViewVet />} />
+          <Route path="view-vet-change" element={<ViewVetChange />} />
+          <Route path="view-vet-services-schedules" element={<ViewVetServicesSchedules />} />
+          <Route path="view-vet-users" element={<ViewVetUsers />} />
+          <Route path="view-vet-points" element={<ViewVetPoints />} />
+          <Route path="view-vet-deposits" element={<ViewVetDeposits />} />
+          <Route path="view-user" element={<ViewUser />} />
           <Route path="view-owner" element={<ViewOwner />} />
           <Route path="view-pet" element={<ViewPet />} />
-          <Route path="view-vet" element={<ViewVet />} />
-          <Route path="view-user" element={<ViewUser />} />
           <Route path="view-manufacturer" element={<ViewManufacturer />} />
           <Route path="view-product" element={<ViewProduct />} />
 

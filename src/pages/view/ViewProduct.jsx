@@ -49,7 +49,7 @@ function ViewProduct() {
       setIsAssocLoading(true);
     } catch (error) {
       handleError(error);
-      snackbar("Error al guardar el producto");
+      snackbar("Error al guardar");
     } finally {
       setIsLoading(false);
     }
@@ -66,7 +66,7 @@ function ViewProduct() {
       setProductUpdated(true);
     } catch (error) {
       handleError(error);
-      snackbar("Error al guardar el producto");
+      snackbar("Error al guardar");
     } finally {
       setIsAssocLoading(false);
     }
@@ -84,7 +84,7 @@ function ViewProduct() {
 
   return (
     //style={{ overflow: 'auto', maxHeight: '100vh' }}
-    <Container>
+    <Container maxWidth="xl">
 
       {/* Info Section */}
       <Box style={{ marginBottom: '16px' }}>

@@ -7,7 +7,9 @@ import { AuthProvider } from './providers/AuthProvider.jsx';
 import { ConfigProvider } from './providers/ConfigProvider.jsx';
 import { AppBarProvider } from './providers/AppBarProvider.jsx';
 import { LoadingProvider } from './providers/LoadingProvider.jsx';
+import { FormProvider } from './providers/FormProvider.jsx';
 import App from './App.jsx'
+import { GlobalItemsProvider } from './providers/GlobalItemsProvider.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -17,7 +19,11 @@ createRoot(document.getElementById('root')).render(
           <AuthProvider>
             <ConfigProvider>
               <AppBarProvider>
-                <App />
+                <GlobalItemsProvider>
+                  <FormProvider>
+                    <App />
+                  </FormProvider>
+                </GlobalItemsProvider>
               </AppBarProvider>
             </ConfigProvider>
           </AuthProvider>

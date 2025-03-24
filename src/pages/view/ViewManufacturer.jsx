@@ -46,7 +46,7 @@ function ViewManufacturer() {
   );
 
   return (
-    <Container style={{ overflow: 'auto', maxHeight: '100vh' }}>
+    <Container maxWidth="xl" style={{ overflow: 'auto', maxHeight: '100vh' }}>
 
       {/* Info Section */}
       <Box style={{ marginBottom: '16px' }}>

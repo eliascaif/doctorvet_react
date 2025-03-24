@@ -12,11 +12,11 @@ import { useAppBar } from '../../providers/AppBarProvider';
 import { fetchOwner, formatCurrency } from '../../utils/lib';
 import { strings } from "../../constants/strings"
 import ListItemRectangle from '../../layouts/ListItemRectangle';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function ViewOwner() {
-
   const location = useLocation();
+  const navigate = useNavigate();
   const [id, setId] = useState(location.state.id);
   const [owner, setOwner] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,6 +32,10 @@ function ViewOwner() {
     };
     fetchOwner_();
   }, []);
+
+  const handlePetClick = (pet) => {
+    navigate('/main/view-pet', { state: { id: pet.id, updateLastView: false } });
+  };
 
   const handleFabClick = async () => {
   };
@@ -53,7 +57,7 @@ function ViewOwner() {
   );
 
   return (
-    <Container style={{ overflow: 'auto', maxHeight: '100vh' }}>
+    <Container maxWidth="xl" style={{ overflow: 'auto', maxHeight: '100vh' }}>
 
       {/* Debt Section */}
       {owner.balance && (     
@@ -91,9 +95,11 @@ function ViewOwner() {
             <Box style={{ display: 'flex', gap: '8px' }}>
               {owner.pets.map(pet => (
                 <ListItemRectangle
+                  key={pet.id}
                   id={pet.id}
                   name={pet.name}
                   thumb_url={pet.thumb_url}
+                  onClick={() => handlePetClick(pet)}
                 />
               ))}
             </Box>

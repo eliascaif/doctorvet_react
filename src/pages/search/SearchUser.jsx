@@ -25,9 +25,9 @@ const SearchUser = () => {
     </Box>
   );
 
-  const handleOnClick = async (owner) => {
+  const handleOnClick = async (user) => {
     const from = location.state?.from;
-    navigate(from, { state: { owner } });
+    navigate(from, { state: { user } });
   };
 
   return (

@@ -35,8 +35,8 @@ function MainOwners() {
     fetchOwnersRecent();
   }, []);
 
-  const handleFabClick = async () => {
-  };
+  // const handleFabClick = async () => {
+  // };
   
   const onClick = (owner) => {
     navigate('/main/view-owner', { state: { id: owner.id, updateLastView: false } });
@@ -75,7 +75,7 @@ function MainOwners() {
         isMultiUser={config.vet.multiuser}
       />
 
-      <Box
+      {/* <Box
         sx={{
           position: "fixed",
           bottom: 16,
@@ -90,7 +90,7 @@ function MainOwners() {
         >
           <AddIcon />
         </Fab>
-      </Box>
+      </Box> */}
 
     </Container>
   );

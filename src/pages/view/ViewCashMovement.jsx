@@ -44,7 +44,7 @@ function ViewCashMovement() {
   );
 
   return (
-    <Container>
+    <Container maxWidth="xl">
 
       <Box style={{ marginBottom: '16px' }}>
         <Typography variant="caption">{'Fecha'}</Typography>

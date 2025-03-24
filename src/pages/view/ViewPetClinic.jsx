@@ -43,7 +43,7 @@ function ViewPetClinic({pet}) {
 
   return (
     // style={{ overflow: 'auto', maxHeight: '100vh' }}
-    <Container sx={{ mt: 4 }} >
+    <Container maxWidth="xl" sx={{ mt: 4 }} >
       {clinicRoot.map((item, index) => {
         if (item.clinic)
           return <ClinicItem key={index} clinic={item.clinic} />;

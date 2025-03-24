@@ -8,33 +8,27 @@ import {
   Fab,
   Tabs,
   Tab,
+  IconButton,
+  Grid,
+  Tooltip,
 } from '@mui/material';
 import AddIcon from "@mui/icons-material/Add";
 import { useAppBar } from '../../providers/AppBarProvider';
-import { fetchPet, formatCurrency, formatHour, getSupplyStr, formatDateLong, getReasonStr, formatDate } from '../../utils/lib';
+import { fetchPet, formatCurrency, formatHour, getSupplyStr, formatDateLong, getReasonStr, formatDate, formatDate2 } from '../../utils/lib';
 import { strings } from "../../constants/strings"
 import ListItemRectangle from '../../layouts/ListItemRectangle';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useConfig } from '../../providers/ConfigProvider';
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import CheckIcon from "@mui/icons-material/Check";
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import PaymentsIcon from "@mui/icons-material/Payments";
 
-function ViewPetInfo({ pet }) {
-
-  //const location = useLocation();
-  // const [id, setId] = useState(location.state.id);
-  // const [pet, setPet] = useState(pet);
+function ViewPetInfo({ pet, onPostpone, onComplete, onViewDebtDetail, onAddPayment }) {
+  const navigate = useNavigate();
   const [petStates, setPetStates] = useState(false);
-  // const [isLoading, setIsLoading] = useState(true);
-  // const {updateTitle} = useAppBar();
-
-  //const { config } = useConfig();
 
   useEffect(() => {
-  //   const fetchPet_ = async () => {
-  //     const pet = await fetchPet(id, !!location.state.updateLastView);
-  //     //console.log(pet);
-  //     setPet(pet);
-  //     updateTitle(pet.thumb_url || '', pet.name, pet.owners_es);
-
       //pet states
       if (
         pet.states_pet.is_birthday || 
@@ -52,20 +46,11 @@ function ViewPetInfo({ pet }) {
       //owner debt
       if (pet.owners.some(owner => owner.balance > 0))
         setPetStates(true);
-
-  //     setIsLoading(false);
-  //   };
-  //   fetchPet_();
   }, []);
 
-  // const handleFabClick = async () => {
-  // };
-  
-  // if (!id) return (
-  //   <Typography variant="caption" style={{ margin: '8px' }}>
-  //     No hay id
-  //   </Typography>
-  // );
+  const handleOwnerClick = (owner) => {
+    navigate('/main/view-owner', { state: { id: owner.id, updateLastView: false } });
+  };
 
   if (!pet) return (
     <>
@@ -73,19 +58,17 @@ function ViewPetInfo({ pet }) {
         size={42}
         sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
       />
-      {/* <Dialog open={isLoading} /> */}
     </>
   );
 
   return (
-    // style={{ overflow: 'auto', maxHeight: '100vh' }}
-    <Container sx={{ mt: 4 }} >
-
+    <>
       {/* Pet states Section */}
       {petStates && (     
         <Box
           style={{
             marginBottom: '8px',
+            marginTop: '16px',
             padding: '8px',
             background: '#fff',
             boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
@@ -109,19 +92,75 @@ function ViewPetInfo({ pet }) {
           {pet.owners
             .filter(owner => owner.balance > 0)
             .map(owner => (
-              <Typography 
+              <Box 
                 key={owner.id}
-                variant="caption">
-                {`Deuda: ${formatCurrency(owner.balance)}`}
-              </Typography>
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%'
+                }}
+              >
+                <Typography variant="caption">
+                  {`Deuda: ${formatCurrency(owner.balance)}`}
+                </Typography>
+                <Box>
+                  <Tooltip title="Ver detalle de deuda">
+                    <IconButton
+                      size="small"
+                      onClick={() => onViewDebtDetail?.(owner)}
+                      sx={{ color: 'text.secondary', mr: 1 }}
+                    >
+                      <ReceiptIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Ingresar pago">
+                    <IconButton
+                      size="small"
+                      onClick={() => onAddPayment?.(owner)}
+                      sx={{ color: 'text.secondary' }}
+                    >
+                      <PaymentsIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </Box>
             ))
           }
           {pet.states_pet.appointments_tasks.map(agenda => (
-            <Typography 
+            <Box 
               key={agenda.id}
-              variant="caption">
-              {`Agenda: ${agenda.event_name} ${formatHour(agenda.begin_time)}`}
-            </Typography>
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '100%'
+              }}
+            >
+              <Typography variant="caption">
+                {`Agenda: ${agenda.event_name} ${formatHour(agenda.begin_time)}`}
+              </Typography>
+              <Box>
+                <Tooltip title="Posponer tarea">
+                  <IconButton
+                    size="small"
+                    onClick={() => onPostpone(agenda)}
+                    sx={{ color: 'text.secondary', mr: 1 }}
+                  >
+                    <ArrowForwardIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Marcar como realizado">
+                  <IconButton
+                    size="small"
+                    onClick={() => onComplete(agenda)}
+                    sx={{ color: 'text.secondary' }}
+                  >
+                    <CheckIcon />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </Box>
           ))}
           {pet.states_pet.supply != 'NA' &&
             <Typography variant="caption">
@@ -145,7 +184,7 @@ function ViewPetInfo({ pet }) {
             <Typography variant="caption">
               {`Último alimento: 
               ${pet.states_pet.last_food.product_name} el  
-              ${formatDate(pet.states_pet.last_food.date)}`}
+              ${formatDate(pet.states_pet.last_food.date)}.`}
             </Typography>
           }
           {pet.states_pet.hasOwnProperty('food_level') &&
@@ -153,9 +192,9 @@ function ViewPetInfo({ pet }) {
               {`Nivel alimento: ${pet.states_pet.food_level}/100.`}
             </Typography>
           }
-          {pet.states_pet.hasOwnProperty('age') &&
+          {pet.age &&
             <Typography variant="caption">
-              {`Edad: ${pet.states_pet.age}`}
+              {`Edad: ${pet.age}`}
             </Typography>
           }
         </Box>
@@ -183,6 +222,7 @@ function ViewPetInfo({ pet }) {
               name={owner.name}
               thumb_url={owner.thumb_url}
               email={owner.email}
+              onClick={() => handleOwnerClick(owner)}
             />
           ))}
         </Box>
@@ -255,7 +295,7 @@ function ViewPetInfo({ pet }) {
             variant="body1"
             style={{ fontSize: '16px' }}
           >
-            {pet.birthday}
+            {formatDate2(pet.birthday)}
           </Typography>
         </Box>
       )}
@@ -296,7 +336,7 @@ function ViewPetInfo({ pet }) {
         </Box>
       )}
 
-    </Container>
+    </>
   );
 }
 

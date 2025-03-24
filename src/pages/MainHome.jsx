@@ -32,9 +32,6 @@ function MainHome() {
     fetchHome();
   }, []);
 
-  const handleFabClick = async () => {
-  };
-  
   const onClick = (notification) => {
     
   }
@@ -50,29 +47,15 @@ function MainHome() {
   );
 
   return (
-    <Container style={{ overflow: 'auto', maxHeight: '100vh' }}>
+    <Container
+      maxWidth="lg"
+      // style={{ overflow: 'auto', maxHeight: '100vh' }}
+      >
 
       <HomeList
         notifications={notifications}
         onClick={onClick}
       />
-
-      <Box
-        sx={{
-          position: "fixed",
-          bottom: 16,
-          right: 16,
-          zIndex: 1000,
-        }}
-      >
-        <Fab
-          color="primary"
-          aria-label="add"
-          onClick={handleFabClick}
-        >
-          <AddIcon />
-        </Fab>
-      </Box>
 
     </Container>
   );

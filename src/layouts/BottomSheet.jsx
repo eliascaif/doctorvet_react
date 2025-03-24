@@ -15,10 +15,10 @@ const BottomSheet = () => {
   return (
     <>
       
-      {/* <Button variant="contained" color="primary" onClick={toggleDrawer(true)}>
+      <Button variant="contained" color="primary" onClick={toggleDrawer(true)}>
         Abrir panel
       </Button>
-      */}
+     
       
       <Drawer
         anchor="bottom"

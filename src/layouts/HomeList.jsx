@@ -30,8 +30,7 @@ const HomeList = ({notifications, onClick}) => {
           Últimos movimientos
         </Typography> */}
 
-      {console.log(notifications)}
-      <List>
+      <List sx={{ pt: 0 }}>
         {notifications.map((notification, index) => (
           <HomeListItem
             key={index}

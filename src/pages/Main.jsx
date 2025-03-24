@@ -1,17 +1,20 @@
 import React from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { AppBar, Toolbar, Drawer, List, ListItem, ListItemText, Typography, CssBaseline, Box, IconButton, ListItemAvatar, Avatar, Divider, Dialog, CircularProgress } from '@mui/material';
+import { Fab, AppBar, Toolbar, Drawer, List, ListItem, ListItemText, Typography, CssBaseline, Box, IconButton, ListItemAvatar, Avatar, Divider, Dialog, CircularProgress } from '@mui/material';
 import { useAppBar } from '../providers/AppBarProvider';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBack from '@mui/icons-material/ArrowBack';
-import BottomSheet from '../layouts/BottomSheet';
+import BottomSheet2 from '../layouts/BottomSheet2';
 import { useConfig } from '../providers/ConfigProvider';
 import StoreIcon from "@mui/icons-material/Store";
 import AddIcon from "@mui/icons-material/Add";
 import PersonIcon from '@mui/icons-material/Person';
 import PetsIcon from '@mui/icons-material/Pets';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import { SwapVerticalCircleTwoTone } from '@mui/icons-material';
 
-const drawerWidth = 240;
+// const drawerWidth = 240;
+const drawerWidth = 280;
 
 function Main() {
   const location = useLocation();
@@ -21,7 +24,7 @@ function Main() {
   };
 
   const { config, isLoadingConfig, error } = useConfig();
-  const { thumbUrl, title, subtitle, showCloseIcon } = useAppBar();
+  const { thumbUrl, title, subtitle, showCloseIcon, showFab } = useAppBar();
 
   //Empty icons for avatar
   const isOwnerRoute = location.pathname.includes('owner');
@@ -62,7 +65,8 @@ function Main() {
           </Typography>
           <Box
             sx={{
-              ml: `${172}px`,
+              // ml: `${172}px`,
+              ml: `${201}px`,
               display: title.length > 0 ? 'flex' : 'none',
               alignItems: 'center',
             }}
@@ -117,17 +121,38 @@ function Main() {
 
         <Box sx={{ flex: 1 }}>
           <List>
-            <ListItem button component={Link} to="view-vet">
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <ListItemAvatar>
-                  <Avatar alt="Vet Avatar" src={config?.vet.thumb_url || undefined}>
-                    {!config?.vet.thumb_url && <StoreIcon />}
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText 
-                  primary={config?.vet.name}
-                  secondary={config?.vet.email}
-                />
+            <ListItem>
+              <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                <Box 
+                  component={Link} 
+                  to="view-vet" 
+                  sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    flexGrow: 1
+                  }}
+                >
+                  <ListItemAvatar>
+                    <Avatar alt="Vet Avatar" src={config?.vet.thumb_url || undefined}>
+                      {!config?.vet.thumb_url && <StoreIcon />}
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText 
+                    primary={config?.vet.name}
+                    secondary={config?.vet.email}
+                  />
+                </Box>
+                {config?.multivet > 1 && (
+                  <IconButton 
+                    onClick={() => navigate('/main/view-vet-change')}
+                    size="small"
+                    sx={{ ml: 1 }}
+                  >
+                    <SwapHorizIcon />
+                  </IconButton>
+                )}
               </Box>
             </ListItem>
             <ListItem button component={Link} to="view-user">
@@ -176,12 +201,42 @@ function Main() {
 
       </Drawer>
 
-      {/* Main Content flexGrow: 1, p: 3, */}
-      {/* maxWidth: "none", */}
       <Box component="main" sx={{ flexGrow: 1, padding: 3, margin: 0 }}>
         <Toolbar />
         <Outlet />
-        <BottomSheet />  
+        {showFab && (
+          <BottomSheet2 
+            buttonGroups={[
+              {
+                label: "Acciones principales",
+                buttons: [
+                  {
+                    label: "Guardar",
+                    action: () => console.log("Guardando..."),
+                    icon: <SwapVerticalCircleTwoTone />
+                  },
+                  {
+                    label: "Eliminar",
+                    action: () => console.log("Eliminando..."),
+                  }
+                ]
+              },
+              {
+                label: "Otras acciones",
+                buttons: [
+                  {
+                    label: "Imprimir",
+                    action: () => console.log("Imprimiendo..."),
+                  },
+                  {
+                    label: "Exportar",
+                    action: () => console.log("Exportando..."),
+                  }
+                ]
+              }
+            ]}
+          />
+        )}
       </Box>
 
     </Box>

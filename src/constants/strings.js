@@ -23,5 +23,9 @@ export const strings = {
   birthday: 'Nacimiento',
   weight: 'Peso',
   chip: 'Chip',
-  
+  product_service: 'Producto / servicio',
+  products_services: 'Productos / servicios',
+  update_vet: 'Editando veterinaria',
+  new_vet: 'Nueva veterinaria',
+
 };

@@ -48,7 +48,7 @@ function ViewAgendaEvent() {
   );
 
   return (
-    <Container>
+    <Container maxWidth="xl">
 
       {agendaEvent.pet && (
         <Box style={{ marginBottom: '16px' }}>

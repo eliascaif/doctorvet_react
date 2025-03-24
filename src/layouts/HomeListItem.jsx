@@ -1,35 +1,55 @@
 import React from 'react';
 import { Card, Box, Typography, Avatar } from '@mui/material';
+import * as MuiIcons from '@mui/icons-material';
 
 const HomeListItem = ({notification, onClick}) => {
-  //console.log(notification);
+  // Función para obtener el icono dinámicamente
+  const getIcon = (iconName) => {
+    // Si no hay nombre de icono, retornamos null
+    if (!iconName) return null;
+    
+    // Obtenemos el componente del icono
+    const IconComponent = MuiIcons[iconName];
+    
+    // Si existe el icono, lo retornamos con color
+    return IconComponent ? <IconComponent sx={{ color: 'grey.700', fontSize: 28 }} /> : null;
+  };
+
+  const isDailySummary = notification.notification_type === 'DAILY_SUMMARY';
+
   return (
     <Card
       onClick={() => onClick(notification)}
       sx={{
         width: '100%',
-        margin: 2,
+        margin: '16px 0',
       }}
     >
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
-          padding: 2,
+          padding: '16px',
+          justifyContent: isDailySummary ? 'center' : 'flex-start',
         }}
       >
-        <Avatar
-          sx={{
-            width: 35,
-            height: 35,
-            bgcolor: 'cardview.dark',
-            display: 'none',
-          }}
-        />
+        {getIcon(notification.icon) && (
+          <Avatar
+            sx={{
+              width: 35,
+              height: 35,
+              bgcolor: 'transparent',
+              display: 'flex',
+            }}
+          >
+            {getIcon(notification.icon)}
+          </Avatar>
+        )}
         <Typography
           sx={{
             marginX: 1,
-            flex: 1,
+            flex: isDailySummary ? 'initial' : 1,
+            textAlign: isDailySummary ? 'center' : 'left',
           }}
           variant="subtitle1"
         >

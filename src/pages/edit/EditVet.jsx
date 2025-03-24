@@ -23,6 +23,7 @@ import {
   Dialog,
   CircularProgress,
   IconButton,
+  Fab,
 } from '@mui/material';
 import StoreIcon from '@mui/icons-material/Store';
 import * as lib from '../../utils/lib';
@@ -30,26 +31,17 @@ import axios from 'axios';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import { useAuth } from '../../providers/AuthProvider';
+import CheckIcon from "@mui/icons-material/Check";
+import { useConfig } from '../../providers/ConfigProvider';
 
-const EditVet = ({ isUpdate = false, initialVetData = null }) => {
-
-  const navigate = useNavigate();
-  const handleBackClick = () => {
-    navigate(-1);
-  };
-
+//no modificar para usar edippage. Recordar que se muestra
+//en proceso de login
+const EditVet = () => {
   const location = useLocation();
-  // const { pre_access_token, isInitCreate } = location.state || {};
+  const { updateVet, isBranch } = location.state || {};
+  const { reloadConfig } = useConfig();
   
-  const [searchParams] = useSearchParams();
-  const isInitCreate = searchParams.get("isInitCreate"); 
-  const preAccessToken = searchParams.get("pre_access_token");
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  const { login } = useAuth();
-
-  const [vet, setVet] = useState(initialVetData || {
+  const [vet, setVet] = useState(updateVet || {
     name: '',
     address: '',
     region: null,
@@ -72,7 +64,10 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
     fiscal_type: null,
   });
 
-  //required and errors
+  const [regions, setRegions] = useState([]);
+  const [sellPoints, setSellPoints] = useState([]);
+  const [fiscalTypes, setFiscalTypes] = useState([]);
+
   const [errors, setErrors] = useState({});
   const [refs, setRefs] = useState({
     name: useRef(null),
@@ -80,11 +75,19 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
     email: useRef(null),
   });
 
-  //fetch data
-  const [regions, setRegions] = useState([]);
-  const [sellPoints, setSellPoints] = useState([]);
-  const [fiscalTypes, setFiscalTypes] = useState([]);
+  const navigate = useNavigate();
+  const handleBackClick = () => {
+    navigate(-1);
+  };
 
+  const [searchParams] = useSearchParams();
+  const isInitCreate = searchParams.get("isInitCreate"); 
+  const preAccessToken = searchParams.get("pre_access_token");
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { login } = useAuth();
+ 
   const ownerNamingOptions = [
     { label: 'Cliente', value: 'CLIENT' },
     { label: 'Dueño', value: 'LANDLORD' },
@@ -131,8 +134,13 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
   }
 
   const handleSubmit = async() => {
-    if (isUpdate){
+    if (updateVet){
       update();
+      return;
+    }
+    
+    if (isBranch) {
+      save_branch();
       return;
     }
       
@@ -170,8 +178,56 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
     }
   }
 
-  const update = async () => {
+  const save_branch = async () => {
 
+    if (!lib.validateNonEmpty('name', vet.name, setErrors, refs.name) ||
+        !lib.validateNonEmpty('region', vet.region?.friendly_name, setErrors, refs.region) || 
+        !lib.validateEmail('email', vet.email, setErrors, refs.email))
+      return;
+
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}vets?create_branch`,
+        vet,
+        { withCredentials: true }
+      );
+
+      // Reload config to update vet information
+      await reloadConfig();
+
+      navigate(-1);
+    } catch (error) {
+      lib.handleError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const update = async () => {
+    if (!lib.validateNonEmpty('name', vet.name, setErrors, refs.name) ||
+        !lib.validateNonEmpty('region', vet.region.friendly_name, setErrors, refs.region))
+      return;
+
+    setIsLoading(true);
+
+    try {
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_URL}vets?id=${vet.id}`,
+        vet,
+        { withCredentials: true }
+      );
+      
+      // Reload config to update vet information
+      await reloadConfig();
+      
+      navigate(-1);
+    } catch (error) {
+      lib.handleError(error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -194,7 +250,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
           {/* Contenedor para el texto */}
           <Box sx={{ ml: 2 }}>
             <Typography variant="h6" component="div">
-              {isUpdate ? 'Editar veterinaria' : 'Nueva veterinaria'}
+              {updateVet ? 'Editar veterinaria' : 'Nueva veterinaria'}
             </Typography>
             <Typography variant="subtitle2" component="div">
               Completa los datos
@@ -268,7 +324,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
           margin="normal"
         />
 
-        {!isUpdate && (
+        {!updateVet && (
           <TextField
             fullWidth
             label="Email *"
@@ -466,7 +522,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
         </FormGroup>
 
         {/* Punto de venta por defecto */}
-        {!isUpdate && (
+        {!updateVet && (
           <FormControl fullWidth margin="normal">
             <InputLabel id="default-sell-point-label">Punto de venta por defecto</InputLabel>
             <Select
@@ -520,7 +576,7 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
         />
 
         {/* Botón de guardar */}
-        <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
+        {/* <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
           <Button 
               variant="contained" 
               color="primary" 
@@ -530,6 +586,19 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
           >
             Guardar
           </Button>
+        </Box> */}
+        {/* Floating Action Button */}
+        <Box
+          sx={{
+            position: "fixed",
+            bottom: 16,
+            right: 16,
+            zIndex: 1000,
+          }}
+        >
+          <Fab color="primary" aria-label="Guardar" onClick={handleSubmit}>
+            <CheckIcon />
+          </Fab>
         </Box>
 
         {isLoading && (
@@ -538,7 +607,6 @@ const EditVet = ({ isUpdate = false, initialVetData = null }) => {
             sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-21px', marginLeft: '-21px' }}
           />
         )}
-        {/* <Dialog open={isLoading} /> */}
 
       </Box>
 

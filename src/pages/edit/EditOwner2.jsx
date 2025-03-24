@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { TextField, Autocomplete } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import * as lib from "../../utils/lib";
 import axios from "axios";
 import { useSnackbar } from "../../providers/SnackBarProvider";
@@ -9,7 +9,10 @@ import { strings } from "../../constants/strings";
 import { useLoading } from "../../providers/LoadingProvider";
 import EditPage from "../../pages/edit/EditPage";
 
-const EditOwner2 = ({ updateOwner = null }) => {
+const EditOwner2 = () => {
+  const location = useLocation();
+  const { updateOwner } = location.state || {};
+
   const [owner, setOwner] = useState(
     updateOwner || {
       name: "",
@@ -22,13 +25,15 @@ const EditOwner2 = ({ updateOwner = null }) => {
       notes: "",
     }
   );
+
+  const [regions, setRegions] = useState([]);
+  const [fiscalTypes, setFiscalTypes] = useState([]);
+
   const [errors, setErrors] = useState({});
   const [refs] = useState({
     name: useRef(null),
     email: useRef(null),
   });
-  const [regions, setRegions] = useState([]);
-  const [fiscalTypes, setFiscalTypes] = useState([]);
   
   const navigate = useNavigate();
   const snackbar = useSnackbar();

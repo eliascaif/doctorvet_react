@@ -27,9 +27,9 @@ const SearchProvider = () => {
     </Box>
   );
 
-  const handleOnClick = async (owner) => {
+  const handleOnClick = async (provider) => {
     const from = location.state?.from;
-    navigate(from, { state: { owner } });
+    navigate(from, { state: { provider } });
   };
 
   return (
